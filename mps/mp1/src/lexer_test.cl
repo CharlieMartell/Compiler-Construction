@@ -2,6 +2,26 @@
    arrays are faked as Strings,
    X's respresent live cells, dots represent dead cells,
    no error checking is done *)
+
+(* 
+lexer test.cl: a very simple cool program for the first scanner test. As this file doesn’t cover all
+elements of cool, you need to augment it with further examples to make sure your lexer processes
+the full set of cool tokens. 
+*)
+
+(*
+lexer test.cl
+This file contains some sample input to be scanned. It does not exercise all of the lexical specification
+but it is nevertheless an interesting test. It is not a good test to start with, nor does it provide
+adequate testing of your scanner. Part of your assignment is to come up with good testing inputs
+and a testing strategy. (Don’t take this lightly – good test input is difficult to create, and forgetting
+to test something is the most likely cause of lost points during grading.)
+You should modify this file with tests that you think adequately exercise your scanner. Our
+lexer test.cl is similar to a real cool program, but your tests need not be. You may keep as much or
+as little of our test as you like.
+
+*)
+
 class CellularAutomaton inherits IO {
     population_map : String;
    

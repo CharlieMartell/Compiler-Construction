@@ -1,11 +1,26 @@
 /*
  *  The lexical analyzer for COOL.
+ *  cool-lexer.cc: a skeleton lexer that you will need to change completely to write your lexical analyzer.
  */
+
+/*
+cool-lexer.cc
+    This file contains a skeleton lexical analyzer for cool. Right now, it does not do much. It returns
+    an error string for each character it encounters till it reaches EOF (end of file).
+    The function cool yylex() should return the next token. You are free to design your lexer using
+    any suitable method. However, you may not use a tool to generate the lexer.
+    Functions getNext() and lookNext() return the next character from the file, the former moves
+    the pointer to the next character, while the latter does not. You can use the functions as provided.
+    Feel free to modify anything in this file, but make sure it works as expected with other provided
+    files.
+*/
 
 #include <cool-parse.h>
 #include <stringtab.h>
 #include <utilities.h>
 #include <strings.h>
+#include <errno.h>
+#include <stdlib.h>
 
 /* Max size of string constants */
 #define MAX_STR_CONST 1025
