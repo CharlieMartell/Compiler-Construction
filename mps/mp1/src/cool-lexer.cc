@@ -38,6 +38,8 @@ extern YYSTYPE cool_yylval;
 char next;
 bool nread;
 
+std::string totalTokens;
+
 // Returns the next character
 // without moving the file pointer
 char lookNext()
@@ -112,8 +114,8 @@ std::string ignoreComment(std::string check)
     {
         if (starts_with(check, "(*"))
         {
-            //keeps getting strings until the close string operator 
-            while(getString() != "*)"){}
+            //keeps getting strings until the close string operator
+            while(!(check = getString().find("*)") != std::string::npos)) {}
             check = getString();
         }
         if (starts_with(check, "--"))
@@ -131,10 +133,13 @@ int token_analyzer(std::string stringToken)
         return 121;
     else if (stringToken == "else")
         return 259;
-    std::cout << stringToken << endl;
+    //std::cout << stringToken << endl;
     return 666;
 }
 
+
+//TODO: redo all this shit using chars lol
+//and write out the automata
 int cool_yylex()
 {
     while(true) {
@@ -148,9 +153,14 @@ int cool_yylex()
 
             /* everything else */
             default:
+                //get the string of the token to analyze
                 std::string toAnalyze = getString();
+
+                //get the token from the string(identify comments etc)
                 int ret_token = token_analyzer(toAnalyze);
-                return ret_token; //return :
+                
+                //return the found token 
+                return ret_token;
         }
     }
 }
