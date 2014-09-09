@@ -63,9 +63,78 @@ char getNext()
     return cur;
 }
 
+
 // Returns the next token
 // Modify this function to
 // return the correct tokens
+
+bool isBlank(char check)
+{
+    if(check == 10 
+        || check == 32 
+        || check == 12 
+        || check == 13 
+        || check == 9 
+        || check == 11)
+        return true;
+    return false;
+}
+
+//checks if a string starts with another
+bool starts_with(const std::string s1, const std::string s2) 
+{
+    return s2.size() <= s1.size() && s1.compare(0, s2.size(), s2) == 0;
+}
+
+std::string getString()
+{
+    char nxt = lookNext();
+    std::string curStr= "";
+    //check if nxt char is blank
+    while(isBlank(nxt))
+    {
+        nxt = getNext();
+    }
+    //now that its not blank, add to string till blank
+    while(!(isBlank(nxt)))
+    {
+        nxt = getNext();
+        curStr += nxt;
+    }
+    return curStr;
+}
+
+
+std::string ignoreComment(std::string check)
+{
+    //handles comments after each other
+    while (starts_with(check, "(*") || starts_with(check, "--"))
+    {
+        if (starts_with(check, "(*"))
+        {
+            //keeps getting strings until the close string operator 
+            while(getString() != "*)"){}
+            check = getString();
+        }
+        if (starts_with(check, "--"))
+        {}
+    }
+    return check;
+}
+
+//analyzes the passed string and returns token id
+int token_analyzer(std::string stringToken)
+{
+    //this function breaks
+    //stringToken = ignoreComment(stringToken);
+    if (stringToken == "class")
+        return 121;
+    else if (stringToken == "else")
+        return 259;
+    std::cout << stringToken << endl;
+    return 666;
+}
+
 int cool_yylex()
 {
     while(true) {
@@ -73,16 +142,15 @@ int cool_yylex()
         switch(nxt)
         {
             case EOF:
-                getNext();
+                getNext(); 
+                cout << "You Reached the end!" << endl;
                 return 0;
 
             /* everything else */
             default:
-                char em[2];
-                em[0] = getNext();
-                em[1] = '\0';
-                cool_yylval.error_msg = em;
-                return ERROR;
+                std::string toAnalyze = getString();
+                int ret_token = token_analyzer(toAnalyze);
+                return ret_token; //return :
         }
     }
 }
