@@ -38,7 +38,7 @@ extern YYSTYPE cool_yylval;
 char next;
 bool nread;
 
-std::string totalTokens;
+// std::string totalTokens;
 
 // Returns the next character
 // without moving the file pointer
@@ -70,74 +70,74 @@ char getNext()
 // Modify this function to
 // return the correct tokens
 
-bool isBlank(char check)
-{
-    if(check == 10 
-        || check == 32 
-        || check == 12 
-        || check == 13 
-        || check == 9 
-        || check == 11)
-        return true;
-    return false;
-}
+// bool isBlank(char check)
+// {
+//     if(check == 10 
+//         || check == 32 
+//         || check == 12 
+//         || check == 13 
+//         || check == 9 
+//         || check == 11)
+//         return true;
+//     return false;
+// }
 
-//checks if a string starts with another
-bool starts_with(const std::string s1, const std::string s2) 
-{
-    return s2.size() <= s1.size() && s1.compare(0, s2.size(), s2) == 0;
-}
+// //checks if a string starts with another
+// bool starts_with(const std::string s1, const std::string s2) 
+// {
+//     return s2.size() <= s1.size() && s1.compare(0, s2.size(), s2) == 0;
+// }
 
-std::string getString()
-{
-    char nxt = lookNext();
-    std::string curStr= "";
-    //check if nxt char is blank
-    while(isBlank(nxt))
-    {
-        nxt = getNext();
-    }
-    //now that its not blank, add to string till blank
-    while(!(isBlank(nxt)))
-    {
-        nxt = getNext();
-        curStr += nxt;
-    }
-    return curStr;
-}
-
-
-std::string ignoreComment(std::string check)
-{
-    //handles comments after each other
-    while (starts_with(check, "(*") || starts_with(check, "--"))
-    {
-        if (starts_with(check, "(*"))
-        {
-            //keeps getting strings until the close string operator
-            while(!(check = getString().find("*)") != std::string::npos)) {}
-            check = getString();
-        }
-        if (starts_with(check, "--"))
-        {}
-    }
-    return check;
-}
-
-//analyzes the passed string and returns token id
-int token_analyzer(std::string stringToken)
-{
-    //this function breaks
-    //stringToken = ignoreComment(stringToken);
-    if (stringToken == "class")
-        return 121;
-    else if (stringToken == "else")
-        return 259;
-    //std::cout << stringToken << endl;
-    return 666;
-}
+// std::string getString()
+// {
+//     char nxt = lookNext();
+//     std::string curStr= "";
+//     //check if nxt char is blank
+//     while(isBlank(nxt))
+//     {
+//         nxt = getNext();
+//     }
+//     //now that its not blank, add to string till blank
+//     while(!(isBlank(nxt)))
+//     {
+//         nxt = getNext();
+//         curStr += nxt;
+//     }
+//     return curStr;
+// }
 
 
+// std::string ignoreComment(std::string check)
+// {
+//     //handles comments after each other
+//     while (starts_with(check, "(*") || starts_with(check, "--"))
+//     {
+//         if (starts_with(check, "(*"))
+//         {
+//             //keeps getting strings until the close string operator
+//             while(!(check = getString().find("*)") != std::string::npos)) {}
+//             check = getString();
+//         }
+//         if (starts_with(check, "--"))
+//         {}
+//     }
+//     return check;
+// }
+
+// //analyzes the passed string and returns token id
+// int token_analyzer(std::string stringToken)
+// {
+//     //this function breaks
+//     //stringToken = ignoreComment(stringToken);
+//     if (stringToken == "class")
+//         return 121;
+//     else if (stringToken == "else")
+//         return 259;
+//     //std::cout << stringToken << endl;
+//     return 666;
+// }
+
+//nothing
 //TODO: redo all this shit using chars lol
 //and write out the automata
 int cool_yylex()
@@ -154,13 +154,13 @@ int cool_yylex()
             /* everything else */
             default:
                 //get the string of the token to analyze
-                std::string toAnalyze = getString();
+                // std::string toAnalyze = getString();
 
-                //get the token from the string(identify comments etc)
-                int ret_token = token_analyzer(toAnalyze);
+                // //get the token from the string(identify comments etc)
+                // int ret_token = token_analyzer(toAnalyze);
                 
                 //return the found token 
-                return ret_token;
+                return 34534;
         }
     }
 }
