@@ -21,6 +21,7 @@ cool-lexer.cc
 #include <strings.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <vector>
 
 /* Max size of string constants */
 #define MAX_STR_CONST 1025
@@ -38,7 +39,20 @@ extern YYSTYPE cool_yylval;
 char next;
 bool nread;
 
-// std::string totalTokens;
+std::vector<char> tokenVector;
+
+////////////////////////////////Declarations/////////////////////
+
+char lookNext();
+char getNext();
+bool ensureNotBlank(char x);
+int analyze(char x);
+char removeComment(char x);
+char lineCommentRemove();
+char blockCommentRemove();
+int cool_yylex();
+
+///////////////////////////////End Declarations//////////////////    
 
 // Returns the next character
 // without moving the file pointer
@@ -65,28 +79,19 @@ char getNext()
     return cur;
 }
 
+bool ensureNotBlank(char check)
+{
+    if(check == 10 
+        || check == 32 
+        || check == 12 
+        || check == 13 
+        || check == 9 
+        || check == 11)
+        return true;
+    return false;
+}
 
-// Returns the next token
-// Modify this function to
-// return the correct tokens
 
-// bool isBlank(char check)
-// {
-//     if(check == 10 
-//         || check == 32 
-//         || check == 12 
-//         || check == 13 
-//         || check == 9 
-//         || check == 11)
-//         return true;
-//     return false;
-// }
-
-// //checks if a string starts with another
-// bool starts_with(const std::string s1, const std::string s2) 
-// {
-//     return s2.size() <= s1.size() && s1.compare(0, s2.size(), s2) == 0;
-// }
 
 // std::string getString()
 // {
@@ -137,6 +142,45 @@ char getNext()
 //     return 666;
 // }
 
+int analyze(char currentCharacter)
+{
+  currentCharacter = removeComment(currentCharacter);
+  return 0;
+}
+
+char removeComment(char currentCharacter)
+{
+  if (currentCharacter == '(' || currentCharacter == ('-'))
+    if (currentCharacter == '(' && lookNext() == '*')
+    {
+      getNext();
+      return blockCommentRemove();
+    }
+    if (currentCharacter == ('-') && lookNext() == '-')
+    {
+      getNext();
+      return lineCommentRemove();
+    }
+  return 'A';
+}
+
+char blockCommentRemove()
+{
+  while(lookNext() != '*')
+    getNext();
+  if(lookNext() == ')')
+    return getNext();
+  else
+    return blockCommentRemove();
+}
+
+char lineCommentRemove()
+{
+  while(lookNext() != '\n')// || lookNext() != EOF)
+    getNext();
+  return getNext();
+}
+
 //nothing
 //TODO: redo all this shit using chars lol
 //and write out the automata
@@ -150,17 +194,10 @@ int cool_yylex()
                 getNext(); 
                 cout << "You Reached the end!" << endl;
                 return 0;
-
-            /* everything else */
             default:
-                //get the string of the token to analyze
-                // std::string toAnalyze = getString();
-
-                // //get the token from the string(identify comments etc)
-                // int ret_token = token_analyzer(toAnalyze);
-                
-                //return the found token 
-                return 34534;
+                int retToken;
+                retToken = analyze(getNext());
+                return retToken;
         }
     }
 }
