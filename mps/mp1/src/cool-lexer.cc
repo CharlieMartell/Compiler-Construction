@@ -73,6 +73,153 @@ int getDigit()
   return INT_CONST; 
 }
 
+bool isEqual(const std::string& a, const std::string& b)
+{
+    unsigned int sz = a.size();
+    if (b.size() != sz)
+        return false;
+    for (unsigned int i = 0; i < sz; ++i)
+        if (tolower(a[i]) != tolower(b[i]))
+            return false;
+    return true;
+}
+
+int getTFKeyword(char x[])
+{
+  std::string str(x);
+  if (isEqual(str,"class"))
+    return CLASS;
+  if (isEqual(str,"else"))
+    return ELSE;
+  if(isEqual(str,"false"))
+  {
+    cool_yylval.symbol = idtable.add_string("false");
+    return BOOL_CONST; 
+  }
+  if(isEqual(str,"true"))
+  {
+    cool_yylval.symbol = idtable.add_string("true");
+    return BOOL_CONST; 
+  }
+  if(isEqual(str,"fi"))
+    return FI;
+  if(isEqual(str,"if"))
+    return IF;
+  if(isEqual(str,"inherits"))
+    return INHERITS;
+  if(isEqual(str,"isvoid"))
+    return ISVOID;
+  if(isEqual(str,"let"))
+    return LET;
+  if(isEqual(str,"loop"))
+    return LOOP;
+  if(isEqual(str,"pool"))
+    return POOL;
+  if(isEqual(str,"then"))
+    return THEN;
+  if(isEqual(str,"while"))
+    return WHILE;
+  if(isEqual(str,"case"))
+    return CASE;
+  if(isEqual(str,"esac"))
+    return ESAC;
+  if(isEqual(str,"new"))
+    return NEW;
+  if(isEqual(str,"of"))
+    return OF;
+  if(isEqual(str,"not"))
+    return NOT;
+  return 666;
+}
+
+int getKeyword(char x[])
+{
+  std::string str(x);
+  if (isEqual(str,"class"))
+    return CLASS;
+  if (isEqual(str,"else"))
+    return ELSE;
+  if(isEqual(str,"fi"))
+    return FI;
+  if(isEqual(str,"if"))
+    return IF;
+  if(isEqual(str,"inherits"))
+    return INHERITS;
+  if(isEqual(str,"isvoid"))
+    return ISVOID;
+  if(isEqual(str,"let"))
+    return LET;
+  if(isEqual(str,"loop"))
+    return LOOP;
+  if(isEqual(str,"pool"))
+    return POOL;
+  if(isEqual(str,"then"))
+    return THEN;
+  if(isEqual(str,"while"))
+    return WHILE;
+  if(isEqual(str,"case"))
+    return CASE;
+  if(isEqual(str,"esac"))
+    return ESAC;
+  if(isEqual(str,"new"))
+    return NEW;
+  if(isEqual(str,"of"))
+    return OF;
+  if(isEqual(str,"not"))
+    return NOT;
+  return 666;
+}
+
+bool checkTFKeyword(char x[])
+{
+  std::string str(x);
+  if (isEqual(str,"class")
+    || isEqual(str,"else")
+    || isEqual(str,"false")
+    || isEqual(str,"fi")
+    || isEqual(str,"if")
+    || isEqual(str,"in")
+    || isEqual(str,"inherits")
+    || isEqual(str,"isvoid")
+    || isEqual(str,"let")
+    || isEqual(str,"loop")
+    || isEqual(str,"pool")
+    || isEqual(str,"then")
+    || isEqual(str,"while")
+    || isEqual(str,"case")
+    || isEqual(str,"esac")
+    || isEqual(str,"new")
+    || isEqual(str,"of")
+    || isEqual(str,"not")
+    || isEqual(str,"true"))
+    return true;
+  return false;
+}
+
+bool checkKeyword(char x[])
+{
+  std::string str(x);
+  if (isEqual(str,"class")
+    || isEqual(str,"else")
+    || isEqual(str,"fi")
+    || isEqual(str,"if")
+    || isEqual(str,"in")
+    || isEqual(str,"inherits")
+    || isEqual(str,"isvoid")
+    || isEqual(str,"let")
+    || isEqual(str,"loop")
+    || isEqual(str,"pool")
+    || isEqual(str,"then")
+    || isEqual(str,"while")
+    || isEqual(str,"case")
+    || isEqual(str,"esac")
+    || isEqual(str,"new")
+    || isEqual(str,"of")
+    || isEqual(str,"not"))
+    return true;
+  return false;
+}
+
 int getObjectID()
 {
   char buf[1024];
@@ -86,6 +233,8 @@ int getObjectID()
     i++;
   }
   buf[i] = '\0';
+  if (checkTFKeyword(buf))
+    return getTFKeyword(buf);
   cool_yylval.symbol = idtable.add_string(buf);
   return OBJECTID; 
 }
@@ -105,6 +254,8 @@ int getTypeID()
     i++;
   }
   buf[i] = '\0';
+  if (checkKeyword(buf))
+    return getKeyword(buf);
   cool_yylval.symbol = idtable.add_string(buf);
   return TYPEID; 
 }
