@@ -6,7 +6,6 @@
 #include <stringtab.h>
 #include <utilities.h>
 #include <strings.h>
-#include <regex>
 
 /* Max size of string constants */
 #define MAX_STR_CONST 1025
@@ -30,7 +29,7 @@ char lookNext();
 char getNext();
 int cool_yylex();
 int getDigit();
-int getID();
+int getObjectID();
 int skipComment();
 
 /////////////////////////////End Declarations//////////////////// 
@@ -74,11 +73,14 @@ int getDigit()
   return INT_CONST; 
 }
 
-int getID()
+int getObjectID()
 {
   char buf[1024];
   int i = 0;
-  while((lookNext() >= 'a' && lookNext() <= 'z') || (lookNext() >= 'A' && lookNext() <= 'Z') || lookNext() == '_' || (lookNext() >= '0' && lookNext() <= '9'))
+  while((lookNext() >= 'a' && lookNext() <= 'z') 
+    || (lookNext() >= 'A' && lookNext() <= 'Z') 
+    || lookNext() == '_' 
+    || (lookNext() >= '0' && lookNext() <= '9'))
   {
     buf[i] = getNext();
     i++;
@@ -86,6 +88,25 @@ int getID()
   buf[i] = '\0';
   cool_yylval.symbol = idtable.add_string(buf);
   return OBJECTID; 
+}
+
+int getTypeID()
+{
+  char buf[1024];
+  int i = 0;
+  buf[i] = getNext();
+  i++;
+  while((lookNext() >= 'a' && lookNext() <= 'z') 
+    || (lookNext() >= 'A' && lookNext() <= 'Z') 
+    || lookNext() == '_' 
+    || (lookNext() >= '0' && lookNext() <= '9'))
+  {
+    buf[i] = getNext();
+    i++;
+  }
+  buf[i] = '\0';
+  cool_yylval.symbol = idtable.add_string(buf);
+  return TYPEID; 
 }
 
 int skipComment()
@@ -168,15 +189,14 @@ int cool_yylex()
         if (nxt >= '0' && nxt <= '9')
           return getDigit();
         if (nxt >='a' && nxt <= 'z')
-          return getID();
+          return getObjectID();
+        if (nxt >='A' && nxt <= 'Z')
+          return getTypeID();
         switch(nxt)
         {
             case EOF:
                 getNext();
                 return 0;
-            case ' ':
-                getNext();
-            break;
             case '\n':
                 curr_lineno++;
                 getNext();
@@ -220,6 +240,9 @@ int cool_yylex()
             case '+':
                 getNext();
                 return '+';
+            case '-':
+                getNext();
+                return '-';
             case '}':
                 getNext();
                 return '}';
@@ -232,6 +255,9 @@ int cool_yylex()
             case ':':
                 getNext();
                 return ':';
+            case ';':
+                getNext();
+                return ';';
             case '<':
                 getNext();
                 if (lookNext() == '=')
@@ -260,6 +286,9 @@ int cool_yylex()
                     return ERROR;
                   }
                 return '*';
+            case ' ':
+                getNext();
+            break;
             default:
                 char em[2];
                 em[0] = getNext();
