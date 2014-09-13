@@ -263,6 +263,11 @@ int cool_yylex()
                 return ';';
             case '<':
                 getNext();
+                if (lookNext() == '-')
+                  {
+                    getNext();
+                    return ASSIGN;
+                  }
                 if (lookNext() == '=')
                   {
                     getNext();
