@@ -1,0 +1,4 @@
+#name "s5.test"
+#1 CLASS
+#1 TYPEID TestEOFInStringConstant
+#2 ERROR "EOF in string constant"

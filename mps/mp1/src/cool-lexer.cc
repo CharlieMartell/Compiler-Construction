@@ -1,27 +1,12 @@
 /*
  *  The lexical analyzer for COOL.
- *  cool-lexer.cc: a skeleton lexer that you will need to change completely to write your lexical analyzer.
  */
-
-/*
-cool-lexer.cc
-    This file contains a skeleton lexical analyzer for cool. Right now, it does not do much. It returns
-    an error string for each character it encounters till it reaches EOF (end of file).
-    The function cool yylex() should return the next token. You are free to design your lexer using
-    any suitable method. However, you may not use a tool to generate the lexer.
-    Functions getNext() and lookNext() return the next character from the file, the former moves
-    the pointer to the next character, while the latter does not. You can use the functions as provided.
-    Feel free to modify anything in this file, but make sure it works as expected with other provided
-    files.
-*/
 
 #include <cool-parse.h>
 #include <stringtab.h>
 #include <utilities.h>
 #include <strings.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <vector>
+#include <regex>
 
 /* Max size of string constants */
 #define MAX_STR_CONST 1025
@@ -39,20 +24,16 @@ extern YYSTYPE cool_yylval;
 char next;
 bool nread;
 
-std::vector<char> tokenVector;
-
 ////////////////////////////////Declarations/////////////////////
 
 char lookNext();
 char getNext();
-bool ensureNotBlank(char x);
-int analyze(char x);
-char removeComment(char x);
-char lineCommentRemove();
-char blockCommentRemove();
 int cool_yylex();
+int getDigit();
+int getID();
+int skipComment();
 
-///////////////////////////////End Declarations//////////////////    
+/////////////////////////////End Declarations//////////////////// 
 
 // Returns the next character
 // without moving the file pointer
@@ -79,125 +60,212 @@ char getNext()
     return cur;
 }
 
-bool ensureNotBlank(char check)
+int getDigit()
 {
-    if(check == 10 
-        || check == 32 
-        || check == 12 
-        || check == 13 
-        || check == 9 
-        || check == 11)
-        return true;
-    return false;
+  char buf[1024];
+  int i = 0;
+  while(lookNext() >= '0' && lookNext() <= '9')
+  {
+    buf[i] = getNext();
+    i++;
+  }
+  buf[i] = '\0';
+  cool_yylval.symbol = inttable.add_string(buf);
+  return INT_CONST; 
 }
 
-
-
-// std::string getString()
-// {
-//     char nxt = lookNext();
-//     std::string curStr= "";
-//     //check if nxt char is blank
-//     while(isBlank(nxt))
-//     {
-//         nxt = getNext();
-//     }
-//     //now that its not blank, add to string till blank
-//     while(!(isBlank(nxt)))
-//     {
-//         nxt = getNext();
-//         curStr += nxt;
-//     }
-//     return curStr;
-// }
-
-
-// std::string ignoreComment(std::string check)
-// {
-//     //handles comments after each other
-//     while (starts_with(check, "(*") || starts_with(check, "--"))
-//     {
-//         if (starts_with(check, "(*"))
-//         {
-//             //keeps getting strings until the close string operator
-//             while(!(check = getString().find("*)") != std::string::npos)) {}
-//             check = getString();
-//         }
-//         if (starts_with(check, "--"))
-//         {}
-//     }
-//     return check;
-// }
-
-// //analyzes the passed string and returns token id
-// int token_analyzer(std::string stringToken)
-// {
-//     //this function breaks
-//     //stringToken = ignoreComment(stringToken);
-//     if (stringToken == "class")
-//         return 121;
-//     else if (stringToken == "else")
-//         return 259;
-//     //std::cout << stringToken << endl;
-//     return 666;
-// }
-
-int analyze(char currentCharacter)
+int getID()
 {
-  currentCharacter = removeComment(currentCharacter);
-  return 0;
+  char buf[1024];
+  int i = 0;
+  while((lookNext() >= 'a' && lookNext() <= 'z') || (lookNext() >= 'A' && lookNext() <= 'Z') || lookNext() == '_' || (lookNext() >= '0' && lookNext() <= '9'))
+  {
+    buf[i] = getNext();
+    i++;
+  }
+  buf[i] = '\0';
+  cool_yylval.symbol = idtable.add_string(buf);
+  return OBJECTID; 
 }
 
-char removeComment(char currentCharacter)
+int skipComment()
 {
-  if (currentCharacter == '(' || currentCharacter == ('-'))
-    if (currentCharacter == '(' && lookNext() == '*')
+  while(true)
+  {
+    switch(lookNext())
     {
-      getNext();
-      return blockCommentRemove();
+      case EOF:
+        cool_yylval.error_msg = "EOF in comment";
+          return ERROR;
+      case '\n':
+        curr_lineno++;
+        getNext();
+        break;
+      case '*':
+        getNext();
+        if (lookNext() == ')')
+          return 0;
+        else
+          break;
+      case '(':
+        getNext();
+        if (lookNext() == '*')
+        {
+          int x = skipComment();
+          if(x != 0)
+            return x;
+          else
+            break;
+        }
+      default:
+        getNext();
     }
-    if (currentCharacter == ('-') && lookNext() == '-')
+  }
+}
+
+int getString()
+{
+  while(true)
+  {
+    switch(lookNext())
     {
-      getNext();
-      return lineCommentRemove();
+      case EOF:
+        cool_yylval.error_msg = "EOF in comment";
+          return ERROR;
+      case '\n':
+        curr_lineno++;
+        getNext();
+        break;
+      case '*':
+        getNext();
+        if (lookNext() == ')')
+          return 0;
+        else
+          break;
+      case '(':
+        getNext();
+        if (lookNext() == '*')
+        {
+          int x = skipComment();
+          if(x != 0)
+            return x;
+          else
+            break;
+        }
+      default:
+        getNext();
     }
-  return 'A';
+  }
 }
 
-char blockCommentRemove()
-{
-  while(lookNext() != '*')
-    getNext();
-  if(lookNext() == ')')
-    return getNext();
-  else
-    return blockCommentRemove();
-}
-
-char lineCommentRemove()
-{
-  while(lookNext() != '\n')// || lookNext() != EOF)
-    getNext();
-  return getNext();
-}
-
-//nothing
-//TODO: redo all this shit using chars lol
-//and write out the automata
+// Returns the next token
+// Modify this function to
+// return the correct tokens
 int cool_yylex()
 {
     while(true) {
         char nxt = lookNext();
+        if (nxt >= '0' && nxt <= '9')
+          return getDigit();
+        if (nxt >='a' && nxt <= 'z')
+          return getID();
         switch(nxt)
         {
             case EOF:
-                getNext(); 
-                cout << "You Reached the end!" << endl;
+                getNext();
                 return 0;
+            case ' ':
+                getNext();
+            break;
+            case '\n':
+                curr_lineno++;
+                getNext();
+            break;
+            case '\t':
+                getNext();
+            break;
+            case '\f':
+                getNext();
+            break;
+            case '\r':
+                getNext();
+            break;
+            case '\v':
+                getNext();
+            break;
+            /* everything else */
+            case '"':
+                getNext();
+                return getString();
+            case '(':
+                getNext();
+                if (lookNext() == '*')
+                {
+                  int x= skipComment();
+                  if(x != 0)
+                    return x;
+                  else
+                    break;
+                }
+                return '(';
+            case '.':
+                getNext();
+                return '.';
+            case '@':
+                getNext();
+                return '@';
+            case '~':
+                getNext();
+                return '~';
+            case '+':
+                getNext();
+                return '+';
+            case '}':
+                getNext();
+                return '}';
+            case '{':
+                getNext();
+                return '{';
+            case ')':
+                getNext();
+                return ')';
+            case ':':
+                getNext();
+                return ':';
+            case '<':
+                getNext();
+                if (lookNext() == '=')
+                  {
+                    getNext();
+                    return LE;
+                  }
+                return '<';
+            case '=':
+                getNext();
+                if (lookNext() == '>')
+                  {
+                    getNext();
+                    return DARROW;
+                  }
+                return '=';
+            case '/':
+                getNext();
+                return '/';
+            case '*':
+                getNext();
+                if (lookNext() == ')')
+                  {
+                    getNext();
+                    cool_yylval.error_msg = "Unmatched *)";
+                    return ERROR;
+                  }
+                return '*';
             default:
-                int retToken;
-                retToken = analyze(getNext());
-                return retToken;
+                char em[2];
+                em[0] = getNext();
+                em[1] = '\0';
+                cool_yylval.error_msg = em;
+                return ERROR;
         }
     }
 }

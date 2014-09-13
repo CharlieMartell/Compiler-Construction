@@ -1,0 +1,5 @@
+#name "s7.test"
+#4 ERROR "String constant too long"
+#8 ERROR "Null in a string"
+#12 ERROR "Unterminated string constant"
+#16 ERROR "String constant too long"

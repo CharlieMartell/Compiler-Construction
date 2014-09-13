@@ -1,0 +1,3 @@
+"test\$ escaped characters\
+\a\b\c\d\'\"\f\r\n\q\t\\\
+\0"

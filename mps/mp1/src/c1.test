@@ -1,0 +1,22 @@
+(* *)
+(**)
+(* -- *)
+(* * *)
+(***)
+(*)*)
+(* * ) )**( ( * *)
+(**)--(*
+(**)(**)
+-- end of line comment with *) comment brackets (* inversed
+-- (* comment containing keywords and numbers and strings
+   -- begin class else end fi if in inherits is let loop pool then while 
+   -- case esac of => <- "abcdefg\\\"" true false 123 Type oBJECT <= not 
+   -- "\t" "\n" "\b" "\f"
+ -- *)
+(* comment containing keywords and numbers and strings
+   begin class else end fi if in inherits is let loop pool then while 
+   case esac of => <- "abcdefg\\\"" true false 123 Type oBJECT <= not 
+   "\t" "\n" "\b" "\f"
+ *)
+(*abcdefghijklmnopqrstuvwxyz1234567890,./<>?|;':"[]{}-=_+()&*%^#$!@`~\*)
+--abcdefghijklmnopqrstuvwxyz1234567890,./<>?|;':"[]{}-=_+()&*%^#$!@`~\

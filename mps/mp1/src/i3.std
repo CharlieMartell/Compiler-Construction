@@ -1,0 +1,16 @@
+#name "i3.test"
+#1 OBJECTID object
+#1 ':'
+#1 TYPEID Type
+#2 TYPEID Type
+#2 ':'
+#2 OBJECTID object
+#3 OBJECTID object
+#3 '-'
+#3 TYPEID Type
+#4 TYPEID Type
+#4 '.'
+#4 OBJECTID object
+#5 OBJECTID object
+#5 ','
+#5 OBJECTID object

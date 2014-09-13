@@ -1,0 +1,16 @@
+#name "k4.test"
+#1 BOOL_CONST true
+#1 BOOL_CONST true
+#1 BOOL_CONST true
+#1 BOOL_CONST true
+#1 BOOL_CONST true
+#1 BOOL_CONST true
+#1 BOOL_CONST true
+#1 BOOL_CONST true
+#2 BOOL_CONST false
+#2 BOOL_CONST false
+#2 BOOL_CONST false
+#2 BOOL_CONST false
+#2 BOOL_CONST false
+#3 TYPEID True
+#3 TYPEID False

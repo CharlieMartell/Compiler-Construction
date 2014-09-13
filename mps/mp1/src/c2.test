@@ -1,0 +1,11 @@
+(* A
+  (* nested
+    (* bracketed
+      (* comment.
+       *) This
+     *) was
+   *) it.
+ *)
+(* (* (* *) *) *)
+(*(*(* 
+     *)*)*)

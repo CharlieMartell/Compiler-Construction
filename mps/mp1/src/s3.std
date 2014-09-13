@@ -1,0 +1,8 @@
+#name "s3.test"
+#1 STR_CONST "a\bcde\fghijklm\nopqrs\tuvwxyz"
+#2 STR_CONST "0123456789"
+#3 STR_CONST "~!@#$%^&*()_-+={[}]:;\"'?/>.,<|\\"
+#4 STR_CONST "\t\t\001\001"
+#6 STR_CONST "escaped newline\n"
+#8 ERROR "Unterminated string constant"
+#9 ERROR "Unterminated string constant"
