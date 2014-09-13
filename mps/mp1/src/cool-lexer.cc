@@ -135,7 +135,7 @@ int getString()
       cool_yylval.error_msg = "Null in string constant";
       return ERROR;
     }
-    if(buf[i] == 'F' && buf[i-1] == 'O' && buf[i-2] == 'E')
+    if(buf[i] == 'EOF')
     {
       cool_yylval.error_msg = "EOF in string constant";
       return ERROR;
