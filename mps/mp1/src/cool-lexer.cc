@@ -105,6 +105,8 @@ int getTFKeyword(char x[])
     return FI;
   if(isEqual(str,"if"))
     return IF;
+  if(isEqual(str,"in"))
+    return IN;
   if(isEqual(str,"inherits"))
     return INHERITS;
   if(isEqual(str,"isvoid"))
@@ -143,6 +145,8 @@ int getKeyword(char x[])
     return FI;
   if(isEqual(str,"if"))
     return IF;
+  if(isEqual(str,"in"))
+    return IN;
   if(isEqual(str,"inherits"))
     return INHERITS;
   if(isEqual(str,"isvoid"))
@@ -298,6 +302,7 @@ int skipComment()
   }
 }
 
+//SOMETHING WRONG WITH THIS
 int getString()
 {
   char buf[1024];
@@ -386,6 +391,9 @@ int cool_yylex()
                     break;
                 }
                 return '(';
+            case ',':
+                getNext();
+                return ',';
             case '.':
                 getNext();
                 return '.';
