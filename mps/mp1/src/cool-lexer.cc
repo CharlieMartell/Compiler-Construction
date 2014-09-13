@@ -306,7 +306,7 @@ int getString()
   {
     buf[i] = getNext();
     if(buf[i] == 00)
-      {
+    {
       cool_yylval.error_msg = "Null in string constant";
       return ERROR;
     }
@@ -322,8 +322,12 @@ int getString()
     }
     i++;
   }
+  //FIGURE OUT WHY THIS DOESN'T WORK
   if (buf[i] != '"')
   {
+    while(lookNext() != '"')
+      getNext();
+    getNext();
     cool_yylval.error_msg = "String constant too long";
     return ERROR;
   }
