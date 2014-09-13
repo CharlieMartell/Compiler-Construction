@@ -125,7 +125,10 @@ int skipComment()
       case '*':
         getNext();
         if (lookNext() == ')')
+        {
+          getNext();
           return 0;
+        }
         else
           break;
       case '(':
