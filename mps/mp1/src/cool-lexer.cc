@@ -95,7 +95,7 @@ int skipComment()
     switch(lookNext())
     {
       case EOF:
-        cool_yylval.error_msg = "EOF in comment";
+          cool_yylval.error_msg = "EOF in comment";
           return ERROR;
       case '\n':
         curr_lineno++;
@@ -125,37 +125,37 @@ int skipComment()
 
 int getString()
 {
-  while(true)
+  char buf[1024];
+  int i = 0;
+  while(lookNext() != '"')
   {
-    switch(lookNext())
-    {
-      case EOF:
-        cool_yylval.error_msg = "EOF in comment";
-          return ERROR;
-      case '\n':
-        curr_lineno++;
-        getNext();
-        break;
-      case '*':
-        getNext();
-        if (lookNext() == ')')
-          return 0;
-        else
-          break;
-      case '(':
-        getNext();
-        if (lookNext() == '*')
-        {
-          int x = skipComment();
-          if(x != 0)
-            return x;
-          else
-            break;
-        }
-      default:
-        getNext();
+    buf[i] = getNext();
+    if(buf[i] == 00)
+      {
+      cool_yylval.error_msg = "Null in string constant";
+      return ERROR;
     }
+    if(buf[i] == 'F' && buf[i-1] == 'O' && buf[i-2] == 'E')
+    {
+      cool_yylval.error_msg = "EOF in string constant";
+      return ERROR;
+    }
+    if(buf[i] == '\n' && buf[i-1] != 92)
+    {
+      cool_yylval.error_msg = "Unterminated string constant";
+      return ERROR;
+    }
+    i++;
   }
+  if (buf[i] != '"')
+  {
+    cool_yylval.error_msg = "String constant too long";
+    return ERROR;
+  }
+
+  buf[i] = '\0';
+  cool_yylval.symbol = idtable.add_string(buf);
+  return STR_CONST; 
 }
 
 // Returns the next token
