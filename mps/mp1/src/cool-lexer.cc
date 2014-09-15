@@ -315,28 +315,48 @@ int getString()
       cool_yylval.error_msg = "Null in string constant";
       return ERROR;
     }
-    if(buf[i] == -1)
+    if(buf[i] == EOF)
     {
       cool_yylval.error_msg = "EOF in string constant";
       return ERROR;
     }
-    if(buf[i] == '\n' && buf[i-1] != 92)
+    if (buf[i] == '\\')
+    {
+      if(lookNext() == 'b')
+        buf[i] = '\b';
+      else if(lookNext() == 't')
+        buf[i] = '\t';
+      else if(lookNext() == 'n')
+        buf[i] = '\n';
+      else if(lookNext() == 'f')
+        buf[i] = '\f';
+      else if(lookNext() == '\n')
+      {
+        buf[i] = '\n';
+        curr_lineno++;
+      }
+      else
+        buf[i] = lookNext();
+      getNext();
+    }
+    if(lookNext() == '\n')
     {
       cool_yylval.error_msg = "Unterminated string constant";
-      return ERROR;
+      return ERROR; 
     }
     i++;
-  }
-  //FIGURE OUT WHY THIS DOESN'T WORK
-  if (buf[i] != '"')
-  {
-    while(lookNext() != '"')
+    if(i >= 1024)
+    {
+      while(lookNext() != '\n' || lookNext() != '"')
+        getNext();
+      if(lookNext() == '\n')
+        curr_lineno++;
       getNext();
-    getNext();
-    cool_yylval.error_msg = "String constant too long";
-    return ERROR;
+      cool_yylval.error_msg = "String constant too long";
+      return ERROR; 
+    }
   }
-
+  getNext();
   buf[i] = '\0';
   cool_yylval.symbol = idtable.add_string(buf);
   return STR_CONST; 
