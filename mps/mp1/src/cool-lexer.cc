@@ -30,7 +30,8 @@ char getNext();
 int cool_yylex();
 int getDigit();
 int getObjectID();
-int skipComment();
+int skipBlockComment();
+int skipLineComment();
 int handleStringError();
 
 /////////////////////////////End Declarations//////////////////// 
@@ -265,7 +266,26 @@ int getTypeID()
   return TYPEID; 
 }
 
-int skipComment()
+int skipLineComment()
+{
+  while(true)
+  {
+    switch(lookNext())
+    {
+      case EOF:
+          cool_yylval.error_msg = "EOF in comment";
+          return ERROR;
+      case '\n':
+        curr_lineno++;
+        getNext();
+        break;
+      default:
+        getNext();
+    }
+  }
+}
+
+int skipBlockComment()
 {
   while(true)
   {
@@ -291,7 +311,7 @@ int skipComment()
         getNext();
         if (lookNext() == '*')
         {
-          int x = skipComment();
+          int x = skipBlockComment();
           if(x != 0)
             return x;
           else
@@ -310,8 +330,6 @@ int handleStringError()
     switch (lookNext())
     {
       case '\n':
-        getNext();
-        curr_lineno++;
         cool_yylval.error_msg = "Unterminated string constant";
         return ERROR;
       case '"':
@@ -324,6 +342,7 @@ int handleStringError()
           curr_lineno++;
           getNext();
         }
+        break;
       case EOF:
         return ERROR;
       default:
@@ -342,7 +361,7 @@ int getString()
     buf[i] = getNext();
     if(buf[i] == 00)
     { 
-      cool_yylval.error_msg = "Null in string constant";
+      cool_yylval.error_msg = "Null in a string";
       return handleStringError();
     }
     if(buf[i] == EOF)
@@ -430,7 +449,7 @@ int cool_yylex()
                 if (lookNext() == '*')
                 {
                   getNext();
-                  int x= skipComment();
+                  int x= skipBlockComment();
                   if(x != 0)
                     return x;
                   else
@@ -454,6 +473,15 @@ int cool_yylex()
                 return '+';
             case '-':
                 getNext();
+                if (lookNext() == '-')
+                {
+                  getNext();
+                  int x = skipBlockComment();
+                  if(x != 0)
+                    return x;
+                  else
+                    break;
+                }
                 return '-';
             case '}':
                 getNext();
