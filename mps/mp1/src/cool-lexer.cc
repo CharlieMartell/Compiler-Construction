@@ -31,6 +31,7 @@ int cool_yylex();
 int getDigit();
 int getObjectID();
 int skipComment();
+int handleStringError();
 
 /////////////////////////////End Declarations//////////////////// 
 
@@ -302,6 +303,28 @@ int skipComment()
   }
 }
 
+int handleStringError()
+{
+  while(true)
+  {
+    switch (lookNext())
+    {
+      case '\n':
+        getNext();
+        return ERROR;
+      case '"'
+        getNext();
+        return ERROR;
+      case '\\':
+        getNext();
+        if(lookNext() == '\n')
+          getNext();
+      default:
+        getNext()
+    } 
+  }
+}
+
 //SOMETHING WRONG WITH THIS
 int getString()
 {
@@ -311,16 +334,12 @@ int getString()
   {
     buf[i] = getNext();
     if(buf[i] == 00)
-    {
-      while((lookNext() != '\n') && (lookNext() != '"'))
-        getNext();
+    { 
       cool_yylval.error_msg = "Null in string constant";
-      return ERROR;
+      return handleStringError();
     }
     if(buf[i] == EOF)
     {
-      while((lookNext() != '\n') && (lookNext() != '"'))
-        getNext();
       cool_yylval.error_msg = "EOF in string constant";
       return ERROR;
     }
@@ -351,13 +370,8 @@ int getString()
     i++;
     if(i > 1024)
     {
-      while((lookNext() != '\n') && (lookNext() != '"'))
-        getNext();
-      if(lookNext() == '\n')
-        curr_lineno++;
-      getNext();
       cool_yylval.error_msg = "String constant too long";
-      return ERROR; 
+      return handleStringError();; 
     }
   }
   getNext();
