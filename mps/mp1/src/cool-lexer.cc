@@ -311,16 +311,23 @@ int handleStringError()
     {
       case '\n':
         getNext();
+        curr_lineno++;
+        cool_yylval.error_msg = "Unterminated string constant";
         return ERROR;
-      case '"'
+      case '"':
         getNext();
         return ERROR;
       case '\\':
         getNext();
         if(lookNext() == '\n')
+        {
+          curr_lineno++;
           getNext();
+        }
+      case EOF:
+        return ERROR;
       default:
-        getNext()
+        getNext();
     } 
   }
 }
