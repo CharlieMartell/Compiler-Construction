@@ -273,8 +273,7 @@ int skipLineComment()
     switch(lookNext())
     {
       case EOF:
-          cool_yylval.error_msg = "EOF in comment";
-          return ERROR;
+          return 0;
       case '\n':
         curr_lineno++;
         getNext();
