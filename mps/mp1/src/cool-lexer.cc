@@ -93,12 +93,12 @@ int getTFKeyword(char x[])
     return ELSE;
   if(isEqual(str,"false"))
   {
-    cool_yylval.symbol = idtable.add_string("false");
+    cool_yylval.boolean = false;
     return BOOL_CONST; 
   }
   if(isEqual(str,"true"))
   {
-    cool_yylval.symbol = idtable.add_string("true");
+    cool_yylval.boolean = true;
     return BOOL_CONST; 
   }
   if(isEqual(str,"fi"))
@@ -312,11 +312,15 @@ int getString()
     buf[i] = getNext();
     if(buf[i] == 00)
     {
+      while((lookNext() != '\n') && (lookNext() != '"'))
+        getNext();
       cool_yylval.error_msg = "Null in string constant";
       return ERROR;
     }
     if(buf[i] == EOF)
     {
+      while((lookNext() != '\n') && (lookNext() != '"'))
+        getNext();
       cool_yylval.error_msg = "EOF in string constant";
       return ERROR;
     }
@@ -345,9 +349,9 @@ int getString()
       return ERROR; 
     }
     i++;
-    if(i >= 1024)
+    if(i > 1024)
     {
-      while(lookNext() != '\n' || lookNext() != '"')
+      while((lookNext() != '\n') && (lookNext() != '"'))
         getNext();
       if(lookNext() == '\n')
         curr_lineno++;
@@ -404,6 +408,7 @@ int cool_yylex()
                 getNext();
                 if (lookNext() == '*')
                 {
+                  getNext();
                   int x= skipComment();
                   if(x != 0)
                     return x;
