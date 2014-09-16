@@ -475,7 +475,7 @@ int cool_yylex()
                 if (lookNext() == '-')
                 {
                   getNext();
-                  int x = skipBlockComment();
+                  int x = skipLineComment();
                   if(x != 0)
                     return x;
                   else
