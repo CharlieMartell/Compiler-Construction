@@ -86,6 +86,8 @@ int cool_yyparse()
     else {
         return 1;
     }
+    ast_root = pr;
+    return ast_root;
 }
 
 /* You need to modify this function! */
@@ -113,7 +115,7 @@ YYSTYPE cool_program()
         else {
             return cl;
         }
-        
+
         if(lookNextToken() == ';') {
             consumeNextToken();
         } else {
@@ -178,17 +180,162 @@ YYSTYPE cool_class()
     } else {
         return handle_error();
     }
-    
+
 
     filename = stringtable.add_string(curr_filename);
     retval.class_ = class_(name, parent, features, filename);
     return retval;
 }
 
+// YYSTYPE cool_formal()
+// {
+//   // formal ::=  ID : TYPE
+//   YYSTYPE retval;
+//
+//   //put stuff here
+//
+//   //ASK SWETA HOW TO RETURN CORRECTLY
+//   retval.formals = nil_Features();
+//   return retval;
+// }
+//
+//
+// YYSTYPE cool_expression()
+// {
+//   // formal ::=  ID : TYPE
+//   YYSTYPE retval;
+//
+//   //put stuff here
+//   //Ask sweta difference of expression and expressions
+//   //ASK SWETA HOW TO RETURN CORRECTLY
+//   retval.expressions = nil_Features();
+//   return retval;
+// }
+
+//Gets all feauttures if repeating
 YYSTYPE cool_features()
 {
-    /* dummy features function */
+    /* Elements for features in AST */
     YYSTYPE retval;
-    retval.features = nil_Features();
+    Features features = nil_Features();
+
+    // feature;*
+    do {
+        YYSTYPE ft = cool_feature();
+        if(!errorstate) {
+            features = append_Features(features, single_Features(ft.class_));
+        }
+        else {
+            return ft;
+        }
+
+        //ASK SWETA IF THIS PART IS NEEDED
+        if(lookNextToken() == ';') {
+            consumeNextToken();
+        } else {
+            return handle_error();
+        }
+    } while(lookNextToken() != 0);
+
+    //return features as features attribute of YYSTYPE
+    retval.features = features;
+    return retval;
+}
+
+//Gets each invidual feature
+YYSTYPE cool_feature()
+{
+    // feature ::=  ID(formal,*):TYPE { expr }
+    //            | ID : TYPE [ <- expr ]
+    YYSTYPE retval;
+    Symbol identifier;
+
+    Features features = nil_Features();
+
+    if(lookNextToken() == ID) {
+        consumeNextToken();
+    } else {
+        return handle_error();
+    }
+
+    // feature ::=  ID(formal,*):TYPE { expr }
+    if(lookNextToken() == '(') {
+        consumeNextToken();
+        if(lookNextToken() == /*Ask how to check for formal*/) {
+            consumeNextToken();
+            if(lookNextToken() == ')') {
+                consumeNextToken();
+                if(lookNextToken() == ':') {
+                    consumeNextToken();
+                    if(lookNextToken() == TYPEID) {
+                        consumeNextToken();
+                        if(lookNextToken() == '{') {
+                            consumeNextToken();
+                            YYSTYPE ft = cool_features();
+                            if(!errorstate)
+                                features = ft.features;
+                            else
+                                return ft;
+                            if(lookNextToken() == '}') {
+                                consumeNextToken();
+                            } else {
+                                return handle_error();
+                            }
+                        } else {
+                            return handle_error();
+                        }
+                    } else {
+                        return handle_error();
+                    }
+                } else {
+                    return handle_error();
+                }
+            } else {
+                return handle_error();
+            }
+        } else {
+            return handle_error();
+        }
+    } else {
+        return handle_error();
+    }
+
+    // feature ::=  ID : TYPE [ <- expr ]
+    else if(lookNextToken() == ':') {
+        consumeNextToken();
+        if(lookNextToken() == TYPEID) {
+            consumeNextToken();
+            if(lookNextToken() == '[') {
+                consumeNextToken();
+                if(lookNextToken() == DARROW) {
+                    consumeNextToken();
+
+                    //ASK IF THIS IS INITIALIZED CORRECTLY
+                    YYSTYPE expr = cool_expression();
+                    if(!errorstate)
+                        expression = expr.expression;
+                    else
+                        return expr;
+
+                    if(lookNextToken() == ']') {
+                        consumeNextToken();
+                    } else {
+                        return handle_error();
+                    }
+                } else {
+                    return handle_error();
+                }
+            } else {
+                return handle_error();
+            }
+        } else {
+            return handle_error();
+        }
+    } else {
+        return handle_error();
+    }
+
+    //ASK SWETA HOW TO RETURN CORRECTLY
+    retval.features = feature
     return retval;
 }
