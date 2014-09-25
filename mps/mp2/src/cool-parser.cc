@@ -392,6 +392,7 @@ YYSTYPE cool_formal()
     if(lookNextToken() == TYPEID) {
         consumeNextToken();
         name = cool_yylval.symbol;
+        //ASK SWETA WHY THIS DOESNT WORK
         retval.formal = formal(identifier, name);
         return retval;
     } else {
@@ -462,6 +463,10 @@ YYSTYPE cool_expression()
   /* Elements for features in AST */
   YYSTYPE retval;
   Boolean boolVal;
+  Expression expression;
+  Expression otherExpression;
+  Expression otherExpression1;
+  Expression otherExpression2;
   Symbol strVal;
   Symbol intVal;
   Symbol objVal;
@@ -471,13 +476,13 @@ YYSTYPE cool_expression()
     expr ::= ID <- expr
           | expr[@TYPE].ID(expr,*)
           | ID(expr,*)
-          | if expr then expr else expr fi
-          | while expr loop expr pool
+        X  | if expr then expr else expr fi
+        X  | while expr loop expr pool
           | { expr;* }
           | let [ID : TYPE [ <- epr ]],* in expr
           | case expr of [ID : TYPE => expr;]+ esac
-          | new TYPE
-          | isvoid expr
+        X  | new TYPE
+        X  | isvoid expr
           | expr + expr
           | expr - expr
           | expr * expr
@@ -486,7 +491,7 @@ YYSTYPE cool_expression()
           | expr < expr
           | expr < expr
           | expr = expr
-          | not expr
+        X  | not expr
         X  | (expr)
         X  | ID
         X  | integer
@@ -494,6 +499,8 @@ YYSTYPE cool_expression()
         X  | true
         X  | false
   */
+
+  // | true && | false
   if(lookNextToken() == BOOL_CONST) {
       consumeNextToken();
       boolVal = cool_yylval.boolean;
@@ -502,6 +509,8 @@ YYSTYPE cool_expression()
   } else {
       return handle_error();
   }
+
+  // | string
   if(lookNextToken() == STR_CONST) {
       consumeNextToken();
       strVal = cool_yylval.symbol;
@@ -510,6 +519,8 @@ YYSTYPE cool_expression()
   } else {
       return handle_error();
   }
+
+  // | integer
   if(lookNextToken() == INT_CONST) {
       consumeNextToken();
       intVal = cool_yylval.symbol;
@@ -518,6 +529,8 @@ YYSTYPE cool_expression()
   } else {
       return handle_error();
   }
+
+  // | ID
   if(lookNextToken() == OBJECTID) {
       consumeNextToken();
       objVal = cool_yylval.symbol;
@@ -526,6 +539,8 @@ YYSTYPE cool_expression()
   } else {
       return handle_error();
   }
+
+  // | (expr)
   if(lookNextToken() == '(') {
       consumeNextToken();
 
@@ -539,7 +554,7 @@ YYSTYPE cool_expression()
           consumeNextToken();
           //ASK SWETA HOW TO RETURN THIS CASE
           //NOT SURE IF THIS IS CORRECT ASSIGNMENT
-          retval.expression = comp(expr);
+          retval.expression = comp(expression);
           return retval;
       } else {
           return handle_error();
@@ -547,6 +562,8 @@ YYSTYPE cool_expression()
   } else {
       return handle_error();
   }
+
+  // | not expr
   if(lookNextToken() == NOT) {
       consumeNextToken();
 
@@ -556,11 +573,13 @@ YYSTYPE cool_expression()
       else
           return expr;
 
-      retval.expression = neg(expr);
+      retval.expression = neg(expression);
       return retval;
   } else {
       return handle_error();
   }
+
+  // | isvoid expr
   if(lookNextToken() == ISVOID) {
       consumeNextToken();
       //ASK SWETA ABOUT WHAT EXPRESSION GOES IN isvoid()
@@ -569,6 +588,8 @@ YYSTYPE cool_expression()
   } else {
       return handle_error();
   }
+
+  // | new TYPE
   if(lookNextToken() == NEW) {
       consumeNextToken();
       if(lookNextToken() == TYPEID) {
@@ -582,12 +603,14 @@ YYSTYPE cool_expression()
   } else {
       return handle_error();
   }
+
+  // | if expr then expr else expr fi
   if(lookNextToken() == IF) {
       consumeNextToken();
 
       YYSTYPE expr = cool_expression();
       if(!errorstate)
-          expression = expr.expression;
+          otherExpression = expr.expression;
       else
           return expr;
 
@@ -596,7 +619,7 @@ YYSTYPE cool_expression()
 
           YYSTYPE expr1 = cool_expression();
           if(!errorstate)
-              expression = expr1.expression;
+              otherExpression1 = expr1.expression;
           else
               return expr1;
 
@@ -605,13 +628,13 @@ YYSTYPE cool_expression()
 
               YYSTYPE expr2 = cool_expression();
               if(!errorstate)
-                  expression = expr2.expression;
+                  otherExpression2 = expr2.expression;
               else
                   return expr2;
 
               if(lookNextToken() == FI) {
                   consumeNextToken();
-                  retval.expression = cond(expr, expr1, expr2);
+                  retval.expression = cond(otherExpression, otherExpression1, otherExpression2);
                   return retval;
               } else {
                   return handle_error();
@@ -626,6 +649,59 @@ YYSTYPE cool_expression()
       }
 
 
+  } else {
+      return handle_error();
+  }
+
+  // | while expr loop expr pool
+  if(lookNextToken() == WHILE) {
+      consumeNextToken();
+
+      YYSTYPE expr = cool_expression();
+      if(!errorstate)
+          otherExpression = expr.expression;
+      else
+          return expr;
+
+      if(lookNextToken() == LOOP) {
+          consumeNextToken();
+
+          YYSTYPE expr1 = cool_expression();
+          if(!errorstate)
+              otherExpression1 = expr1.expression;
+          else
+              return expr1;
+
+          if(lookNextToken() == POOL) {
+              consumeNextToken();
+              retval.expression = loop(otherExpression, otherExpression1);
+              return retval;
+          } else {
+              return handle_error();
+          }
+
+      } else {
+          return handle_error();
+      }
+
+
+  } else {
+      return handle_error();
+  }
+
+  // | ~expr
+  if(lookNextToken() == '~') {
+      consumeNextToken();
+
+      YYSTYPE expr = cool_expression();
+      if(!errorstate)
+          expression = expr.expression;
+      else
+          return expr;
+
+      //ASK SWETA WHAT THE RETURN FUNCTION OF THIS ONE IS
+      retval.expression = /*NO CLUE WHAT TO PUT HERE*/;
+      return retval;
   } else {
       return handle_error();
   }
