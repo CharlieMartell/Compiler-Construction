@@ -824,9 +824,9 @@ Expression lt(Expression, Expression);
 Expression eq(Expression, Expression);
 Expression leq(Expression, Expression);
 Expression comp(Expression);
-Expression int_const(Symbol);
-Expression bool_const(Boolean);
-Expression string_const(Symbol);
+Expression int_const(Symbol); //XXXX
+Expression bool_const(Boolean); //XXXX
+Expression string_const(Symbol); //XXXX
 Expression new_(Symbol);
 Expression isvoid(Expression);
 Expression no_expr();

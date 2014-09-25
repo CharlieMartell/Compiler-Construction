@@ -69,6 +69,12 @@ void consumeNextToken()
 YYSTYPE cool_program();
 YYSTYPE cool_class();
 YYSTYPE cool_features();
+YYSTYPE cool_feature();
+YYSTYPE cool_expressions();
+YYSTYPE cool_expression();
+YYSTYPE cool_formals();
+YYSTYPE cool_formal();
+int cool_yyparse();
 
 // SIMPLE FUNCTION - You will need to modify this (or remove it) to handle
 // errors robustly
@@ -86,8 +92,9 @@ int cool_yyparse()
     else {
         return 1;
     }
-    ast_root = pr;
-    return ast_root;
+    //ASK SWETA HOW TO RETURN FROM FUNCTION PROPERLY
+    //ast_root = pr;
+    return 0; //ast_root;
 }
 
 /* You need to modify this function! */
@@ -187,32 +194,7 @@ YYSTYPE cool_class()
     return retval;
 }
 
-// YYSTYPE cool_formal()
-// {
-//   // formal ::=  ID : TYPE
-//   YYSTYPE retval;
-//
-//   //put stuff here
-//
-//   //ASK SWETA HOW TO RETURN CORRECTLY
-//   retval.formals = nil_Features();
-//   return retval;
-// }
-//
-//
-// YYSTYPE cool_expression()
-// {
-//   // formal ::=  ID : TYPE
-//   YYSTYPE retval;
-//
-//   //put stuff here
-//   //Ask sweta difference of expression and expressions
-//   //ASK SWETA HOW TO RETURN CORRECTLY
-//   retval.expressions = nil_Features();
-//   return retval;
-// }
-
-//Gets all feauttures if repeating
+//Gets all feautures if repeating
 YYSTYPE cool_features()
 {
     /* Elements for features in AST */
@@ -223,7 +205,7 @@ YYSTYPE cool_features()
     do {
         YYSTYPE ft = cool_feature();
         if(!errorstate) {
-            features = append_Features(features, single_Features(ft.class_));
+            features = append_Features(features, single_Features(ft.feature));
         }
         else {
             return ft;
@@ -249,11 +231,15 @@ YYSTYPE cool_feature()
     //            | ID : TYPE [ <- expr ]
     YYSTYPE retval;
     Symbol identifier;
+    Formals formals;
+    Symbol name;
+    Expression expression;
 
-    Features features = nil_Features();
+    Feature feature = NULL;
 
-    if(lookNextToken() == ID) {
+    if(lookNextToken() == OBJECTID) {
         consumeNextToken();
+        identifier = cool_yylval.symbol;
     } else {
         return handle_error();
     }
@@ -261,43 +247,51 @@ YYSTYPE cool_feature()
     // feature ::=  ID(formal,*):TYPE { expr }
     if(lookNextToken() == '(') {
         consumeNextToken();
-        if(lookNextToken() == /*Ask how to check for formal*/) {
-            consumeNextToken();
-            if(lookNextToken() == ')') {
-                consumeNextToken();
-                if(lookNextToken() == ':') {
-                    consumeNextToken();
-                    if(lookNextToken() == TYPEID) {
-                        consumeNextToken();
-                        if(lookNextToken() == '{') {
-                            consumeNextToken();
-                            YYSTYPE ft = cool_features();
-                            if(!errorstate)
-                                features = ft.features;
-                            else
-                                return ft;
-                            if(lookNextToken() == '}') {
-                                consumeNextToken();
-                            } else {
-                                return handle_error();
-                            }
-                        } else {
-                            return handle_error();
-                        }
-                    } else {
-                        return handle_error();
-                    }
-                } else {
-                    return handle_error();
-                }
-            } else {
-                return handle_error();
-            }
-        } else {
-            return handle_error();
-        }
-    } else {
-        return handle_error();
+
+        YYSTYPE frml = cool_formals();
+        if(!errorstate)
+            formals = frml.formals;
+        else
+            return frml;
+
+          if(lookNextToken() == ')') {
+              consumeNextToken();
+              if(lookNextToken() == ':') {
+                  consumeNextToken();
+                  if(lookNextToken() == TYPEID) {
+                      consumeNextToken();
+                      name = cool_yylval.symbol;
+                      if(lookNextToken() == '{') {
+                          consumeNextToken();
+
+                          //Make sure this is how I get expressions
+                          YYSTYPE expr = cool_expression();
+                          if(!errorstate)
+                              expression = expr.expression;
+                          else
+                              return expr;
+
+                          if(lookNextToken() == '}') {
+                              consumeNextToken();
+
+                              //Ask if I should be returning here
+                              retval.feature = method(identifier, formals, name, expression);
+                              return retval;
+                          } else {
+                              return handle_error();
+                          }
+                      } else {
+                          return handle_error();
+                      }
+                  } else {
+                      return handle_error();
+                  }
+              } else {
+                  return handle_error();
+              }
+          } else {
+              return handle_error();
+          }
     }
 
     // feature ::=  ID : TYPE [ <- expr ]
@@ -305,12 +299,13 @@ YYSTYPE cool_feature()
         consumeNextToken();
         if(lookNextToken() == TYPEID) {
             consumeNextToken();
+            name = cool_yylval.symbol;
             if(lookNextToken() == '[') {
                 consumeNextToken();
                 if(lookNextToken() == DARROW) {
                     consumeNextToken();
 
-                    //ASK IF THIS IS INITIALIZED CORRECTLY
+                    //Make sure this is how I get expressions
                     YYSTYPE expr = cool_expression();
                     if(!errorstate)
                         expression = expr.expression;
@@ -319,6 +314,10 @@ YYSTYPE cool_feature()
 
                     if(lookNextToken() == ']') {
                         consumeNextToken();
+
+                        //Ask if I should be returning here
+                        retval.feature = attr(identifier, name, expression);
+                        return retval;
                     } else {
                         return handle_error();
                     }
@@ -331,11 +330,303 @@ YYSTYPE cool_feature()
         } else {
             return handle_error();
         }
+    }
+    else {
+        return handle_error();
+    }
+}
+
+//Gets the formals repeating
+YYSTYPE cool_formals()
+{
+  /* Elements for features in AST */
+  YYSTYPE retval;
+  Formals formals = nil_Formals();
+
+  // formal;*
+  do {
+      YYSTYPE frml = cool_formal();
+      if(!errorstate) {
+          formals = append_Formals(formals, single_Formals(frml.formal));
+      }
+      else {
+          return frml;
+      }
+
+      //ASK SWETA IF THIS PART IS NEEDED
+      if(lookNextToken() == ';') {
+          consumeNextToken();
+      } else {
+          return handle_error();
+      }
+  } while(lookNextToken() != 0);
+
+  //return features as features attribute of YYSTYPE
+  retval.formals = formals;
+  return retval;
+}
+
+//Gets the individual formal
+YYSTYPE cool_formal()
+{
+  // formal ::=  ID : TYPE
+  YYSTYPE retval;
+  Symbol identifier;
+  Symbol name;
+
+  Formal formal = NULL;
+
+    if(lookNextToken() == OBJECTID) {
+        consumeNextToken();
+        identifier = cool_yylval.symbol;
     } else {
         return handle_error();
     }
 
-    //ASK SWETA HOW TO RETURN CORRECTLY
-    retval.features = feature
-    return retval;
+    if(lookNextToken() == ':') {
+        consumeNextToken();
+    } else {
+        return handle_error();
+    }
+
+    if(lookNextToken() == TYPEID) {
+        consumeNextToken();
+        name = cool_yylval.symbol;
+        retval.formal = formal(identifier, name);
+        return retval;
+    } else {
+        return handle_error();
+    }
+}
+
+//Gets all expressions recursively
+YYSTYPE cool_expressions()
+{
+  /* Elements for features in AST */
+  YYSTYPE retval;
+  Expressions expressions = nil_Expressions();
+
+  /*
+    expr ::= ID <- expr
+          | expr[@TYPE].ID(expr,*)
+          | ID(expr,*)
+          | if expr then expr else expr fi
+          | while expr loop expr pool
+          | { expr;* }
+          | let [ID : TYPE [ <- epr ]],* in expr
+          | case expr of [ID : TYPE => expr;]+ esac
+          | new TYPE
+          | isvoid expr
+          | expr + expr
+          | expr - expr
+          | expr * expr
+          | expr / expr
+          | ~expr
+          | expr < expr
+          | expr < expr
+          | expr = expr
+          | not expr
+          | (expr)
+          | ID
+          | integer
+          | string
+          | true
+          | false
+  */
+
+  do {
+      YYSTYPE expr = cool_expression();
+      if(!errorstate) {
+          expressions = append_Expressions(expressions, single_Expressions(expr.expression));
+      }
+      else {
+          return expr;
+      }
+
+      //ASK SWETA IF THIS PART IS NEEDED
+      if(lookNextToken() == ';') {
+          consumeNextToken();
+      } else {
+          return handle_error();
+      }
+  } while(lookNextToken() != 0);
+
+  //return features as features attribute of YYSTYPE
+  retval.expressions = expressions;
+  return retval;
+}
+
+//Gets individual expression
+YYSTYPE cool_expression()
+{
+  /* Elements for features in AST */
+  YYSTYPE retval;
+  Boolean boolVal;
+  Symbol strVal;
+  Symbol intVal;
+  Symbol objVal;
+  Symbol typeVal;
+
+  /*
+    expr ::= ID <- expr
+          | expr[@TYPE].ID(expr,*)
+          | ID(expr,*)
+          | if expr then expr else expr fi
+          | while expr loop expr pool
+          | { expr;* }
+          | let [ID : TYPE [ <- epr ]],* in expr
+          | case expr of [ID : TYPE => expr;]+ esac
+          | new TYPE
+          | isvoid expr
+          | expr + expr
+          | expr - expr
+          | expr * expr
+          | expr / expr
+          | ~expr
+          | expr < expr
+          | expr < expr
+          | expr = expr
+          | not expr
+        X  | (expr)
+        X  | ID
+        X  | integer
+        X  | string
+        X  | true
+        X  | false
+  */
+  if(lookNextToken() == BOOL_CONST) {
+      consumeNextToken();
+      boolVal = cool_yylval.boolean;
+      retval.expression = bool_const(boolVal);
+      return retval;
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == STR_CONST) {
+      consumeNextToken();
+      strVal = cool_yylval.symbol;
+      retval.expression = string_const(strVal);
+      return retval;
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == INT_CONST) {
+      consumeNextToken();
+      intVal = cool_yylval.symbol;
+      retval.expression = int_const(intVal);
+      return retval;
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == OBJECTID) {
+      consumeNextToken();
+      objVal = cool_yylval.symbol;
+      retval.expression = object(objVal);
+      return retval;
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == '(') {
+      consumeNextToken();
+
+      YYSTYPE expr = cool_expression();
+      if(!errorstate)
+          expression = expr.expression;
+      else
+          return expr;
+
+      if(lookNextToken() == ')') {
+          consumeNextToken();
+          //ASK SWETA HOW TO RETURN THIS CASE
+          //NOT SURE IF THIS IS CORRECT ASSIGNMENT
+          retval.expression = comp(expr);
+          return retval;
+      } else {
+          return handle_error();
+      }
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == NOT) {
+      consumeNextToken();
+
+      YYSTYPE expr = cool_expression();
+      if(!errorstate)
+          expression = expr.expression;
+      else
+          return expr;
+
+      retval.expression = neg(expr);
+      return retval;
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == ISVOID) {
+      consumeNextToken();
+      //ASK SWETA ABOUT WHAT EXPRESSION GOES IN isvoid()
+      retval.expression = isvoid(/*NOT SURE WHAT TO PUT IN HERE*/);
+      return retval;
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == NEW) {
+      consumeNextToken();
+      if(lookNextToken() == TYPEID) {
+          consumeNextToken();
+          typeVal = cool_yylval.symbol;
+          retval.expression = new_(typeVal);
+          return retval;
+      } else {
+          return handle_error();
+      }
+  } else {
+      return handle_error();
+  }
+  if(lookNextToken() == IF) {
+      consumeNextToken();
+
+      YYSTYPE expr = cool_expression();
+      if(!errorstate)
+          expression = expr.expression;
+      else
+          return expr;
+
+      if(lookNextToken() == THEN) {
+          consumeNextToken();
+
+          YYSTYPE expr1 = cool_expression();
+          if(!errorstate)
+              expression = expr1.expression;
+          else
+              return expr1;
+
+          if(lookNextToken() == ELSE) {
+              consumeNextToken();
+
+              YYSTYPE expr2 = cool_expression();
+              if(!errorstate)
+                  expression = expr2.expression;
+              else
+                  return expr2;
+
+              if(lookNextToken() == FI) {
+                  consumeNextToken();
+                  retval.expression = cond(expr, expr1, expr2);
+                  return retval;
+              } else {
+                  return handle_error();
+              }
+
+          } else {
+              return handle_error();
+          }
+
+      } else {
+          return handle_error();
+      }
+
+
+  } else {
+      return handle_error();
+  }
 }
