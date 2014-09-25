@@ -374,8 +374,6 @@ YYSTYPE cool_formal()
   Symbol identifier;
   Symbol name;
 
-  Formal formal = NULL;
-
     if(lookNextToken() == OBJECTID) {
         consumeNextToken();
         identifier = cool_yylval.symbol;
