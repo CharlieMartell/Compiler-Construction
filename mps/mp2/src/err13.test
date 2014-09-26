@@ -1,0 +1,10 @@
+-- Assignments of this type are not allowed
+class Main {
+	main() : Object { {
+		(new IO).out_string("1234");
+		"asdf" <- 5;
+		12345 <- 5;
+		(new IO).out_string("1234");
+		true <- 5;
+	} };
+};

@@ -55,6 +55,7 @@ int lookNextToken()
         consumeNextToken();
         isfirst = false;
     }
+    cout <<  next_token << endl;
     return next_token;
 }
 

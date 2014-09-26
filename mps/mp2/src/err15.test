@@ -1,0 +1,12 @@
+-- Invalid feature followed by two valid features followed by an invalid feature
+
+class A {
+  -- Invalid feature
+  foo(z : Int,) : Int { 1 };
+  -- Valid feature
+  add(a:Int, b:Int):Int { a+b };
+  -- Valid feature
+  test: Bool;
+  -- Invalid feature
+  z . Int;
+};

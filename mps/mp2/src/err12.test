@@ -1,0 +1,5 @@
+-- Comparison operators are non-associative
+class Main {
+	a : Bool <- 1 <= 2 < 3;
+    b : Bool <- a = b < 4;
+};
