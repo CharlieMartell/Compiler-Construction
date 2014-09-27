@@ -55,7 +55,7 @@ int lookNextToken()
         consumeNextToken();
         isfirst = false;
     }
-    cout <<  next_token << endl;
+    cout << "Look: " << cool_token_to_string(next_token) << endl;
     return next_token;
 }
 
@@ -71,7 +71,8 @@ YYSTYPE cool_program();
 YYSTYPE cool_class();
 YYSTYPE cool_features();
 YYSTYPE cool_feature();
-YYSTYPE cool_expressions();
+YYSTYPE cool_expressions_semi();
+YYSTYPE cool_expressions_comma();
 YYSTYPE cool_expression();
 YYSTYPE cool_formals();
 YYSTYPE cool_formal();
@@ -95,8 +96,6 @@ int cool_yyparse()
     else {
         return 1;
     }
-    //ASK SWETA HOW TO RETURN FROM FUNCTION PROPERLY
-    //ast_root = pr;
     return 0; //ast_root;
 }
 
@@ -205,7 +204,7 @@ YYSTYPE cool_features()
     Features features = nil_Features();
 
     // feature;*
-    do {
+    while(lookNextToken() != '}'){
         YYSTYPE ft = cool_feature();
         if(!errorstate) {
             features = append_Features(features, single_Features(ft.feature));
@@ -214,13 +213,12 @@ YYSTYPE cool_features()
             return ft;
         }
 
-        //ASK SWETA IF THIS PART IS NEEDED
         if(lookNextToken() == ';') {
             consumeNextToken();
         } else {
             return handle_error();
         }
-    } while(lookNextToken() != 0);
+    }
 
     //return features as features attribute of YYSTYPE
     retval.features = features;
@@ -241,8 +239,8 @@ YYSTYPE cool_feature()
     Feature feature = NULL;
 
     if(lookNextToken() == OBJECTID) {
-        consumeNextToken();
         identifier = cool_yylval.symbol;
+        consumeNextToken();
     } else {
         return handle_error();
     }
@@ -262,12 +260,11 @@ YYSTYPE cool_feature()
               if(lookNextToken() == ':') {
                   consumeNextToken();
                   if(lookNextToken() == TYPEID) {
-                      consumeNextToken();
                       name = cool_yylval.symbol;
+                      consumeNextToken();
                       if(lookNextToken() == '{') {
                           consumeNextToken();
-
-                          //Make sure this is how I get expressions
+                          
                           YYSTYPE expr = cool_expression();
                           if(!errorstate)
                               expression = expr.expression;
@@ -276,8 +273,6 @@ YYSTYPE cool_feature()
 
                           if(lookNextToken() == '}') {
                               consumeNextToken();
-
-                              //ASK SWETA IF I SHOULD BE RETURNING HERE
                               retval.feature = method(identifier, formals, name, expression);
                               return retval;
                           } else {
@@ -301,35 +296,22 @@ YYSTYPE cool_feature()
     else if(lookNextToken() == ':') {
         consumeNextToken();
         if(lookNextToken() == TYPEID) {
-            consumeNextToken();
             name = cool_yylval.symbol;
-            if(lookNextToken() == '[') {
-                consumeNextToken();
-                if(lookNextToken() == DARROW) {
-                    consumeNextToken();
+            consumeNextToken();
+              if(lookNextToken() == ASSIGN) {
+                  consumeNextToken();
 
-                    //Make sure this is how I get expressions
-                    YYSTYPE expr = cool_expression();
-                    if(!errorstate)
-                        expression = expr.expression;
-                    else
-                        return expr;
+                  YYSTYPE expr = cool_expression();
+                  if(!errorstate)
+                      expression = expr.expression;
+                  else
+                      return expr;
 
-                    if(lookNextToken() == ']') {
-                        consumeNextToken();
-
-                        //ASK SWETA IF I SHOULD BE RETURNING HERE
-                        retval.feature = attr(identifier, name, expression);
-                        return retval;
-                    } else {
-                        return handle_error();
-                    }
-                } else {
-                    return handle_error();
-                }
-            } else {
-                return handle_error();
-            }
+                  retval.feature = attr(identifier, name, expression);
+                  return retval;
+              }
+              retval.feature = attr(identifier, name, no_expr());
+              return retval;
         } else {
             return handle_error();
         }
@@ -345,9 +327,9 @@ YYSTYPE cool_formals()
   /* Elements for features in AST */
   YYSTYPE retval;
   Formals formals = nil_Formals();
-
-  // formal;*
-  do {
+  bool err = false;
+  // (formal,*)
+  while(lookNextToken() != ')'){
       YYSTYPE frml = cool_formal();
       if(!errorstate) {
           formals = append_Formals(formals, single_Formals(frml.formal));
@@ -357,12 +339,16 @@ YYSTYPE cool_formals()
       }
 
       //ASK SWETA IF THIS PART IS NEEDED
-      if(lookNextToken() == ';') {
+      if(lookNextToken() == ',') {
           consumeNextToken();
-      } else {
+          YYSTYPE frmlTest = cool_formal();
+          if(errorstate)
+            err = true;
+      }
+      else if(err){
           return handle_error();
       }
-  } while(lookNextToken() != 0);
+  }
 
   //return features as features attribute of YYSTYPE
   retval.formals = formals;
@@ -378,8 +364,8 @@ YYSTYPE cool_formal()
   Symbol name;
 
     if(lookNextToken() == OBJECTID) {
-        consumeNextToken();
         identifier = cool_yylval.symbol;
+        consumeNextToken();
     } else {
         return handle_error();
     }
@@ -391,8 +377,8 @@ YYSTYPE cool_formal()
     }
 
     if(lookNextToken() == TYPEID) {
-        consumeNextToken();
         name = cool_yylval.symbol;
+        consumeNextToken();
         //ASK SWETA WHY THIS DOESNT WORK
         retval.formal = formal(identifier, name);
         return retval;
@@ -402,39 +388,38 @@ YYSTYPE cool_formal()
 }
 
 //Gets all expressions recursively
-YYSTYPE cool_expressions()
+YYSTYPE cool_expressions_comma()
 {
   /* Elements for features in AST */
   YYSTYPE retval;
   Expressions expressions = nil_Expressions();
 
-  /*
-    expr ::= ID <- expr
-          | expr[@TYPE].ID(expr,*)
-          | ID(expr,*)
-          | if expr then expr else expr fi
-          | while expr loop expr pool
-          | { expr;* }
-          | let [ID : TYPE [ <- epr ]],* in expr
-          | case expr of [ID : TYPE => expr;]+ esac
-          | new TYPE
-          | isvoid expr
-          | expr + expr
-          | expr - expr
-          | expr * expr
-          | expr / expr
-          | ~expr
-          | expr < expr
-          | expr < expr
-          | expr = expr
-          | not expr
-          | (expr)
-          | ID
-          | integer
-          | string
-          | true
-          | false
-  */
+  while(lookNextToken() != ')'){
+      YYSTYPE expr = cool_expression();
+      if(!errorstate) {
+          expressions = append_Expressions(expressions, single_Expressions(expr.expression));
+      }
+      else {
+          return expr;
+      }
+      //Figure out how to make grammar (expr,)* so last no comma
+      if(lookNextToken() != ',') {
+          consumeNextToken();
+          if(lookNextToken() == ')')
+            return handle_error();
+      }
+    }
+  //return expressions as expressions attribute of YYSTYPE
+  retval.expressions = expressions;
+  return retval;
+}
+
+//Gets all expressions recursively
+YYSTYPE cool_expressions_semi()
+{
+  /* Elements for features in AST */
+  YYSTYPE retval;
+  Expressions expressions = nil_Expressions();
 
   do {
       YYSTYPE expr = cool_expression();
@@ -445,13 +430,12 @@ YYSTYPE cool_expressions()
           return expr;
       }
 
-      //ASK SWETA IF THIS PART IS NEEDED
       if(lookNextToken() == ';') {
           consumeNextToken();
       } else {
           return handle_error();
       }
-  } while(lookNextToken() != 0);
+  } while(lookNextToken() != '}');
 
   //return expressions as expressions attribute of YYSTYPE
   retval.expressions = expressions;
@@ -468,42 +452,129 @@ YYSTYPE cool_expression()
   /* Elements for features in AST */
   YYSTYPE retval;
   Boolean boolVal;
+  Expressions expressions;
   Expression expression;
   Expression otherExpression;
   Expression otherExpression1;
   Expression otherExpression2;
+  Expression letExpression;
+  Symbol identifier;
+  Symbol letIdentifier;
+  Symbol name;
   Symbol strVal;
   Symbol intVal;
   Symbol objVal;
   Symbol typeVal;
 
   /*
-    expr ::= ID <- expr
-          | expr[@TYPE].ID(expr,*)
-          | ID(expr,*)
+    expr ::=
+        X  | ID <- expr
+        X  | ID(expr,*)
+        X  | ID
+           | expr[@TYPE].ID(expr,*)
+           | expr + expr | expr - expr
+           | expr * expr | expr / expr
+           | expr < expr | expr <= expr | expr = expr
+        X  | isvoid expr
+        X  | not expr
         X  | if expr then expr else expr fi
         X  | while expr loop expr pool
-          | { expr;* }
-          | let [ID : TYPE [ <- epr ]],* in expr
-          | case expr of [ID : TYPE => expr;]+ esac
+           | { expr;* }
+        X  | let [ID : TYPE [ <- epr ]],* in expr
+           | case expr of [ID : TYPE => expr;]+ esac
         X  | new TYPE
-        X  | isvoid expr
-          | expr + expr
-          | expr - expr
-          | expr * expr
-          | expr / expr
         X  | ~expr
-          | expr < expr
-          | expr < expr
-          | expr = expr
-        X  | not expr
         X  | (expr)
-        X  | ID
         X  | integer
         X  | string
         X  | true
         X  | false
   */
+
+  // | expr[@TYPE].ID(expr,*)
+  // | expr + expr | expr - expr
+  // | expr * expr | expr / expr
+  // | expr < expr | expr <= expr | expr = expr
+  if(lookNextToken() == 999999) {
+      /* fill this in with identifying a proper expressions*/
+  }
+
+  // | let [ID : TYPE [ <- epr ]],* in expr
+  if(lookNextToken() == LET) {
+      consumeNextToken();
+      do{
+        if(lookNextToken() == OBJECTID) {
+            letIdentifier = cool_yylval.symbol;
+            consumeNextToken();
+            if(lookNextToken() == ':') {
+                consumeNextToken();
+                if(lookNextToken() == TYPEID) {
+                    name = cool_yylval.symbol;
+                    consumeNextToken();
+                    if(lookNextToken() == ASSIGN) {
+                        consumeNextToken();
+                        YYSTYPE expr = cool_expression();
+                        if(!errorstate)
+                            letExpression = expr.expression;
+                        else
+                            return expr;
+                    }
+                }
+            } else {
+                return handle_error();
+            }
+        }
+      } while(lookNextToken() == ',');
+      if(lookNextToken() == IN) {
+          consumeNextToken();
+
+          YYSTYPE expr = cool_expression();
+          if(!errorstate)
+              expression = expr.expression;
+          else
+              return expr;
+
+          } else {
+              return handle_error();
+          }
+  }
+
+  // | ID
+  // | ID(expr,*)
+  // ID <- expr
+  if(lookNextToken() == OBJECTID) {
+      identifier = cool_yylval.symbol;
+      consumeNextToken();
+      if(lookNextToken() == ASSIGN) {
+          consumeNextToken();
+          YYSTYPE expr = cool_expression();
+          if(!errorstate)
+              expression = expr.expression;
+          else
+              return expr;
+          retval.expression = assign(identifier,expression);
+          return retval;
+      }
+      else if(lookNextToken() == '(') {
+          consumeNextToken();
+          YYSTYPE expr = cool_expressions_comma();
+          if(!errorstate)
+              expressions = expr.expressions;
+          else
+              return expr;
+          if(lookNextToken() == ')') {
+              consumeNextToken();
+          }else {
+            return handle_error();
+          }
+          //wait for piazza
+          retval.expression = dispatch(no_expr(), identifier, expressions);
+          return retval;
+      }
+      objVal = cool_yylval.symbol;
+      retval.expression = object(objVal);
+      return retval;
+  }
 
   // | if expr then expr else expr fi
   if(lookNextToken() == IF) {
@@ -586,8 +657,8 @@ YYSTYPE cool_expression()
   if(lookNextToken() == NEW) {
       consumeNextToken();
       if(lookNextToken() == TYPEID) {
-          consumeNextToken();
           typeVal = cool_yylval.symbol;
+          consumeNextToken();
           retval.expression = new_(typeVal);
           return retval;
       } else {
@@ -598,10 +669,30 @@ YYSTYPE cool_expression()
   // | isvoid expr
   if(lookNextToken() == ISVOID) {
       consumeNextToken();
-      //ASK SWETA ABOUT WHAT EXPRESSION GOES IN isvoid()
-      retval.expression = NULL;/*isvoid(ASK SWETA, NOT SURE WHAT TO PUT IN HERE);*/
+
+      YYSTYPE expr = cool_expression();
+      if(!errorstate)
+          expression = expr.expression;
+      else
+          return expr;
+
+      retval.expression = isvoid(expression);
       return retval;
   }
+
+  // | expr + expr
+  // if(lookNextToken() == ISVOID) {
+  //     consumeNextToken();
+  //
+  //     YYSTYPE expr = cool_expression();
+  //     if(!errorstate)
+  //         expression = expr.expression;
+  //     else
+  //         return expr;
+  //
+  //     retval.expression = isvoid(expression);
+  //     return retval;
+  // }
 
   // | ~expr
   if(lookNextToken() == '~') {
@@ -613,7 +704,7 @@ YYSTYPE cool_expression()
       else
           return expr;
 
-      //ASK SWETA WHAT THE RETURN FUNCTION OF THIS ONE IS
+      //this one is neg
       retval.expression = NULL;/*NO CLUE WHAT TO PUT HERE*/
       return retval;
   }
@@ -627,7 +718,7 @@ YYSTYPE cool_expression()
           expression = expr.expression;
       else
           return expr;
-
+      //try and find the not constructor
       retval.expression = neg(expression);
       return retval;
   }
@@ -644,43 +735,32 @@ YYSTYPE cool_expression()
 
       if(lookNextToken() == ')') {
           consumeNextToken();
-          //ASK SWETA HOW TO RETURN THIS CASE
-          //NOT SURE IF THIS IS CORRECT ASSIGNMENT
-          retval.expression = comp(expression);
+          retval.expression = expression;
           return retval;
       } else {
           return handle_error();
       }
   }
 
-  // | ID
-  if(lookNextToken() == OBJECTID) {
-      consumeNextToken();
-      objVal = cool_yylval.symbol;
-      retval.expression = object(objVal);
-      return retval;
-  }
-
   // | integer
   if(lookNextToken() == INT_CONST) {
-      consumeNextToken();
       intVal = cool_yylval.symbol;
+      consumeNextToken();
       retval.expression = int_const(intVal);
       return retval;
   }
 
   // | string
   if(lookNextToken() == STR_CONST) {
-      consumeNextToken();
       strVal = cool_yylval.symbol;
+      consumeNextToken();
       retval.expression = string_const(strVal);
       return retval;
   }
 
   // | true && | false
   if(lookNextToken() == BOOL_CONST) {
-      consumeNextToken();
-      boolVal = cool_yylval.boolean;
+      boolVal = cool_yylval.boolean;consumeNextToken();
       retval.expression = bool_const(boolVal);
       return retval;
   }else {
