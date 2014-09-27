@@ -55,7 +55,6 @@ int lookNextToken()
         consumeNextToken();
         isfirst = false;
     }
-    cout << "Look: " << cool_token_to_string(next_token) << endl;
     return next_token;
 }
 
@@ -77,7 +76,8 @@ YYSTYPE cool_expression();
 YYSTYPE cool_formals();
 YYSTYPE cool_formal();
 int cool_yyparse();
-
+bool checkForSecondExpression();
+YYSTYPE handleSecondExpression(YYSTYPE curr);
 Expression handleConditional();
 
 // SIMPLE FUNCTION - You will need to modify this (or remove it) to handle
@@ -264,13 +264,14 @@ YYSTYPE cool_feature()
                       consumeNextToken();
                       if(lookNextToken() == '{') {
                           consumeNextToken();
-                          
+
                           YYSTYPE expr = cool_expression();
                           if(!errorstate)
                               expression = expr.expression;
                           else
                               return expr;
 
+                          //ASK SWETA WHY THIS IS NOT CONSUMED
                           if(lookNextToken() == '}') {
                               consumeNextToken();
                               retval.feature = method(identifier, formals, name, expression);
@@ -338,12 +339,15 @@ YYSTYPE cool_formals()
           return frml;
       }
 
-      //ASK SWETA IF THIS PART IS NEEDED
       if(lookNextToken() == ',') {
           consumeNextToken();
-          YYSTYPE frmlTest = cool_formal();
-          if(errorstate)
-            err = true;
+          YYSTYPE frml = cool_formal();
+          if(!errorstate) {
+              formals = append_Formals(formals, single_Formals(frml.formal));
+          }
+          else {
+              err = true;
+          }
       }
       else if(err){
           return handle_error();
@@ -403,7 +407,7 @@ YYSTYPE cool_expressions_comma()
           return expr;
       }
       //Figure out how to make grammar (expr,)* so last no comma
-      if(lookNextToken() != ',') {
+      if(lookNextToken() == ',') {
           consumeNextToken();
           if(lookNextToken() == ')')
             return handle_error();
@@ -442,11 +446,178 @@ YYSTYPE cool_expressions_semi()
   return retval;
 }
 
+// | expr[@TYPE].ID(expr,*)
+// | expr + expr | expr - expr
+// | expr * expr | expr / expr
+// | expr < expr | expr <= expr | expr = expr
+//  returns true if their is a second expression
+bool checkForSecondExpression(){
+  if(lookNextToken() == '.' || lookNextToken() == '@')
+    return true;
+  if(lookNextToken() == '+')
+    return true;
+  if(lookNextToken() == '-')
+    return true;
+  if(lookNextToken() == '*')
+    return true;
+  if(lookNextToken() == '/')
+    return true;
+  if(lookNextToken() == '<')
+    return true;
+  if(lookNextToken() == LE)
+    return true;
+  if(lookNextToken() == '=')
+    return true;
+  if(lookNextToken() == ASSIGN)
+    return true;
+  return false;
+}
+
+// | expr[@TYPE].ID(expr,*)
+// | expr + expr | expr - expr
+// | expr * expr | expr / expr
+// | expr < expr | expr <= expr | expr = expr
+// concats the second expression to the current
+// ASK SWETA WHY test06 CONSTRUCTS WRONG GRAMMAR
+YYSTYPE handleSecondExpression(YYSTYPE curr){
+  Expression expression;
+  Expressions expressions;
+  YYSTYPE retval;
+  Symbol name;
+  Symbol identifier;
+  bool staticDis = false;
+  if(lookNextToken() == '.' || lookNextToken() == '@') {
+      if(lookNextToken() == '@'){
+          consumeNextToken();
+          if(lookNextToken() == TYPEID) {
+              name = cool_yylval.symbol;
+              consumeNextToken();
+              staticDis = true;
+          }
+      }
+      if(lookNextToken() == '.'){
+        consumeNextToken();
+        if(lookNextToken() == OBJECTID) {
+            identifier = cool_yylval.symbol;
+            consumeNextToken();
+            if(lookNextToken() == '(') {
+                consumeNextToken();
+
+                YYSTYPE expr = cool_expressions_comma();
+                if(!errorstate)
+                    expressions = expr.expressions;
+                else
+                    return expr;
+
+                if(lookNextToken() == ')') {
+                    consumeNextToken();
+                }else {
+                  return handle_error();
+                }
+
+        } else {
+            return handle_error();
+        }
+      } else {
+          return handle_error();
+      }
+      if(staticDis){
+        retval.expression = static_dispatch(curr.expression, name, identifier, expressions);
+        return retval;
+      }
+      retval.expression = dispatch(curr.expression, identifier, expressions);
+      return retval;
+    }
+  }
+  if(lookNextToken() == '+'){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = plus(expression, curr.expression);
+    return retval;
+  }
+  if(lookNextToken() == '-'){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = sub(expression, curr.expression);
+    return retval;
+  }
+  if(lookNextToken() == '*'){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = mul(expression, curr.expression);
+    return retval;
+  }
+  if(lookNextToken() == '/'){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = divide(expression, curr.expression);
+    return retval;
+  }
+  if(lookNextToken() == LE){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = leq(expression, curr.expression);
+    return retval;
+  }
+  if(lookNextToken() == '<'){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = lt(expression, curr.expression);
+    return retval;
+  }
+  if(lookNextToken() == '='){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = eq(expression, curr.expression);
+    return retval;
+  }
+  if(lookNextToken() == ASSIGN){
+    consumeNextToken();
+    YYSTYPE expr = cool_expression();
+    if(!errorstate)
+        expression = expr.expression;
+    else
+        return expr;
+    retval.expression = assign(curr.symbol, expression);
+    return retval;
+  }
+  return curr;
+}
+
 //Gets individual expression
-//TODO: GRAMMAR NEEDS TO BE IN TOP DOWN ORDER
 //TODO: ASK SWETA HOW TO DO ERROR HANDLING WHEN FIRST TOKEN MATCHES
 //      BUT YOU NEED TO SKIP LATER TO FIND NEXT IE: BACKTRACKING
 //      DO I NEED TO LEFT FACTOR THE GRAMMAR?
+// TODO: add a before return method to check for the another expression
+//        after the current expression
 YYSTYPE cool_expression()
 {
   /* Elements for features in AST */
@@ -458,6 +629,7 @@ YYSTYPE cool_expression()
   Expression otherExpression1;
   Expression otherExpression2;
   Expression letExpression;
+  Expression letExpression1;
   Symbol identifier;
   Symbol letIdentifier;
   Symbol name;
@@ -471,15 +643,15 @@ YYSTYPE cool_expression()
         X  | ID <- expr
         X  | ID(expr,*)
         X  | ID
-           | expr[@TYPE].ID(expr,*)
-           | expr + expr | expr - expr
-           | expr * expr | expr / expr
-           | expr < expr | expr <= expr | expr = expr
+        X  | expr[@TYPE].ID(expr,*)
+        X  | expr + expr | expr - expr
+        X  | expr * expr | expr / expr
+        X  | expr < expr | expr <= expr | expr = expr
         X  | isvoid expr
         X  | not expr
         X  | if expr then expr else expr fi
         X  | while expr loop expr pool
-           | { expr;* }
+        X  | { expr;* }
         X  | let [ID : TYPE [ <- epr ]],* in expr
            | case expr of [ID : TYPE => expr;]+ esac
         X  | new TYPE
@@ -491,16 +663,27 @@ YYSTYPE cool_expression()
         X  | false
   */
 
-  // | expr[@TYPE].ID(expr,*)
-  // | expr + expr | expr - expr
-  // | expr * expr | expr / expr
-  // | expr < expr | expr <= expr | expr = expr
-  if(lookNextToken() == 999999) {
-      /* fill this in with identifying a proper expressions*/
+  // | { expr;* }
+  if(lookNextToken() == '{') {
+      consumeNextToken();
+      YYSTYPE expr = cool_expressions_semi();
+      if(!errorstate)
+          expressions = expr.expressions;
+      else
+          return expr;
+      if(lookNextToken() == '}') {
+          consumeNextToken();
+      }
+      retval.expressions = expressions;
+      if(!checkForSecondExpression())
+        return retval;
+      //TODO: implement handleSecondExpression
   }
 
+  // this function is broken
   // | let [ID : TYPE [ <- epr ]],* in expr
   if(lookNextToken() == LET) {
+      bool assignment = false;
       consumeNextToken();
       do{
         if(lookNextToken() == OBJECTID) {
@@ -513,6 +696,7 @@ YYSTYPE cool_expression()
                     consumeNextToken();
                     if(lookNextToken() == ASSIGN) {
                         consumeNextToken();
+                        assignment = true;
                         YYSTYPE expr = cool_expression();
                         if(!errorstate)
                             letExpression = expr.expression;
@@ -530,13 +714,27 @@ YYSTYPE cool_expression()
 
           YYSTYPE expr = cool_expression();
           if(!errorstate)
-              expression = expr.expression;
+              letExpression1 = expr.expression;
           else
               return expr;
 
-          } else {
-              return handle_error();
-          }
+        } else {
+            return handle_error();
+        }
+      if(assignment){
+        retval.expression = let(letIdentifier, name, letExpression, letExpression1);
+      }
+      else{
+        retval.expression = let(letIdentifier, name, no_expr(), letExpression1);
+      }
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
+
   }
 
   // | ID
@@ -553,7 +751,13 @@ YYSTYPE cool_expression()
           else
               return expr;
           retval.expression = assign(identifier,expression);
-          return retval;
+          if(!checkForSecondExpression())
+            return retval;
+          else{
+            while(checkForSecondExpression())
+              retval.expression = handleSecondExpression(retval).expression;
+            return retval;
+          }
       }
       else if(lookNextToken() == '(') {
           consumeNextToken();
@@ -568,12 +772,25 @@ YYSTYPE cool_expression()
             return handle_error();
           }
           //wait for piazza
-          retval.expression = dispatch(no_expr(), identifier, expressions);
-          return retval;
+          typeVal = idtable.add_string("self");
+          retval.expression = dispatch(object(typeVal), identifier, expressions);
+          if(!checkForSecondExpression())
+            return retval;
+          else{
+            while(checkForSecondExpression())
+              retval.expression = handleSecondExpression(retval).expression;
+            return retval;
+          }
       }
       objVal = cool_yylval.symbol;
       retval.expression = object(objVal);
-      return retval;
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
   }
 
   // | if expr then expr else expr fi
@@ -607,7 +824,13 @@ YYSTYPE cool_expression()
               if(lookNextToken() == FI) {
                   consumeNextToken();
                   retval.expression = cond(otherExpression, otherExpression1, otherExpression2);
-                  return retval;
+                  if(!checkForSecondExpression())
+                    return retval;
+                  else{
+                    while(checkForSecondExpression())
+                      retval.expression = handleSecondExpression(retval).expression;
+                    return retval;
+                  }
               } else {
                   return handle_error();
               }
@@ -643,7 +866,13 @@ YYSTYPE cool_expression()
           if(lookNextToken() == POOL) {
               consumeNextToken();
               retval.expression = loop(otherExpression, otherExpression1);
-              return retval;
+              if(!checkForSecondExpression())
+                return retval;
+              else{
+                while(checkForSecondExpression())
+                  retval.expression = handleSecondExpression(retval).expression;
+                return retval;
+              }
           } else {
               return handle_error();
           }
@@ -660,7 +889,13 @@ YYSTYPE cool_expression()
           typeVal = cool_yylval.symbol;
           consumeNextToken();
           retval.expression = new_(typeVal);
-          return retval;
+          if(!checkForSecondExpression())
+            return retval;
+          else{
+            while(checkForSecondExpression())
+              retval.expression = handleSecondExpression(retval).expression;
+            return retval;
+          }
       } else {
           return handle_error();
       }
@@ -677,22 +912,14 @@ YYSTYPE cool_expression()
           return expr;
 
       retval.expression = isvoid(expression);
-      return retval;
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
   }
-
-  // | expr + expr
-  // if(lookNextToken() == ISVOID) {
-  //     consumeNextToken();
-  //
-  //     YYSTYPE expr = cool_expression();
-  //     if(!errorstate)
-  //         expression = expr.expression;
-  //     else
-  //         return expr;
-  //
-  //     retval.expression = isvoid(expression);
-  //     return retval;
-  // }
 
   // | ~expr
   if(lookNextToken() == '~') {
@@ -704,9 +931,14 @@ YYSTYPE cool_expression()
       else
           return expr;
 
-      //this one is neg
-      retval.expression = NULL;/*NO CLUE WHAT TO PUT HERE*/
-      return retval;
+      retval.expression = neg(expression);
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
   }
 
   // | not expr
@@ -719,8 +951,14 @@ YYSTYPE cool_expression()
       else
           return expr;
       //try and find the not constructor
-      retval.expression = neg(expression);
-      return retval;
+      retval.expression = comp(expression);
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
   }
 
   // | (expr)
@@ -736,7 +974,13 @@ YYSTYPE cool_expression()
       if(lookNextToken() == ')') {
           consumeNextToken();
           retval.expression = expression;
-          return retval;
+          if(!checkForSecondExpression())
+            return retval;
+          else{
+            while(checkForSecondExpression())
+              retval.expression = handleSecondExpression(retval).expression;
+            return retval;
+          }
       } else {
           return handle_error();
       }
@@ -747,7 +991,13 @@ YYSTYPE cool_expression()
       intVal = cool_yylval.symbol;
       consumeNextToken();
       retval.expression = int_const(intVal);
-      return retval;
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
   }
 
   // | string
@@ -755,14 +1005,26 @@ YYSTYPE cool_expression()
       strVal = cool_yylval.symbol;
       consumeNextToken();
       retval.expression = string_const(strVal);
-      return retval;
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
   }
 
   // | true && | false
   if(lookNextToken() == BOOL_CONST) {
       boolVal = cool_yylval.boolean;consumeNextToken();
       retval.expression = bool_const(boolVal);
-      return retval;
+      if(!checkForSecondExpression())
+        return retval;
+      else{
+        while(checkForSecondExpression())
+          retval.expression = handleSecondExpression(retval).expression;
+        return retval;
+      }
   }else {
       return handle_error();
   }
