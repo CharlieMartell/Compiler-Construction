@@ -18,7 +18,8 @@ Program ast_root;             /* the result of the parse  */
 Classes parse_results;        /* for use in semantic analysis */
 int omerrs = 0;               /* number of errors in lexing and parsing */
 bool errorstate = false;
-
+int level = 0;
+bool recurse = true;
 int next_token;
 bool isfirst = true;
 
@@ -77,6 +78,7 @@ YYSTYPE cool_expression();
 YYSTYPE cool_formals();
 YYSTYPE cool_formal();
 int cool_yyparse();
+int getNextLevel();
 bool checkExpression();
 bool checkForSecondExpression();
 bool checkForThirdExpression();
@@ -145,6 +147,7 @@ YYSTYPE cool_program(){
 }
 
 YYSTYPE cool_class(){
+  cout << "Generating Cool Class" << endl;
     /* Elements for class in AST */
     YYSTYPE retval;
     Symbol name;
@@ -191,11 +194,10 @@ YYSTYPE cool_class(){
         return ft;
 
     if(lookNextToken() == '}') {
-        consumeNextToken();
+      consumeNextToken();
     } else {
         return handle_error();
     }
-
 
     filename = stringtable.add_string(curr_filename);
     retval.class_ = class_(name, parent, features, filename);
@@ -204,6 +206,7 @@ YYSTYPE cool_class(){
 
 //Gets all feautures if repeating
 YYSTYPE cool_features(){
+  cout << "Generating Cool Features: feature;* " << endl;
     /* Elements for features in AST */
     YYSTYPE retval;
     Features features = nil_Features();
@@ -239,7 +242,7 @@ YYSTYPE cool_feature(){
     Formals formals;
     Symbol name;
     Expression expression;
-
+    level = 0;
     Feature feature = NULL;
 
     if(lookNextToken() == OBJECTID) {
@@ -252,6 +255,8 @@ YYSTYPE cool_feature(){
     // feature ::=  ID(formal,*):TYPE { expr }
     if(lookNextToken() == '(') {
         consumeNextToken();
+
+        cout << "Generating Cool Feature: ID(formal,*):TYPE { expr }" << endl;
 
         YYSTYPE frml = cool_formals();
         if(!errorstate)
@@ -268,17 +273,14 @@ YYSTYPE cool_feature(){
                       consumeNextToken();
                       if(lookNextToken() == '{') {
                           consumeNextToken();
-
                           YYSTYPE expr = cool_expression();
                           if(!errorstate)
                               expression = expr.expression;
                           else
                               return expr;
-
-                          //ASK SWETA WHY THIS IS NOT CONSUMED
                           if(lookNextToken() == '}') {
-                              consumeNextToken();
                               retval.feature = method(identifier, formals, name, expression);
+                              consumeNextToken();
                               return retval;
                           } else {
                               return handle_error();
@@ -300,6 +302,7 @@ YYSTYPE cool_feature(){
     // feature ::=  ID : TYPE [ <- expr ]
     else if(lookNextToken() == ':') {
         consumeNextToken();
+        cout << "Generating Cool Feature: ID :  TYPE [ <- expr]" << endl;
         if(lookNextToken() == TYPEID) {
             name = cool_yylval.symbol;
             consumeNextToken();
@@ -329,6 +332,7 @@ YYSTYPE cool_feature(){
 //Gets the formals repeating
 YYSTYPE cool_formals(){
   /* Elements for features in AST */
+  cout << "Generating Cool Formals" << endl;
   YYSTYPE retval;
   Formals formals = nil_Formals();
   bool err = false;
@@ -365,6 +369,7 @@ YYSTYPE cool_formals(){
 //Gets the individual formal
 YYSTYPE cool_formal(){
   // formal ::=  ID : TYPE
+  cout << "Generating Cool Forma: ID : TYPE" << endl;
   YYSTYPE retval;
   Symbol identifier;
   Symbol name;
@@ -395,6 +400,7 @@ YYSTYPE cool_formal(){
 
 //Gets all expressions ended with comma
 YYSTYPE cool_expressions_comma(){
+  cout << "Generating Cool Expressions: expr,*" << endl;
   /* Elements for features in AST */
   YYSTYPE retval;
   Expressions expressions = nil_Expressions();
@@ -407,6 +413,7 @@ YYSTYPE cool_expressions_comma(){
       else {
           return expr;
       }
+      //THIS NEEDS A REWORK
       //Figure out how to make grammar (expr,)* so last no comma
       if(lookNextToken() == ',') {
           consumeNextToken();
@@ -421,6 +428,7 @@ YYSTYPE cool_expressions_comma(){
 
 //Gets all expressions ended with semi colon
 YYSTYPE cool_expressions_semi(){
+  cout << "Generating Cool Expressions: expr;+" << endl;
   /* Elements for features in AST */
   YYSTYPE retval;
   Expressions expressions = nil_Expressions();
@@ -453,7 +461,7 @@ YYSTYPE cool_expressions_cases(){
   Symbol name;
   Expression expression;
   Cases cases = nil_Cases();
-
+  cout << "Generating Cool Cases: [[ID : TYPE [ <- expr]]" << endl;
   do{
     if(lookNextToken() == OBJECTID) {
         identifier = cool_yylval.symbol;
@@ -506,67 +514,115 @@ bool checkAllExpression(){
 
 // | expr[@TYPE].ID(expr,*)
 bool checkExpression(){
-  if(lookNextToken() == '.')
+  if(lookNextToken() == '.')// && level > 1)
     return true;
-  if(lookNextToken() == '@')
+  if(lookNextToken() == '@')// && level > 2)
+    return true;
+  if(lookNextToken() == '~')// && level > 3)
     return true;
   return false;
 }
 
 // | expr * expr | expr / expr
-//  returns true if their is a second expression
 bool checkForSecondExpression(){
-  if(lookNextToken() == '*')
+  if(lookNextToken() == ISVOID)// && level > 4)
     return true;
-  if(lookNextToken() == '/')
+  if(lookNextToken() == '*')// && level > 5)
+    return true;
+  if(lookNextToken() == '/')// && level > 5)
     return true;
   return false;
 }
 
 // | expr + expr | expr - expr
 bool checkForThirdExpression(){
-  if(lookNextToken() == '+')
+  if(lookNextToken() == '+')// && level > 6)
     return true;
-  if(lookNextToken() == '-')
+  if(lookNextToken() == '-')// && level > 6)
     return true;
   return false;
 }
 
 // | expr < expr | expr <= expr | expr = expr
-//  returns true if their is a second expression
 bool checkForFourthExpression(){
-  if(lookNextToken() == '<')
+  if(lookNextToken() == '<')// && level > 7)
     return true;
-  if(lookNextToken() == LE)
+  if(lookNextToken() == LE)// && level > 7)
     return true;
-  if(lookNextToken() == '=')
+  if(lookNextToken() == '=')// && level > 7)
     return true;
   return false;
 }
 
 // assign
-//  returns true if their is a second expression
 bool checkForFifthExpression(){
-  if(lookNextToken() == ASSIGN)
+  if(lookNextToken() == NOT)// && level > 8)
+    return true;
+  if(lookNextToken() == ASSIGN)// && level > 9)
     return true;
   return false;
+}
+
+/*Note Precendence is as follows:
+  1 = .
+  2 = @
+  3 = ~
+  4 = isvoid
+  5 = * /
+  6 = + -
+  7 = <= < =
+  8 = not
+  9 = <-
+*/
+//returns the precendence of the next token
+int getNextLevel(){
+  if(lookNextToken() == '.')
+    return 1;
+  if(lookNextToken() == '@' )
+    return 2;
+  if(lookNextToken() == '~')
+    return 3;
+  if(lookNextToken() == ISVOID)
+    return 4;
+  if(lookNextToken() == '*' || lookNextToken() == '/')
+    return 5;
+  if(lookNextToken() == '+' || lookNextToken() == '-')
+    return 6;
+  if(lookNextToken() == LE || lookNextToken() == '<' || lookNextToken() == '=')
+    return 7;
+  if(lookNextToken() == NOT)
+    return 8;
+  if(lookNextToken() == ASSIGN)
+    return 9;
+  return 0;
 }
 
 //Loops through all expression checks
 YYSTYPE multipleExpressionCheck(YYSTYPE current){
   YYSTYPE retval = current;
   //goes backword to set precendence
-
-  while(checkForFifthExpression())
-    retval.expression = handleFifthExpression(retval).expression;
-  while(checkForFourthExpression())
-    retval.expression = handleFourthExpression(retval).expression;
-  while(checkForThirdExpression())
-    retval.expression = handleThirdExpression(retval).expression;
-  while(checkForSecondExpression())
-    retval.expression = handleSecondExpression(retval).expression;
-  while(checkExpression())
-    retval.expression = handleExpression(retval).expression;
+  while(checkAllExpression()){
+    while(checkForFifthExpression()){
+      retval.expression = handleFifthExpression(retval).expression;
+    break;
+    }
+    while(checkForFourthExpression()){
+      retval.expression = handleFourthExpression(retval).expression;
+    break;
+    }
+    while(checkForThirdExpression()){
+      retval.expression = handleThirdExpression(retval).expression;
+    break;
+    }
+    while(checkForSecondExpression()){
+      retval.expression = handleSecondExpression(retval).expression;
+    break;
+    }
+    while(checkExpression()){
+      retval.expression = handleExpression(retval).expression;
+    break;
+    }
+  }
   return retval;
 }
 
@@ -578,8 +634,9 @@ YYSTYPE handleExpression(YYSTYPE curr){
   Symbol name;
   Symbol identifier;
   bool staticDis = false;
-
+  cout << "Generating Cool Expression: expr[@TYPE].ID(expr,*)" << endl;
   if(lookNextToken() == '.' || lookNextToken() == '@') {
+      level = 1;
       if(lookNextToken() == '@'){
           consumeNextToken();
           if(lookNextToken() == TYPEID) {
@@ -635,25 +692,36 @@ YYSTYPE handleSecondExpression(YYSTYPE curr){
   Symbol name;
   Symbol identifier;
   bool staticDis = false;
+  level = 5;
 
   if(lookNextToken() == '*'){
     consumeNextToken();
+    cout << "Generating Cool Concatenated Expression: expr * expr" << endl;
     YYSTYPE expr = cool_expression();
     if(!errorstate)
         expression = expr.expression;
     else
         return expr;
-    retval.expression = mul(expression, curr.expression);
+    retval.expression = mul(curr.expression, expression);
+    // if(getNextLevel() < level)
+    //   recurse = true;
+    // recurse = false;
+    //level = getNextLevel();
     return retval;
   }
   else if(lookNextToken() == '/'){
     consumeNextToken();
+    cout << "Generating Cool Concatenated Expression: expr / expr" << endl;
     YYSTYPE expr = cool_expression();
     if(!errorstate)
         expression = expr.expression;
     else
         return expr;
-    retval.expression = divide(expression, curr.expression);
+    retval.expression = divide(curr.expression, expression);
+    // if(getNextLevel() < level)
+    //   recurse = true;
+    // recurse = false;
+    //level = getNextLevel();
     return retval;
   }
   return curr;
@@ -670,22 +738,34 @@ YYSTYPE handleThirdExpression(YYSTYPE curr){
 
   if(lookNextToken() == '+'){
     consumeNextToken();
+    cout << "Generating Cool Concatenated Expression: expr + expr" << endl;
+    level = 6;
     YYSTYPE expr = cool_expression();
     if(!errorstate)
         expression = expr.expression;
     else
         return expr;
-    retval.expression = plus(expression, curr.expression);
+    retval.expression = plus(curr.expression, expression);
+    // if(getNextLevel() < level)
+    //   recurse = true;
+    // recurse = false;
+    //level = getNextLevel();
     return retval;
   }
   else if(lookNextToken() == '-'){
     consumeNextToken();
+    cout << "Generating Cool Concatenated Expression: expr - expr" << endl;
     YYSTYPE expr = cool_expression();
+    level = 6;
     if(!errorstate)
         expression = expr.expression;
     else
         return expr;
-    retval.expression = sub(expression, curr.expression);
+    retval.expression = sub(curr.expression, expression);
+    // if(getNextLevel() < level)
+    //   recurse = true;
+    // recurse = false;
+    //level = getNextLevel();
     return retval;
   }
   return curr;
@@ -700,35 +780,50 @@ YYSTYPE handleFourthExpression(YYSTYPE curr){
   Symbol name;
   Symbol identifier;
   bool staticDis = false;
-
+  level = 7;
   if(lookNextToken() == LE){
     consumeNextToken();
+    cout << "Generating Cool Concatenated Expression: expr <= expr" << endl;
     YYSTYPE expr = cool_expression();
     if(!errorstate)
         expression = expr.expression;
     else
         return expr;
-    retval.expression = leq(expression, curr.expression);
+    retval.expression = leq(curr.expression, expression);
+    // if(getNextLevel() < level)
+    //   recurse = true;
+    // recurse = false;
+    //level = getNextLevel();
     return retval;
   }
   else if(lookNextToken() == '<'){
     consumeNextToken();
+    cout << "Generating Cool Concatenated Expression: expr < expr" << endl;
     YYSTYPE expr = cool_expression();
     if(!errorstate)
         expression = expr.expression;
     else
         return expr;
-    retval.expression = lt(expression, curr.expression);
+    retval.expression = lt(curr.expression, expression);
+    // if(getNextLevel() < level)
+    //   recurse = true;
+    // recurse = false;
+    //level = getNextLevel();
     return retval;
   }
   else if(lookNextToken() == '='){
     consumeNextToken();
+    cout << "Generating Cool Concatenated Expression: expr = expr" << endl;
     YYSTYPE expr = cool_expression();
     if(!errorstate)
         expression = expr.expression;
     else
         return expr;
-    retval.expression = eq(expression, curr.expression);
+    retval.expression = eq(curr.expression, expression);
+    // if(getNextLevel() < level)
+    //   recurse = true;
+    // recurse = false;
+    //level = getNextLevel();
     return retval;
   }
   return curr;
@@ -742,9 +837,10 @@ YYSTYPE handleFifthExpression(YYSTYPE curr){
   Symbol name;
   Symbol identifier;
   bool staticDis = false;
-
+  cout << "Generating Cool Concatenated Expression: expr <- expr" << endl;
   if(lookNextToken() == ASSIGN){
     consumeNextToken();
+    level = 9;
     YYSTYPE expr = cool_expression();
     if(!errorstate)
         expression = expr.expression;
@@ -809,10 +905,25 @@ YYSTYPE cool_expression()
         X  | false
   */
 
+  // if(lookNextToken() == '.'
+  //   || lookNextToken() == '@'
+  //   || lookNextToken() == '~'
+  //   || lookNextToken() == ISVOID
+  //   || lookNextToken() == '*'
+  //   || lookNextToken() == '/'
+  //   || lookNextToken() == '+'
+  //   || lookNextToken() == '-'
+  //   || lookNextToken() == LE
+  //   || lookNextToken() == '<'
+  //   || lookNextToken() == '='
+  //   || lookNextToken() == NOT
+  //   || lookNextToken() == ASSIGN)
+  //
+
   // | case expr of [ID : TYPE => expr;]+ esac
   if(lookNextToken() == CASE) {
       consumeNextToken();
-
+      cout << "Generating Cool Expression: case expr of [ID : TYPE => expr;]+ esac" << endl;
       YYSTYPE expr = cool_expression();
       if(!errorstate)
           expression = expr.expression;
@@ -838,6 +949,7 @@ YYSTYPE cool_expression()
   // | { expr;* }
   if(lookNextToken() == '{') {
       consumeNextToken();
+      cout << "Generating Cool Expression: { expr;* }" << endl;
       YYSTYPE expr = cool_expressions_semi();
       if(!errorstate)
           expressions = expr.expressions;
@@ -847,7 +959,7 @@ YYSTYPE cool_expression()
           consumeNextToken();
       }
       retval.expressions = expressions;
-      if(!checkAllExpression())
+      if(!checkAllExpression())// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -858,6 +970,7 @@ YYSTYPE cool_expression()
   // this function is broken
   // | let [ID : TYPE [ <- epr ]],* in expr
   if(lookNextToken() == LET) {
+    cout << "Generating Cool Expression: let [ID : TYPE [ <- epr ]],* in expr" << endl;
       bool assignment = false;
       consumeNextToken();
       do{
@@ -883,7 +996,14 @@ YYSTYPE cool_expression()
                 return handle_error();
             }
         }
-      } while(lookNextToken() == ',');
+        if(lookNextToken() == IN) {
+            break;
+          }
+        if(lookNextToken() == ',') {
+            consumeNextToken();
+          }
+      } while(lookNextToken() == IN);
+      //do I need to consume the comma
       if(lookNextToken() == IN) {
           consumeNextToken();
 
@@ -902,7 +1022,7 @@ YYSTYPE cool_expression()
       else{
         retval.expression = let(letIdentifier, name, no_expr(), letExpression1);
       }
-      if(!checkAllExpression())
+      if(!checkAllExpression())// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -919,21 +1039,25 @@ YYSTYPE cool_expression()
       consumeNextToken();
       if(lookNextToken() == ASSIGN) {
           consumeNextToken();
+          cout << "Generating Cool Expression: ID <- expr" << endl;
           YYSTYPE expr = cool_expression();
           if(!errorstate)
               expression = expr.expression;
           else
               return expr;
           retval.expression = assign(identifier,expression);
-          if(!checkAllExpression())
+          if(!checkAllExpression())// || getNextLevel() > level)
             return retval;
           else{
+
             retval = multipleExpressionCheck(retval);
+
             return retval;
           }
       }
       else if(lookNextToken() == '(') {
           consumeNextToken();
+          cout << "Generating Cool Expression: ID(expr,*)" << endl;
           YYSTYPE expr = cool_expressions_comma();
           if(!errorstate)
               expressions = expr.expressions;
@@ -947,16 +1071,18 @@ YYSTYPE cool_expression()
           //wait for piazza
           typeVal = idtable.add_string("self");
           retval.expression = dispatch(object(typeVal), identifier, expressions);
-          if(!checkAllExpression())
+          if(!checkAllExpression())// || getNextLevel() > level)
             return retval;
           else{
+
             retval = multipleExpressionCheck(retval);
+
             return retval;
           }
       }
-      objVal = cool_yylval.symbol;
-      retval.expression = object(objVal);
-      if(!checkAllExpression())
+      cout << "Generating Cool Expression: ID" << endl;
+      retval.expression = object(identifier);
+      if(!checkAllExpression())// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -967,7 +1093,7 @@ YYSTYPE cool_expression()
   // | if expr then expr else expr fi
   if(lookNextToken() == IF) {
       consumeNextToken();
-
+      cout << "Generating Cool Expression: if expr then expr else expr fi" << endl;
       YYSTYPE expr = cool_expression();
       if(!errorstate)
           otherExpression = expr.expression;
@@ -995,10 +1121,12 @@ YYSTYPE cool_expression()
               if(lookNextToken() == FI) {
                   consumeNextToken();
                   retval.expression = cond(otherExpression, otherExpression1, otherExpression2);
-                  if(!checkAllExpression())
+                  if(!checkAllExpression())// || getNextLevel() > level)
                     return retval;
                   else{
+
                     retval = multipleExpressionCheck(retval);
+
                     return retval;
                   }
               } else {
@@ -1017,7 +1145,7 @@ YYSTYPE cool_expression()
   // | while expr loop expr pool
   if(lookNextToken() == WHILE) {
       consumeNextToken();
-
+      cout << "Generating Cool Expression: while expr loop expr pool" << endl;
       YYSTYPE expr = cool_expression();
       if(!errorstate)
           otherExpression = expr.expression;
@@ -1036,10 +1164,12 @@ YYSTYPE cool_expression()
           if(lookNextToken() == POOL) {
               consumeNextToken();
               retval.expression = loop(otherExpression, otherExpression1);
-              if(!checkAllExpression())
+              if(!checkAllExpression())// || getNextLevel() > level)
                 return retval;
               else{
+
                 retval = multipleExpressionCheck(retval);
+
                 return retval;
               }
           } else {
@@ -1054,6 +1184,7 @@ YYSTYPE cool_expression()
   // | new TYPE
   if(lookNextToken() == NEW) {
       consumeNextToken();
+      cout << "Generating Cool Expression: new TYPE" << endl;
       if(lookNextToken() == TYPEID) {
           typeVal = cool_yylval.symbol;
           consumeNextToken();
@@ -1072,7 +1203,7 @@ YYSTYPE cool_expression()
   // | isvoid expr
   if(lookNextToken() == ISVOID) {
       consumeNextToken();
-
+      cout << "Generating Cool Expression: isvoid expr" << endl;
       YYSTYPE expr = cool_expression();
       if(!errorstate)
           expression = expr.expression;
@@ -1080,7 +1211,7 @@ YYSTYPE cool_expression()
           return expr;
 
       retval.expression = isvoid(expression);
-      if(!checkAllExpression())
+      if(!checkAllExpression())// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -1091,15 +1222,22 @@ YYSTYPE cool_expression()
   // | ~expr
   if(lookNextToken() == '~') {
       consumeNextToken();
-
+      cout << "Generating Cool Expression: ~expr" << endl;
+      cout << "level: "<< level << endl;
+      cout << "nextlevel: "<< getNextLevel() << endl;
+      if(getNextLevel() <= level)
+        recurse = false;
+      else
+        recurse = true;
+      cout << "recurse: " << recurse << endl;
       YYSTYPE expr = cool_expression();
       if(!errorstate)
           expression = expr.expression;
       else
           return expr;
-
       retval.expression = neg(expression);
-      if(!checkAllExpression())
+
+      if(!checkAllExpression() || recurse == false)// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -1110,7 +1248,7 @@ YYSTYPE cool_expression()
   // | not expr
   if(lookNextToken() == NOT) {
       consumeNextToken();
-
+      cout << "Generating Cool Expression: not expr" << endl;
       YYSTYPE expr = cool_expression();
       if(!errorstate)
           expression = expr.expression;
@@ -1118,7 +1256,7 @@ YYSTYPE cool_expression()
           return expr;
       //try and find the not constructor
       retval.expression = comp(expression);
-      if(!checkAllExpression())
+      if(!checkAllExpression())// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -1129,7 +1267,7 @@ YYSTYPE cool_expression()
   // | (expr)
   if(lookNextToken() == '(') {
       consumeNextToken();
-
+      cout << "Generating Cool Expression: (expr)" << endl;
       YYSTYPE expr = cool_expression();
       if(!errorstate)
           expression = expr.expression;
@@ -1139,7 +1277,7 @@ YYSTYPE cool_expression()
       if(lookNextToken() == ')') {
           consumeNextToken();
           retval.expression = expression;
-          if(!checkAllExpression())
+          if(!checkAllExpression() || recurse == false)// || getNextLevel() > level)
             return retval;
           else{
             retval = multipleExpressionCheck(retval);
@@ -1152,10 +1290,18 @@ YYSTYPE cool_expression()
 
   // | integer
   if(lookNextToken() == INT_CONST) {
+      cout << "Generating Cool Expression: integer" << endl;
       intVal = cool_yylval.symbol;
-      consumeNextToken();
       retval.expression = int_const(intVal);
-      if(!checkAllExpression())
+      consumeNextToken();
+      cout << "level: "<< level << endl;
+      cout << "nextlevel: "<< getNextLevel() << endl;
+      if(getNextLevel() <= level)
+        recurse = false;
+      else
+        recurse = true;
+      cout << "recurse: " << recurse << endl;
+      if(!checkAllExpression() || recurse == false)// || getNextLevel() > level || recurse == false)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -1165,10 +1311,11 @@ YYSTYPE cool_expression()
 
   // | string
   if(lookNextToken() == STR_CONST) {
+      cout << "Generating Cool Expression: string" << endl;
       strVal = cool_yylval.symbol;
-      consumeNextToken();
       retval.expression = string_const(strVal);
-      if(!checkAllExpression())
+      consumeNextToken();
+      if(!checkAllExpression() || recurse == false)// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
@@ -1178,10 +1325,11 @@ YYSTYPE cool_expression()
 
   // | true && | false
   if(lookNextToken() == BOOL_CONST) {
+    cout << "Generating Cool Expression: boolean" << endl;
       boolVal = cool_yylval.boolean;
-      consumeNextToken();
       retval.expression = bool_const(boolVal);
-      if(!checkAllExpression())
+      consumeNextToken();
+      if(!checkAllExpression() || recurse == false)// || getNextLevel() > level)
         return retval;
       else{
         retval = multipleExpressionCheck(retval);
