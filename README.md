@@ -12,7 +12,7 @@ first used for Shahid Beheshti University of Iran) and the software is stable.
 
 A simple Cool program for computing factorial follows:
 
-'''
+```c++
 
 class Main inherits IO {
   main(): Object {{
@@ -33,4 +33,4 @@ class Main inherits IO {
   };
 };
 
-'''
+```
