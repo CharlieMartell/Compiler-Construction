@@ -11,6 +11,7 @@ compilers at many institutions (such as the University of California at Berkeley
 first used for Shahid Beheshti University of Iran) and the software is stable.
 
 A simple Cool program for computing factorial follows:
+
 '''
 
 class Main inherits IO {
