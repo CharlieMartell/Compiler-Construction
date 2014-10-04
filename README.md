@@ -1,4 +1,4 @@
-##Herein lies my implementation of the COOL-Compiler:
+###Herein lies my implementation of the COOL-Compiler:
 
 Cool, an acronym for Classroom Object Oriented Language, is a computer programming
 language designed by Alexander Aiken for use in an undergraduate compiler course project.
@@ -11,7 +11,8 @@ compilers at many institutions (such as the University of California at Berkeley
 first used for Shahid Beheshti University of Iran) and the software is stable.
 
 A simple Cool program for computing factorial follows:
-'''C++
+'''c++
+
 class Main inherits IO {
   main(): Object {{
     out_string("Enter an integer greater-than or equal-to 0: ");
@@ -30,4 +31,5 @@ class Main inherits IO {
     if num = 0 then 1 else num * factorial(num - 1) fi
   };
 };
+
 '''
