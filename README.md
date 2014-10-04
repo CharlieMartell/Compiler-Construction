@@ -34,3 +34,9 @@ class Main inherits IO {
 };
 
 ```
+
+###The Machine Problems:
+MP1: This mp implements the lexical analyzer from scratch without flex.
+MP2: This mp implements the recursive descent parser without the use of bison.
+MP3: This mp implements the conversion of our Abstract Syntax Tree, to
+      LLVM intermediate representation. (without objects)
