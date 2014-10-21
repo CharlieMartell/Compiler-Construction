@@ -2,7 +2,7 @@
 //
 // Code generator SKELETON
 //
-// Read the comments carefully and add code to build an LLVM program 
+// Read the comments carefully and add code to build an LLVM program
 //**************************************************************
 
 #define EXTERN
@@ -10,7 +10,7 @@
 #include <string>
 #include <sstream>
 
-// 
+//
 extern int cgen_debug;
 
 //////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ extern int cgen_debug;
 // own definitions as you see fit.
 //
 //////////////////////////////////////////////////////////////////////
-EXTERN Symbol 
+EXTERN Symbol
     // required classes
     Object,
     IO,
@@ -119,7 +119,7 @@ static void initialize_constants(void)
 // generator.
 //
 //*********************************************************
-void program_class::cgen(ostream &os) 
+void program_class::cgen(ostream &os)
 {
     initialize_constants();
     class_table = new CgenClassTable(classes,os);
@@ -153,8 +153,8 @@ void CgenClassTable::setup_external_functions()
 	op_type i32_type(INT32), i8ptr_type(INT8_PTR), vararg_type(VAR_ARG);
 	vector<op_type> strcmp_args;
 	strcmp_args.push_back(i8ptr_type);
-	strcmp_args.push_back(i8ptr_type);  
-	vp.declare(*ct_stream, i32_type, "strcmp", strcmp_args); 
+	strcmp_args.push_back(i8ptr_type);
+	vp.declare(*ct_stream, i32_type, "strcmp", strcmp_args);
 
 	// setup function: external int printf(sbyte*, ...)
 	vector<op_type> printf_args;
@@ -189,7 +189,7 @@ void CgenClassTable::install_basic_classes()
     // A few special class names are installed in the lookup table but not
     // the class list.  Thus, these classes exist, but are not part of the
     // inheritance hierarchy.
-     
+
     // No_class serves as the parent of Object and the other special classes.
     Class_ noclasscls = class_(No_class,No_class,nil_Features(),filename);
     install_special_class(new CgenNode(noclasscls, CgenNode::Basic, this));
@@ -200,7 +200,7 @@ void CgenClassTable::install_basic_classes()
     Class_ selftypecls = class_(SELF_TYPE,No_class,nil_Features(),filename);
     install_special_class(new CgenNode(selftypecls, CgenNode::Basic, this));
     delete selftypecls;
-    // 
+    //
     // Primitive types masquerading as classes.  This is done so we can
     // get the necessary Symbols for the innards of String, Int, and Bool
     //
@@ -214,7 +214,7 @@ void CgenClassTable::install_basic_classes()
     Class_ primboolcls = class_(prim_bool,No_class,nil_Features(),filename);
     install_special_class(new CgenNode(primboolcls, CgenNode::Basic, this));
     delete primboolcls;
-    // 
+    //
     // The Object class has no parent class. Its methods are
     //        cool_abort() : Object    aborts the program
     //        type_name() : Str    returns a string representation of class name
@@ -224,15 +224,15 @@ void CgenClassTable::install_basic_classes()
     // are already built in to the runtime system.
     //
     Class_ objcls =
-            class_(Object, 
+            class_(Object,
                    No_class,
                    append_Features(
                    append_Features(
-                   single_Features(method(cool_abort, nil_Formals(), 
+                   single_Features(method(cool_abort, nil_Formals(),
                                           Object, no_expr())),
                    single_Features(method(type_name, nil_Formals(),
                                           String, no_expr()))),
-                   single_Features(method(cool_copy, nil_Formals(), 
+                   single_Features(method(cool_copy, nil_Formals(),
                                           SELF_TYPE, no_expr()))),
                    filename);
     install_class(new CgenNode(objcls, CgenNode::Basic, this));
@@ -240,10 +240,10 @@ void CgenClassTable::install_basic_classes()
 
 //
 // The Int class has no methods and only a single attribute, the
-// "val" for the integer. 
+// "val" for the integer.
 //
     Class_ intcls=
-            class_(Int, 
+            class_(Int,
                    Object,
                    single_Features(attr(val, prim_int, no_expr())),
                    filename);
@@ -254,8 +254,8 @@ void CgenClassTable::install_basic_classes()
 // Bool also has only the "val" slot.
 //
     Class_ boolcls=
-            class_(Bool,  
-                   Object, 
+            class_(Bool,
+                   Object,
                    single_Features(attr(val, prim_bool, no_expr())),
                    filename);
     install_class(new CgenNode(boolcls, CgenNode::Basic, this));
@@ -268,9 +268,9 @@ void CgenClassTable::install_basic_classes()
 //       length() : Int                       length of the string
 //       concat(arg: Str) : Str               string concatenation
 //       substr(arg: Int, arg2: Int): Str     substring
-//       
+//
     Class_ stringcls =
-            class_(String, 
+            class_(String,
                    Object,
                    append_Features(
                    append_Features(
@@ -282,11 +282,11 @@ void CgenClassTable::install_basic_classes()
                                           single_Formals(formal(arg, String)),
                                           String,
                                           no_expr()))),
-                   single_Features(method(substr, 
+                   single_Features(method(substr,
                                           append_Formals(
-                                             single_Formals(formal(arg, Int)), 
+                                             single_Formals(formal(arg, Int)),
                                              single_Formals(formal(arg2, Int))),
-                                          String, 
+                                          String,
                                           no_expr()))),
                    filename);
     install_class(new CgenNode(stringcls, CgenNode::Basic, this));
@@ -294,7 +294,7 @@ void CgenClassTable::install_basic_classes()
 #endif
 
 #ifdef MP4
-// 
+//
 // The IO class inherits from Object. Its methods are
 //        out_string(Str) : SELF_TYPE          writes a string to the output
 //        out_int(Int) : SELF_TYPE               "    an int    "  "     "
@@ -331,9 +331,9 @@ void CgenClassTable::install_classes(Classes cs)
     }
 }
 
-// 
+//
 // Add this CgenNode to the class list and the lookup table
-// 
+//
 void CgenClassTable::install_class(CgenNode *nd)
 {
     Symbol name = nd->get_name();
@@ -347,9 +347,9 @@ void CgenClassTable::install_class(CgenNode *nd)
     addid(name,nd);
 }
 
-// 
+//
 // Add this CgenNode to the special class list and the lookup table
-// 
+//
 void CgenClassTable::install_special_class(CgenNode *nd)
 {
     Symbol name = nd->get_name();
@@ -479,7 +479,7 @@ void IntEntry::code_def(ostream& s, CgenClassTable* ct)
 //
 // CgenClassTable constructor orchestrates all code generation
 //
-CgenClassTable::CgenClassTable(Classes classes, ostream& s) 
+CgenClassTable::CgenClassTable(Classes classes, ostream& s)
 : nds(0)
 {
     if (cgen_debug) std::cerr << "Building CgenClassTable" << endl;
@@ -524,13 +524,13 @@ void CgenClassTable::setup_classes(CgenNode *c, int depth)
 	List<CgenNode> *children = c->get_children();
 	for (List<CgenNode> *child = children; child; child = child->tl())
 		setup_classes(child->hd(), depth + 1);
-    
+
 	c->set_max_child(current_tag-1);
 
 	/*
 	if (cgen_debug)
-		std::cerr << "Class " << c->get_name() << " assigned tag " 
-			<< c->get_tag() << ", max child " << c->get_max_child() 
+		std::cerr << "Class " << c->get_name() << " assigned tag "
+			<< c->get_tag() << ", max child " << c->get_max_child()
 			<< ", depth " << c->get_depth() << endl;
 	*/
 }
@@ -567,32 +567,59 @@ void CgenClassTable::code_classes(CgenNode *c)
 #endif
 
 
+
+// define i32 @main() {
+//   entry:
+//   %tmp.0 = call i32 @Main_main( )
+//   %tmp.1 = getelementptr [25 x i8]* @.str, i32 0, i32 0
+//   %tmp.2 = call i32 (i8*, ...)* @printf( i8* %tmp.1, i32 %tmp.0 )
+//   ret i32 0
+// }
 //
-// Create LLVM entry point. This function will initiate our Cool program 
+// Create LLVM entry point. This function will initiate our Cool program
 // by generating the code to execute (new Main).main()
 //
 void CgenClassTable::code_main()
 {
-	// Define a function main that has no parameters and returns an i32
-
-	// Define an entry basic block
-
-	// Call Main_main(). This returns int for phase 1, Object for phase 2
-
+  ValuePrinter vp(*ct_stream);
+  //return value
+  op_type i32_type(INT32);
+  //argument for main, doesnt allow no arg
+  op_type void_type(VOID);
+  //argument for declare type
+  vector<op_type> main_args_types;
+  vector<operand> main_args;
+  // Define a function main that has no parameters and returns an i32
+  vp.define(i32_type, "main", main_args);
+  // Define an entry basic block
+  string mainString("entry");
+  vp.begin_block(mainString);
+  operand result = vp.call(main_args_types, i32_type, "Main_main", true, main_args);
+  // Call Main_main(). This returns int for phase 1, Object for phase 2
 
 #ifndef MP4
-	// Get the address of the string "Main_main() returned %d\n" using
-	// getelementptr 
-
-	// Call printf with the string address of "Main_main() returned %d\n"
-	// and the return value of Main_main() as its arguments
-
-	// Insert return 0
+  // Get the address of the string "Main_main() returned %d\n" using
+  vector<op_type> printf_args_types;
+  vector<operand> printf_args;
+  op_type i8ptr_type(INT8_PTR);
+  op_arr_type op_arr(i8ptr_type.get_id(), 25);
+  global_value ptrString(op_arr)
+  operand pointer = vp.getelementptr(ptrString, int_value(0), int_value(0), i32_type);
+  // Call printf with the string address of "Main_main() returned %d\n"
+  // and the return value of Main_main() as its arguments
+  op_type i8_ptr(INT8_PTR);
+  printf_args_types.push_back(i8_ptr);
+  op_type varArg(VAR_ARG);
+  printf_args_types.push_back(varArg);
+  printf_args.push_back(pointer);
+  printf_args.push_back(result);
+  operand callprintf = vp.call(printf_args_types, i32_type, "printf", true, printf_args);
+        // Insert return 0
 
 #else
-	// Phase 2
+        // Phase 2
 #endif
-
+  vp.end_define();
 }
 
 
@@ -603,9 +630,9 @@ void CgenClassTable::code_main()
 ///////////////////////////////////////////////////////////////////////
 
 CgenNode::CgenNode(Class_ nd, Basicness bstatus, CgenClassTable *ct)
-: class__class((const class__class &) *nd), 
+: class__class((const class__class &) *nd),
   parentnd(0), children(0), basic_status(bstatus), class_table(ct), tag(-1)
-{ 
+{
 	// ADD CODE HERE
 }
 
@@ -624,8 +651,8 @@ void CgenNode::set_parentnd(CgenNode *p)
 //
 // Class setup.  You may need to add parameters to this function so that
 // the classtable can provide setup information (such as the class tag
-// that should be used by this class).  
-// 
+// that should be used by this class).
+//
 // Things that setup should do:
 //  - layout the features of the class
 //  - create the types for the class and its vtable
@@ -633,7 +660,6 @@ void CgenNode::set_parentnd(CgenNode *p)
 //
 void CgenNode::setup(int tag, int depth)
 {
-	tag = tag;
 #ifdef MP4
     layout_features();
 
@@ -652,7 +678,7 @@ void CgenNode::code_class()
 	// No code generation for basic classes. The runtime will handle that.
 	if (basic())
 		return;
-	
+
 		// ADD CODE HERE
 }
 
@@ -664,7 +690,7 @@ void CgenNode::layout_features()
 }
 #else
 
-// 
+//
 // code-gen function main() in class Main
 //
 void CgenNode::codeGenMainmain()
@@ -678,7 +704,7 @@ void CgenNode::codeGenMainmain()
     // Generally what you need to do are:
     // -- setup or create the environment, env, for translating this method
     // -- invoke mainMethod->code(env) to translate the method
-    
+
 
 }
 
@@ -704,7 +730,7 @@ CgenEnvironment::CgenEnvironment(std::ostream &o, CgenNode *c)
 
 // Look up a CgenNode given a symbol
 CgenNode *CgenEnvironment::type_to_class(Symbol t) {
-	return t == SELF_TYPE ? get_class() 
+	return t == SELF_TYPE ? get_class()
 		: get_class()->get_classtable()->lookup(t);
 }
 
@@ -774,7 +800,7 @@ operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {
 
 //
 // Create a method body
-// 
+//
 void method_class::code(CgenEnvironment *env)
 {
     	if (cgen_debug) std::cerr << "method" << endl;
@@ -787,164 +813,165 @@ void method_class::code(CgenEnvironment *env)
 // Codegen for expressions.  Note that each expression has a value.
 //
 
-operand assign_class::code(CgenEnvironment *env) 
-{ 
+operand assign_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "assign" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand cond_class::code(CgenEnvironment *env) 
-{ 
+operand cond_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "cond" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand loop_class::code(CgenEnvironment *env) 
-{ 
+operand loop_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "loop" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
-} 
+}
 
-operand block_class::code(CgenEnvironment *env) 
-{ 
+operand block_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "block" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand let_class::code(CgenEnvironment *env) 
-{ 
+operand let_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "let" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand plus_class::code(CgenEnvironment *env) 
-{ 
+operand plus_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "plus" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand sub_class::code(CgenEnvironment *env) 
-{ 
+operand sub_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "sub" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand mul_class::code(CgenEnvironment *env) 
-{ 
+operand mul_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "mul" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand divide_class::code(CgenEnvironment *env) 
-{ 
+operand divide_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "div" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
+
 	return nothing;
 }
 
-operand neg_class::code(CgenEnvironment *env) 
-{ 
+operand neg_class::code(CgenEnvironment *env)
+{
 	if (cgen_debug) std::cerr << "neg" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand lt_class::code(CgenEnvironment *env) 
+operand lt_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "lt" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand eq_class::code(CgenEnvironment *env) 
+operand eq_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "eq" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand leq_class::code(CgenEnvironment *env) 
+operand leq_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "leq" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand comp_class::code(CgenEnvironment *env) 
+operand comp_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "complement" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand int_const_class::code(CgenEnvironment *env) 
+operand int_const_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "Integer Constant" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand bool_const_class::code(CgenEnvironment *env) 
+operand bool_const_class::code(CgenEnvironment *env)
 {
     	if (cgen_debug) std::cerr << "Boolean Constant" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand object_class::code(CgenEnvironment *env) 
+operand object_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "Object" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
 
-operand no_expr_class::code(CgenEnvironment *env) 
+operand no_expr_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "No_expr" << endl;
 	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 	return nothing;
 }
@@ -955,47 +982,47 @@ operand no_expr_class::code(CgenEnvironment *env)
 // methods via the Expression_SHARED_EXTRAS hack.
 //*****************************************************************
 
-operand static_dispatch_class::code(CgenEnvironment *env) 
-{ 
+operand static_dispatch_class::code(CgenEnvironment *env)
+{
 	operand nothing;
 	if (cgen_debug) std::cerr << "static dispatch" << endl;
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 #endif
 	return nothing;
 }
 
-operand string_const_class::code(CgenEnvironment *env) 
+operand string_const_class::code(CgenEnvironment *env)
 {
 	operand nothing;
 	if (cgen_debug) std::cerr << "string_const" << endl;
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 #endif
 	return nothing;
 }
 
-operand dispatch_class::code(CgenEnvironment *env) 
-{ 
+operand dispatch_class::code(CgenEnvironment *env)
+{
 	operand nothing;
     if (cgen_debug) std::cerr << "dispatch" << endl;
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 #endif
 	return nothing;
 }
 
-operand typcase_class::code(CgenEnvironment *env) { 
-	if (cgen_debug) 
+operand typcase_class::code(CgenEnvironment *env) {
+	if (cgen_debug)
 		std::cerr << "typecase::code()" << endl;
 #ifndef MP4
     assert(0 && "Unsupported case for phase 1");
@@ -1028,7 +1055,7 @@ operand typcase_class::code(CgenEnvironment *env) {
 	branch_class *b = (branch_class *)cases->nth(cases->first());
 	string case_result_type = b->get_expr()->get_type()->get_string();
 	if (case_result_type == "SELF_TYPE")
-		case_result_type = env->get_class()->get_type_name();		
+		case_result_type = env->get_class()->get_type_name();
 	op_type alloca_type(case_result_type, 1);
 	operand alloca_final(alloca_type, env->new_name());
 	env->branch_operand = alloca_final;
@@ -1049,49 +1076,49 @@ operand typcase_class::code(CgenEnvironment *env) {
 				values.push_back(val);
 			}
 		}
-	} 
-	vp.branch_uncond(*o, "abort");	
+	}
+	vp.branch_uncond(*o, "abort");
 	env->new_label("", true);
 	*o << "\n" << exit_label << ":\n";
 	operand final_result(alloca_type, env->new_name());
 	alloca_final.set_type(alloca_final.get_type().get_ptr_type());
 	vp.load(*o, alloca_final, final_result);
 	alloca_final.set_type(alloca_final.get_type().get_deref_type());
- 
+
 	if (cgen_debug)
 		cerr << "Done typcase::code()" << endl;
 	return final_result;
 #endif
 }
 
-operand new__class::code(CgenEnvironment *env) 
+operand new__class::code(CgenEnvironment *env)
 {
 	operand nothing;
     if (cgen_debug) std::cerr << "newClass" << endl;
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 #endif
 	return nothing;;
 }
 
-operand isvoid_class::code(CgenEnvironment *env) 
+operand isvoid_class::code(CgenEnvironment *env)
 {
 	operand nothing;
     if (cgen_debug) std::cerr << "isvoid" << endl;
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING 
+	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
 	// MORE MEANINGFUL
 #endif
 	return nothing;;
 }
 
 // Create the LLVM Function corresponding to this method.
-void method_class::layout_feature(CgenNode *cls) 
+void method_class::layout_feature(CgenNode *cls)
 {
 #ifndef MP4
     assert(0 && "Unsupported case for phase 1");
@@ -1129,14 +1156,14 @@ operand branch_class::code(operand expr_val, operand tag,
 
 	// Compare the source tag to the class tag
 	operand icmp_result = vp.icmp(LT, tag, my_tag_val);
-	vp.branch_cond(icmp_result, exit_label, sg_label);	
+	vp.branch_cond(icmp_result, exit_label, sg_label);
 	*o << "\n" << sg_label << ":\n";
 	int_value max_child_val(max_child);
 
 	// Compare the source tag to max child
 	operand icmp2_result = vp.icmp(GT, tag, max_child_val);
 	vp.branch_cond(icmp2_result, exit_label, sl_label);
-	*o << "\n" << sl_label << ":\n";	
+	*o << "\n" << sl_label << ":\n";
 	tag.set_type(old_tag_t);
 
 	// Handle casts of *arbitrary* types to Int or Bool.  We need to:
@@ -1185,4 +1212,3 @@ void attr_class::code(CgenEnvironment *env)
     // ADD CODE HERE
 #endif
 }
-
