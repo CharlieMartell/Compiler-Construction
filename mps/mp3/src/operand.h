@@ -2,7 +2,7 @@
  * This defines a small number of classes for creating/manipulating operands/operand
  * types. The provided code is minimal and should be enough for MP3. You can freely
  * expand it as you like but you might need to modify ValuePrinter in the process.
- */ 
+ */
 #ifndef __OPERAND_H
 #define __OPERAND_H
 
@@ -19,8 +19,8 @@ using std::ostream;
 using std::vector;
 
 /* All the types needed in MP3 */
-typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR, 
-	      INT32, INT32_PTR, INT32_PPTR, VAR_ARG, 
+typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,
+	      INT32, INT32_PTR, INT32_PPTR, VAR_ARG,
 /* Types needed for MP4 */ OBJ, OBJ_PTR, OBJ_PPTR} op_type_id;
 
 class op_type {
@@ -145,7 +145,7 @@ class bool_value : public const_value {
 	private:
 		bool b_value;
 	public:
-		bool_value(bool b, bool intr) : const_value(op_type(INT1), "", intr), 
+		bool_value(bool b, bool intr) : const_value(op_type(INT1), "", intr),
 						 b_value(b) { if (b) value = "true"; else value = "false"; name = value;}
 		int get_boolvalue() { return b_value; }
 };

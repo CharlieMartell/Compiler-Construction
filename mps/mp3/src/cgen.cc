@@ -172,6 +172,9 @@ void CgenClassTable::setup_external_functions()
 	malloc_args.push_back(i32_type);
 	vp.declare(*ct_stream, i8ptr_type, "malloc", malloc_args);
 
+  //declare Main_main
+  vector<op_type> main_args;
+  vp.declare(*ct_stream, i32_type, "Main_main", main_args);
 #ifdef MP4
 	//ADD CODE HERE
 	//Setup external functions for built in object class functions
@@ -584,13 +587,18 @@ void CgenClassTable::code_main()
   ValuePrinter vp(*ct_stream);
   //return value
   op_type i32_type(INT32);
-  //argument for main, doesnt allow no arg
-  op_type void_type(VOID);
   //argument for declare type
   vector<op_type> main_args_types;
   vector<operand> main_args;
+
+  string strToPass("Main_main() returned %d\\n");
+  op_arr_type op_type_array(INT8, strToPass.length());
+  const_value strConst(op_type_array, strToPass, false);
+  vp.init_constant(".str", strConst);
+
   // Define a function main that has no parameters and returns an i32
   vp.define(i32_type, "main", main_args);
+
   // Define an entry basic block
   string mainString("entry");
   vp.begin_block(mainString);
@@ -601,23 +609,23 @@ void CgenClassTable::code_main()
   // Get the address of the string "Main_main() returned %d\n" using
   vector<op_type> printf_args_types;
   vector<operand> printf_args;
-  op_type i8ptr_type(INT8_PTR);
-  op_arr_type op_arr(i8ptr_type.get_id(), 25);
-  global_value ptrString(op_arr)
-  operand pointer = vp.getelementptr(ptrString, int_value(0), int_value(0), i32_type);
+
+  op_type i8_ptr(INT8_PTR);
+  global_value ptrString(op_type_array, ".str", strConst);
+  operand pointer = vp.getelementptr(ptrString, int_value(0), int_value(0), i8_ptr);
   // Call printf with the string address of "Main_main() returned %d\n"
   // and the return value of Main_main() as its arguments
-  op_type i8_ptr(INT8_PTR);
   printf_args_types.push_back(i8_ptr);
   op_type varArg(VAR_ARG);
   printf_args_types.push_back(varArg);
   printf_args.push_back(pointer);
   printf_args.push_back(result);
   operand callprintf = vp.call(printf_args_types, i32_type, "printf", true, printf_args);
-        // Insert return 0
+  // Insert return
+  vp.ret(int_value(0));
 
 #else
-        // Phase 2
+  // Phase 2
 #endif
   vp.end_define();
 }
