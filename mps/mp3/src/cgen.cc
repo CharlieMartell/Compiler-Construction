@@ -611,7 +611,8 @@ void CgenClassTable::code_main()
   vector<operand> printf_args;
 
   op_type i8_ptr(INT8_PTR);
-  global_value ptrString(op_type_array, ".str", strConst);
+  op_arr_type op_type_array2(i8_ptr, strToPass.length());
+  global_value ptrString(op_type_array2, ".str", strConst);
   operand pointer = vp.getelementptr(ptrString, int_value(0), int_value(0), i8_ptr);
   // Call printf with the string address of "Main_main() returned %d\n"
   // and the return value of Main_main() as its arguments
