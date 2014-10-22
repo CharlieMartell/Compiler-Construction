@@ -172,9 +172,6 @@ void CgenClassTable::setup_external_functions()
 	malloc_args.push_back(i32_type);
 	vp.declare(*ct_stream, i8ptr_type, "malloc", malloc_args);
 
-  //declare Main_main
-  vector<op_type> main_args;
-  vp.declare(*ct_stream, i32_type, "Main_main", main_args);
 #ifdef MP4
 	//ADD CODE HERE
 	//Setup external functions for built in object class functions
@@ -591,10 +588,17 @@ void CgenClassTable::code_main()
   vector<op_type> main_args_types;
   vector<operand> main_args;
 
-  string strToPass("Main_main() returned %d\\n");
-  op_arr_type op_type_array(INT8, strToPass.length());
+  string strToPass("Main_main() returned %d\n");
+  op_arr_type op_type_array(INT8, strToPass.length()+1);
   const_value strConst(op_type_array, strToPass, false);
   vp.init_constant(".str", strConst);
+
+
+  //Define other stuff:
+
+  vp.define(i32_type, "Main_main", main_args);
+  vp.ret(int_value(0));
+  vp.end_define();
 
   // Define a function main that has no parameters and returns an i32
   vp.define(i32_type, "main", main_args);
@@ -610,9 +614,9 @@ void CgenClassTable::code_main()
   vector<op_type> printf_args_types;
   vector<operand> printf_args;
 
-  op_type i8_ptr(INT8_PTR);
-  op_arr_type op_type_array2(i8_ptr, strToPass.length());
+  op_arr_type op_type_array2(INT8_PTR, strToPass.length()+1);
   global_value ptrString(op_type_array2, ".str", strConst);
+  op_type i8_ptr(INT8_PTR);
   operand pointer = vp.getelementptr(ptrString, int_value(0), int_value(0), i8_ptr);
   // Call printf with the string address of "Main_main() returned %d\n"
   // and the return value of Main_main() as its arguments
