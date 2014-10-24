@@ -828,11 +828,11 @@ void method_class::code(CgenEnvironment *env)
 
 operand assign_class::code(CgenEnvironment *env)
 {
+  ValuePrinter vp;
 	if (cgen_debug) std::cerr << "assign" << endl;
-	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
-	return nothing;
+	operand assign_operand = env->var_table.lookup(name);
+
+	return assign_operand;
 }
 
 operand cond_class::code(CgenEnvironment *env)
@@ -956,10 +956,10 @@ operand comp_class::code(CgenEnvironment *env)
 operand int_const_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "Integer Constant" << endl;
-	operand nothing;
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
-	return nothing;
+  operand nothing;
+  // ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
+  // MORE MEANINGFUL
+  return nothing;
 }
 
 operand bool_const_class::code(CgenEnvironment *env)
