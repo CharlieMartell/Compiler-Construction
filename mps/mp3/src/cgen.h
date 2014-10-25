@@ -23,15 +23,15 @@
 // (CgenNodes) by name, and it also handles global code generation tasks.
 // The CgenClassTable constructor is where you'll find the entry point for
 // code generation for an entire Cool program.
-// 
-class CgenClassTable : public cool::SymbolTable<Symbol,CgenNode> 
+//
+class CgenClassTable : public cool::SymbolTable<Symbol,CgenNode>
 {
 private:
 	// Class list
 	List<CgenNode> *nds;
 	List<CgenNode> *special_nds;
     int current_tag;
-    
+
 #ifndef MP4
 	CgenNode* getMainmain(CgenNode* c);
 #endif
@@ -49,7 +49,7 @@ public:
 
 private:
 	// COMPLETE FUNCTIONS
-    
+
 	// Create declarations for C runtime functions we need to generate code
 	void setup_external_functions();
 	void setup_classes(CgenNode *c, int depth);
@@ -58,8 +58,8 @@ private:
 	void code_classes(CgenNode *c);
 #endif
 
-	// The following creates an inheritance graph from a list of classes.  
-	// The graph is implemented as a tree of `CgenNode', and class names 
+	// The following creates an inheritance graph from a list of classes.
+	// The graph is implemented as a tree of `CgenNode', and class names
 	// are placed in the base class symbol table.
 	void install_basic_classes();
 	void install_class(CgenNode *nd);
@@ -67,12 +67,12 @@ private:
 	void install_classes(Classes cs);
 	void build_inheritance_tree();
 	void set_relations(CgenNode *nd);
-    
+
 	// INCOMPLETE FUNCTIONS
-    
+
 	// Setup each class in the table and prepare for code generation phase
 	void setup();
-    
+
 	// Code generation functions. You need to write these functions.
 	void code_module();
 	void code_constants();
@@ -82,29 +82,29 @@ private:
 
 };
 
-    
+
 //
 // Each CgenNode corresponds to a Cool class.  As such, it is responsible for
 // performing code generation on the class level.  This includes laying out
-// the class attributes, creating the necessary Types for the class and 
+// the class attributes, creating the necessary Types for the class and
 // generating code for each of its methods.
 //
-class CgenNode : public class__class 
+class CgenNode : public class__class
 {
 public:
 	enum Basicness
 	{ Basic, NotBasic };
 
 #ifndef MP4
-	void codeGenMainmain();
+	void codeGenMainmain(std::ostream &o);
 #endif
 
-private: 
+private:
 	CgenNode *parentnd;                        // Parent of class
 	List<CgenNode> *children;                  // Children of class
 	Basicness basic_status;                    // `Basic' or 'NotBasic'
 	CgenClassTable *class_table;
-    
+
 	// Class tag.  Should be unique for each class in the tree
 	int tag;
     int max_child;
@@ -122,7 +122,7 @@ public:
 	void set_parentnd(CgenNode *p);
 	int basic() { return (basic_status == Basic); }
 	List<CgenNode> *get_children() { return children; }
-    
+
 	// Accessors for other provided fields
 	int get_tag() const 	{ return tag; }
 	CgenClassTable *get_classtable() { return class_table; }
@@ -131,7 +131,7 @@ public:
 	int get_max_child() const 	{ return max_child; }
 
 	// INCOMPLETE FUNCTIONS
-    
+
 	// Constructs a CgenNode from a Class
 	CgenNode(Class_ c, Basicness bstatus, CgenClassTable *class_table);
 	virtual ~CgenNode() { }
@@ -166,8 +166,6 @@ private:
 class CgenEnvironment
 {
 private:
-	// mapping from variable names to memory locations
-	cool::SymbolTable<Symbol,operand> var_table;
 
 	// Keep counters for unique name generation in the current method
 	int block_count;
@@ -179,6 +177,9 @@ private:
 
 
 public:
+	// mapping from variable names to memory locations
+	cool::SymbolTable<Symbol,operand> var_table;
+
     std::ostream *cur_stream;
 
     // fresh name generation functions
@@ -188,8 +189,9 @@ public:
 
     // Used in provided code for the (case..of) construct
 	string next_label;
-	operand branch_operand;    
+	operand branch_operand;
     void add_local(Symbol name, operand &vb);
+		void cc_add_symbol(Symbol name, operand &vb);
     void kill_local();
     // end of helpers for provided code
 
@@ -197,16 +199,16 @@ public:
 
 
 	operand *lookup(Symbol name)		{ return var_table.lookup(name); }
-    
+
 	CgenNode *get_class() { return cur_class; }
 	void set_class(CgenNode *c) { cur_class = c; }
-    
+
     // INCOMPLETE FUNCTIONS
 
     // Must return the CgenNode for a class given the symbol of its name
 	CgenNode *type_to_class(Symbol t);
 	// ADD CODE HERE
-	
+
 };
 
 // Utitlity function
