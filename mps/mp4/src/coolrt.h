@@ -238,7 +238,7 @@ String* IO_in_string(IO *self);
 Int* IO_in_int(IO *self);
 
 /* methods in class Int */
-Int Int_new(void);
+Int* Int_new(void);
 
 /* methods in class Bool */
 Bool* Bool_new(void);

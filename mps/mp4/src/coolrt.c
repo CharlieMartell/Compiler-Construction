@@ -336,16 +336,44 @@ Int* IO_in_int(IO *self)
 }
 
 //Create new objects!
-Int Int_new(void){
-  //TODO
+Object* Object_new(void){
+  Object result;
+  result.type = Object_string;
+  Object* o = malloc(sizeof(Object));
+  memcpy(o, &result, sizeof(Object));
+  return o;
 }
 
-Bool* Bool_new(false){
-  //TODO
+IO* IO_new(void){
+  IO result;
+  result.type = Object_string;
+  IO* o = malloc(sizeof(IO));
+  memcpy(o, &result, sizeof(IO));
+  return o;
 }
 
-String* String_new(""){
-  //TODO
+Int* Int_new(void){
+  Int result;
+  result.type = Object_string;
+  Int* o = malloc(sizeof(Int));
+  memcpy(o, &result, sizeof(Int));
+  return o;
+}
+
+Bool* Bool_new(void){
+  Bool result;
+  result.type = Object_string;
+  Bool* o = malloc(sizeof(Bool));
+  memcpy(o, &result, sizeof(Bool));
+  return o;
+}
+
+String* String_new(void){
+  String result;
+  result.type = Object_string;
+  String* o = malloc(sizeof(String));
+  memcpy(o, &result, sizeof(String));
+  return o;
 }
 
 int String_length(){
@@ -353,24 +381,25 @@ int String_length(){
 }
 
 String* String_concat(String* x, String* s){
-    size_t selfLen = strlen(self);
-    size_t sLen = strlen(s);
-    char* result = malloc( selfLen + sLen + 1);
-    memcpy(result, self, selfLen);
-    memcpy(result + selfLen, s, sLen);
-    result[selfLen + sLen] = '\0';
-    return boxString(result);
+  char* self = unboxString(x);
+  size_t selfLen = strlen(self);
+  size_t sLen = strlen(s);
+  char* result = malloc(selfLen + sLen + 1);
+  memcpy(result, self, selfLen);
+  memcpy(result + selfLen, s, sLen);
+  result[selfLen + sLen] = '\0';
+  return boxString(result);
 }
 
 String* String_substr(String* x, int i, int l){
-    char* self = unboxString(x);
-    size_t selfLen = strlen(self);
-    if(selfLen < (i + l))
-        error("Index out of range");
-    char* result = malloc(l+1);
-    memcpy(result, self+i, l);
-    result[l] = '\0';
-    return boxString(result);
+  char* self = unboxString(x);
+  size_t selfLen = strlen(self);
+  if(selfLen < (i + l))
+      error("Index out of range");
+  char* result = malloc(l+1);
+  memcpy(result, self+i, l);
+  result[l] = '\0';
+  return boxString(result);
 }
 
 //Boxing/Unboxing Methods
