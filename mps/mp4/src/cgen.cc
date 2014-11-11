@@ -145,8 +145,7 @@ void IntTable::code_string_table(ostream& s, CgenClassTable* ct)
 // Sets up declarations for extra functions needed for code generation
 // You should not need to modify this code for MP3
 //
-void CgenClassTable::setup_external_functions()
-{
+void CgenClassTable::setup_external_functions(){
 	ValuePrinter vp;
 	// setup function: external int strcmp(sbyte*, sbyte*)
 	op_type i32_type(INT32), i8ptr_type(INT8_PTR), vararg_type(VAR_ARG);
@@ -172,8 +171,98 @@ void CgenClassTable::setup_external_functions()
 	vp.declare(*ct_stream, i8ptr_type, "malloc", malloc_args);
 
 #ifdef MP4
-	//ADD CODE HERE
-	//Setup external functions for built in object class functions
+//ADD CODE HERE
+//Setup external functions for built in object class functions
+
+  op_type obj_ptr_type("Object*"), str_ptr_type("String*"), i1_type(INT1),
+          io_ptr_type("IO*"), int_ptr_type("Int*"), bool_ptr_type("Bool*");
+  // setup function: declare %Object* @Object_new()
+  vector<op_type> obj_new_args;
+  vp.declare(*ct_stream, obj_ptr_type, "Object_new", obj_new_args);
+
+  // setup function: declare %Object* @Object_abort(%Object*)
+  vector<op_type> obj_abort_args;
+  obj_abort_args.push_back(obj_ptr_type);
+  vp.declare(*ct_stream, obj_ptr_type, "Object_abort", obj_abort_args);
+
+  // setup function: declare %String* @Object_type_name(%Object*)
+  vector<op_type> obj_type_args;
+  obj_type_args.push_back(obj_ptr_type);
+  vp.declare(*ct_stream, str_ptr_type, "Object_type_name", obj_type_args);
+
+  // setup function: declare %Object* @Object_copy(%Object*)
+  vector<op_type> obj_copy_args;
+  obj_copy_args.push_back(obj_ptr_type);
+  vp.declare(*ct_stream, obj_ptr_type, "Object_copy", obj_copy_args);
+
+  // setup function: declare %IO* @IO_new()
+  vector<op_type> io_new_args;
+  vp.declare(*ct_stream, io_ptr_type, "IO_new", io_new_args);
+
+  // setup function: declare %IO* @IO_out_string(%IO*, %String*)
+  vector<op_type> io_out_string_args;
+  io_out_string_args.push_back(io_ptr_type);
+  io_out_string_args.push_back(str_ptr_type);
+  vp.declare(*ct_stream, io_ptr_type, "IO_out_string", io_out_string_args);
+
+  // setup function: declare %IO* @IO_out_int(%IO*, i32)
+  vector<op_type> io_out_int_args;
+  io_out_int_args.push_back(io_ptr_type);
+  io_out_int_args.push_back(i32_type);
+  vp.declare(*ct_stream, io_ptr_type, "IO_out_int", io_out_int_args);
+
+  // setup function: declare %String* @IO_in_string(%IO*)
+  vector<op_type> io_in_string_args;
+  io_in_string_args.push_back(io_ptr_type);
+  vp.declare(*ct_stream, str_ptr_type, "IO_in_string", io_in_string_args);
+
+  // setup function: declare i32 @IO_in_int(%IO*)
+  vector<op_type> io_in_int_args;
+  io_in_int_args.push_back(io_ptr_type);
+  vp.declare(*ct_stream, i32_type, "IO_in_int", io_in_int_args);
+
+  // setup function: declare %String* @String_new()
+  vector<op_type> string_new_args;
+  vp.declare(*ct_stream, str_ptr_type, "String_new", string_new_args);
+
+  // setup function: declare i32 @String_length(%String*)
+  vector<op_type> str_len_args;
+  str_len_args.push_back(str_ptr_type);
+  vp.declare(*ct_stream, i32_type, "String_length", str_len_args);
+
+  // setup function: declare %String* @String_concat(%String*, %String*)
+  vector<op_type> str_concat_args;
+  str_concat_args.push_back(str_ptr_type);
+  str_concat_args.push_back(str_ptr_type);
+  vp.declare(*ct_stream, str_ptr_type, "String_concat", str_concat_args);
+
+  // setup function: declare %String* @String_substr(%String*, i32, i32)
+  vector<op_type> str_substr_args;
+  str_substr_args.push_back(str_ptr_type);
+  str_substr_args.push_back(i32_type);
+  str_substr_args.push_back(i32_type);
+  vp.declare(*ct_stream, str_ptr_type, "String_substr", str_substr_args);
+
+  // setup function: declare %Int* @Int_new()
+  vector<op_type> int_new_args;
+  vp.declare(*ct_stream, int_ptr_type, "Int_new", int_new_args);
+
+  // setup function: declare void @Int_init(%Int*, i32)
+  vector<op_type> int_init_args;
+  int_init_args.push_back(int_ptr_type);
+  int_init_args.push_back(i32_type);
+  vp.declare(*ct_stream, void_type, "Int_init", int_init_args);
+
+  // setup function: declare %Bool* @Bool_new()
+  vector<op_type> bool_new_args;
+  vp.declare(*ct_stream, bool_ptr_type, "Bool_new", bool_new_args);
+
+  // setup function: declare void @Bool_init(%Bool*, i1)
+  vector<op_type> bool_init_args;
+  bool_init_args.push_back(bool_ptr_type);
+  bool_init_args.push_back(i1_type);
+  vp.declare(*ct_stream, void_type, "Int_init", bool_init_args);
+
 #endif
 }
 
@@ -323,8 +412,7 @@ void CgenClassTable::install_basic_classes()
 //
 // install_classes enters a list of classes in the symbol table.
 //
-void CgenClassTable::install_classes(Classes cs)
-{
+void CgenClassTable::install_classes(Classes cs){
     for (int i = cs->first(); cs->more(i); i = cs->next(i)) {
 	install_class(new CgenNode(cs->nth(i),CgenNode::NotBasic,this));
     }
@@ -333,8 +421,7 @@ void CgenClassTable::install_classes(Classes cs)
 //
 // Add this CgenNode to the class list and the lookup table
 //
-void CgenClassTable::install_class(CgenNode *nd)
-{
+void CgenClassTable::install_class(CgenNode *nd){
     Symbol name = nd->get_name();
 
     if (probe(name))
@@ -349,8 +436,7 @@ void CgenClassTable::install_class(CgenNode *nd)
 //
 // Add this CgenNode to the special class list and the lookup table
 //
-void CgenClassTable::install_special_class(CgenNode *nd)
-{
+void CgenClassTable::install_special_class(CgenNode *nd){
     Symbol name = nd->get_name();
 
     if (probe(name))
@@ -365,8 +451,7 @@ void CgenClassTable::install_special_class(CgenNode *nd)
 //
 // CgenClassTable::build_inheritance_tree
 //
-void CgenClassTable::build_inheritance_tree()
-{
+void CgenClassTable::build_inheritance_tree(){
     for(List<CgenNode> *l = nds; l; l = l->tl())
 	set_relations(l->hd());
 }
@@ -377,16 +462,14 @@ void CgenClassTable::build_inheritance_tree()
 // Takes a CgenNode and locates its, and its parent's, inheritance nodes
 // via the class table.  Parent and child pointers are added as appropriate.
 //
-void CgenClassTable::set_relations(CgenNode *nd)
-{
+void CgenClassTable::set_relations(CgenNode *nd){
     CgenNode *parent_node = probe(nd->get_parent());
     nd->set_parentnd(parent_node);
     parent_node->add_child(nd);
 }
 
 // Get the root of the class tree.
-CgenNode *CgenClassTable::root()
-{
+CgenNode *CgenClassTable::root(){
     return probe(Object);
 }
 
@@ -399,8 +482,7 @@ CgenNode *CgenClassTable::root()
 
 #ifndef MP4
 
-CgenNode* CgenClassTable::getMainmain(CgenNode* c)
-{
+CgenNode* CgenClassTable::getMainmain(CgenNode* c){
     if (c && ! c->basic())
         return c;                       // Found it!
 
@@ -446,11 +528,9 @@ CgenNode* CgenClassTable::getMainmain(CgenNode* c)
 //
 // Create global definitions for constant Cool objects
 //
-void CgenClassTable::code_constants()
-{
+void CgenClassTable::code_constants(){
 #ifdef MP4
 
-	// ADD CODE HERE
 #endif
 }
 
@@ -463,8 +543,7 @@ void StringEntry::code_def(ostream& s, CgenClassTable* ct)
 }
 
 // generate code to define a global int constant
-void IntEntry::code_def(ostream& s, CgenClassTable* ct)
-{
+void IntEntry::code_def(ostream& s, CgenClassTable* ct){
 	// Leave this method blank, since we are not going to use global
 	// declarations for int constants.
 }
@@ -479,8 +558,7 @@ void IntEntry::code_def(ostream& s, CgenClassTable* ct)
 // CgenClassTable constructor orchestrates all code generation
 //
 CgenClassTable::CgenClassTable(Classes classes, ostream& s)
-: nds(0)
-{
+: nds(0){
     if (cgen_debug) std::cerr << "Building CgenClassTable" << endl;
     ct_stream = &s;
     // Make sure we have a scope, both for classes and for constants
@@ -584,10 +662,10 @@ void CgenClassTable::code_main()
   //return value
   op_type i32_type(INT32);
 
-  string strToPass("Main.main() returned %d\n");
+  string strToPass("Object");
   op_arr_type op_type_array(INT8, strToPass.length()+1);
-  const_value strConst(op_type_array, strToPass, false);
-  vp.init_constant(".str", strConst);
+  const_value strConst(op_type_array, strToPass, true);
+  vp.init_constant("str.Object", strConst);
 
   //argument for declare type
   vector<op_type> main_args_types;
