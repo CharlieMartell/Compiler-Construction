@@ -13,6 +13,7 @@
 
 //
 extern int cgen_debug;
+
 ////////////////////////////////////////////////////////////////////
 //
 // Symbols
@@ -730,19 +731,75 @@ void CgenNode::set_parentnd(CgenNode *p)
 //
 void CgenNode::setup(int tag, int depth){
 #ifdef MP4
+	just_checking = false;
+	//this->method_op_types.clear();
+	op_type i32_type(INT32), i1_type(INT1), i8_ptr_type(INT8_PTR);
+	std::string name_type(name->get_string());
+	name_type = name_type + "* () ";
+	op_type cool_type(name_type, 1);
+	//push back the types common to all vtables
+	this->method_op_types.push_back(i32_type);
+	this->method_op_types.push_back(i32_type);
+	this->method_op_types.push_back(i8_ptr_type);
+	this->method_op_types.push_back(cool_type);
 	//Make new environment
 	CgenEnvironment* env = new CgenEnvironment(*(get_classtable()->ct_stream), this);
 	//Make new ValuePrinter
 	ValuePrinter vp(*(env->cur_stream));
-	layout_features();
+
 	string strToPass(name->get_string());
 	op_arr_type op_type_array(INT8, strToPass.length()+1);
 	const_value strConst(op_type_array, strToPass, true);
 	vp.init_constant(std::string("str.") + std::string(name->get_string()), strConst);
 
-	vector<op_type> obj_types;
+
+	op_type obj_vtable_type(std::string(name->get_string()) + "_vtable", 1);
+	vector<op_type> type_def_vec;
+	type_def_vec.push_back(obj_vtable_type);
+	layout_features();
+	for(size_t i = 0; i < this->attr_ret_types.size(); i++){
+		type_def_vec.push_back(this->attr_ret_types.at(i));
+		std::cerr << " iterations: " << i << " types: " << this->attr_ret_types.at(i).get_name() << "\n";
+	}
+	vp.type_define(name->get_string(), type_def_vec);
+
+//	if(this->name->get_string() != "Object"){
+//		std::string func_decl_str;
+//		if(std::string(return_type->get_string()) != std::string("SELF_TYPE"))
+//			func_decl_str = return_type->get_string();
+//		else
+//			func_decl_str = cls->get_type_name();
+//		func_decl_str = func_decl_str + "* (";
+//		func_decl_str = func_decl_str + class_param.get_name();
+//		func_decl_str = func_decl_str + "*) ";
+//		op_type to_push(func_decl_str, 1);
+//		cls->method_op_types.push_back(to_push);
+//	}
+	handle_inheritance();
+	vp.type_define(std::string(name->get_string()) + "_vtable", this->method_op_types);
+	//vp.init_struct_constant();
 
 
+#endif
+}
+void CgenNode::handle_inheritance(){
+#ifdef MP4
+	if(get_parentnd()->get_type_name() != "_no_class"){
+		CgenNode* parent_node = get_parentnd();
+		for(size_t i = 0; i < parent_node->class_ret_types.size(); i++){
+			op_type class_param(parent_node->get_type_name());
+			std::string func_decl_str;
+			if(std::string(parent_node->class_ret_types.at(i)) != std::string("SELF_TYPE"))
+					func_decl_str = parent_node->class_ret_types.at(i);
+				else
+					func_decl_str = parent_node->get_type_name();
+				func_decl_str = func_decl_str + "* (";
+				func_decl_str = func_decl_str + class_param.get_name();
+				func_decl_str = func_decl_str + "*) ";
+				op_type to_push(func_decl_str, 1);
+				this->method_op_types.push_back(to_push);
+		}
+	}
 #endif
 }
 //void CgenNode::setup(int tag, int depth){
@@ -1094,6 +1151,20 @@ operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {
 	return operand();
 }
 
+string string_to_typestring(string x){
+	if(x == "Object")
+		return "Object*";
+	else if(x == "Bool" || x == "bool")
+		return "i1";
+	else if(x == "Int" || x == "int")
+		return "i32";
+	else if(x == "String")
+		return "String";
+	else if(x == "IO")
+		return "IO";
+	else
+		return x;
+}
 //
 // Create a method body
 //
@@ -1525,9 +1596,138 @@ void method_class::layout_feature(CgenNode *cls){
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
+//	cls->ft_name = name->get_string();
+//	cls->ft_return_type = return_type->get_string();
+//	cls->ft_type = cls->get_type_name();
+//	cls->ft_type_decl = "";
+//	//std::cerr << "ZZZZ ft name: " << cls->ft_name << "  ft ret type:  " << cls->ft_return_type << "  ft_type:   " << cls->ft_type << endl;
+//	for(int x = formals->first(); formals->more(x); x = formals->next(x)){
+//		cls->formal_types.push_back(formals->nth(x)->get_type_decl());
+//		cls->formal_names.push_back(formals->nth(x)->get_name());
+//	}
+//	if(cls->just_checking == true)
+//			return;
+//	CgenEnvironment* env = new CgenEnvironment(*(cls->get_classtable()->ct_stream), cls);
+//	std::cerr << "Class: " << cls->get_type_name() << "  Name:  " << name->get_string() << "  Ret type:  "<< return_type->get_string() <<endl;
+//	op_type class_param(cls->get_type_name());
+//	if(cls->get_parentnd()->get_type_name() != "_no_class"){
+//		vector<op_type> inherited(cls->get_parentnd_op_types(cls, class_param));
+//		for(size_t i = 0; i < inherited.size() -1; i++)
+//			cls->method_op_types.push_back(inherited.at(i));
+//	}
+//	else{
+//		std::string func_decl_str;
+//		if(std::string(return_type->get_string()) != std::string("SELF_TYPE"))
+//			func_decl_str = return_type->get_string();
+//		else
+//			func_decl_str = cls->get_type_name();
+//		func_decl_str = func_decl_str + "* (";
+//		func_decl_str = func_decl_str + class_param.get_name();
+//		func_decl_str = func_decl_str + "*) ";
+//		op_type to_push(func_decl_str, 1);
+//		cls->method_op_types.push_back(to_push);
+//	}
+	for(int x = formals->first(); formals->more(x); x = formals->next(x)){
+		op_type class_ret_type;
+		if(std::string(this->formals->nth(x)->get_type_decl()->get_string()) == std::string("Int")
+			|| std::string(this->formals->nth(x)->get_type_decl()->get_string()) == std::string("int"))
+				class_ret_type= INT32;
+			else if(std::string(this->formals->nth(x)->get_type_decl()->get_string()) == std::string("Bool")
+			|| std::string(this->formals->nth(x)->get_type_decl()->get_string()) == std::string("bool"))
+				class_ret_type = INT1;
+			else if(std::string(this->formals->nth(x)->get_type_decl()->get_string()) == std::string("sbyte*"))
+				class_ret_type = INT8_PTR;
+			else
+				class_ret_type = op_type(this->formals->nth(x)->get_name()->get_string());
+		cls->formal_types.push_back(class_ret_type);
+		cls->formal_names.push_back(class_ret_type);
+	}
+
+
+	cls->class_ret_types.push_back(return_type->get_string());
+
+	op_type class_param(cls->get_type_name());
+	std::string func_decl_str;
+
+	if(std::string(return_type->get_string()) != std::string("SELF_TYPE"))
+		func_decl_str = string_to_typestring(return_type->get_string());
+	else
+		func_decl_str = cls->get_type_name();
+	func_decl_str = func_decl_str + " (";
+	if(cls->formal_types.size() < 2)
+		func_decl_str = func_decl_str + class_param.get_name();
+	else{
+		for(size_t i = 0; i < cls->formal_types.size(); i++){
+			if(i == (cls->formal_types.size() - 1))
+				func_decl_str = func_decl_str + cls->formal_types.at(i).get_name();
+			else
+				func_decl_str = func_decl_str + cls->formal_types.at(i).get_name() + ",";
+		}
+	}
+	func_decl_str = func_decl_str + ") ";
+	op_type to_push(func_decl_str, 1);
+	cls->method_op_types.push_back(to_push);
 
 #endif
 }
+
+
+//vector<op_type> CgenNode::get_parentnd_op_types(CgenNode *cls, op_type opt){
+//	vector<op_type> temp_vec;
+//	vector<op_type> temper_vec;
+////	std::cerr << "im is:  " << cls->get_type_name() << endl;
+////	std::cerr << "my parent is:  " << cls->get_parentnd()->get_type_name() << endl;
+//	just_checking = true;
+//	if(cls->get_parentnd()->get_type_name() != "_no_class"){
+//		for(int x = cls->get_parentnd()->features->first(); cls->get_parentnd()->features->more(x); x = cls->get_parentnd()->features->next(x))
+//		{
+//			features->nth(x)->layout_feature(cls->get_parentnd());
+//			if(CgenNode::ft_return_type != "" || CgenNode::ft_type_decl != "" || CgenNode::ft_name != ""){
+//				std::cerr << "parent class  "<< cls->get_parentnd()->get_type_name() << "   current class:  "<< cls->get_type_name() << "  Properties of parents features: \n"<<" ft name: "
+//						<< CgenNode::ft_name << "  ft ret type:  " << CgenNode::ft_return_type << "  ft_type_decl   " << CgenNode::ft_type_decl <<"  ft_type:   "
+//						<< CgenNode::ft_type << "\n";
+////				for(size_t i = 0; i < CgenNode::formal_types.size() -1; i++){
+////					std::cerr << "  formal type: " << CgenNode::formal_types.at(i);
+////				}
+//				std::string func_decl_str;
+//				if(CgenNode::ft_return_type != "")
+//				{
+//					if(std::string(CgenNode::ft_return_type) != std::string("SELF_TYPE"))
+//						func_decl_str = CgenNode::ft_return_type;
+//					else
+//						func_decl_str = cls->get_type_name();
+//				}
+//				else
+//				{
+//					if(std::string(CgenNode::ft_type_decl) != std::string("SELF_TYPE"))
+//						if(CgenNode::ft_type_decl == "sbyte*")
+//						{
+//							op_type int_ptr_type("Int", 1);
+//							func_decl_str = int_ptr_type.get_name();
+//						}
+//						else
+//							func_decl_str = CgenNode::ft_type_decl;
+//					else
+//						func_decl_str = cls->get_type_name();
+//				}
+//				func_decl_str = func_decl_str + "* (";
+//				func_decl_str = func_decl_str + opt.get_name();
+//				func_decl_str = func_decl_str + "*) ";
+//				op_type to_push(func_decl_str, 1);
+//				std::cerr << "adding:  " << to_push.get_name() << "\n";
+//				temp_vec.push_back(to_push);
+//				CgenNode::ft_name = "";
+//				CgenNode::ft_type_decl = "";
+//				CgenNode::ft_type = "";
+//				CgenNode::ft_return_type = "";
+//			}
+//
+//		}
+//		just_checking = false;
+//		return temp_vec;
+//	}
+//}
+
 
 // If the source tag is >= the branch tag and <= (max child of the branch class) tag,
 // then the branch is a superclass of the source
@@ -1602,7 +1802,84 @@ void attr_class::layout_feature(CgenNode *cls)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE
+	//std::cerr << "Class: " << cls->get_type_name() << "  Name:  " << name->get_string() << "  type decl:  "<< type_decl->get_string() <<endl;
+//	cls->ft_name = name->get_string();
+//	cls->ft_type_decl = type_decl->get_string();
+//	cls->ft_type = cls->get_type_name();
+//	cls->ft_return_type = "";
+//	if(cls->just_checking == true)
+//			return;
+//	if(std::string(type_decl->get_string()) == std::string("Int")
+//	|| std::string(type_decl->get_string()) == std::string("int")){
+//		op_type class_ret_type(INT32);
+//		cls->class_ret_types.push_back(class_ret_type);
+//	}
+//	else if(std::string(type_decl->get_string()) == std::string("Bool")
+//	|| std::string(type_decl->get_string()) == std::string("bool")){
+//		op_type class_ret_type(INT1);
+//		cls->class_ret_types.push_back(class_ret_type);
+//	}
+//	else if(std::string(type_decl->get_string()) == std::string("sbyte*")){
+//			op_type class_ret_type(INT8_PTR);
+//			cls->class_ret_types.push_back(class_ret_type);
+//		}
+//	else{
+//		op_type class_ret_type(type_decl->get_string());
+//		cls->class_ret_types.push_back(class_ret_type);
+//	}
+//	if(cls->get_parentnd()->get_type_name() != "_no_class"){
+//		return;
+//	}
+//	else{
+//		op_type class_param(cls->get_type_name());
+//		std::string func_decl_str;
+//		if(std::string(type_decl->get_string()) != std::string("SELF_TYPE"))
+//			func_decl_str = type_decl->get_string();
+//		else
+//			func_decl_str = cls->get_type_name();
+//		func_decl_str = func_decl_str + "* (";
+//		func_decl_str = func_decl_str + class_param.get_name();
+//		func_decl_str = func_decl_str + "*) ";
+//		op_type to_push(func_decl_str, 1);
+//		cls->method_op_types.push_back(to_push);
+//	}
+//
+
+	if(std::string(type_decl->get_string()) == std::string("Int")
+	|| std::string(type_decl->get_string()) == std::string("int")){
+		op_type class_ret_type(INT32);
+		cls->class_ret_types.push_back("Int*");
+		cls->attr_ret_types.push_back(class_ret_type);
+	}
+	else if(std::string(type_decl->get_string()) == std::string("Bool")
+	|| std::string(type_decl->get_string()) == std::string("bool")){
+		op_type class_ret_type(INT1);
+		cls->class_ret_types.push_back("Bool*");
+		cls->attr_ret_types.push_back(class_ret_type);
+	}
+	else if(std::string(type_decl->get_string()) == std::string("sbyte*")){
+		op_type class_ret_type(INT8_PTR);
+		cls->class_ret_types.push_back("String*");
+		cls->attr_ret_types.push_back(class_ret_type);
+	}
+	else{
+		op_type class_ret_type(type_decl->get_string());
+		cls->class_ret_types.push_back(type_decl->get_string());
+		cls->attr_ret_types.push_back(class_ret_type);
+	}
+
+	op_type class_param(cls->get_type_name());
+	std::string func_decl_str;
+	if(std::string(type_decl->get_string()) != std::string("SELF_TYPE"))
+		func_decl_str = string_to_typestring(type_decl->get_string());
+	else
+		func_decl_str = cls->get_type_name();
+	func_decl_str = func_decl_str + " (";
+	func_decl_str = func_decl_str + class_param.get_name();
+	func_decl_str = func_decl_str + "*) ";
+	op_type to_push(func_decl_str, 1);
+	cls->method_op_types.push_back(to_push);
+
 #endif
 }
 
@@ -1611,6 +1888,7 @@ void attr_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE
+
 #endif
 }
+

@@ -141,9 +141,24 @@ public:
 	// Class codegen. You need to write the body of this function.
 	void code_class();
 	void decl_name(char* x, CgenEnvironment *env);
+
 	// ADD CODE HERE
 	string get_type_name() { return string(name->get_string()); }
+	vector<op_type> method_op_types;
+	vector<string> class_ret_types;
+	vector<op_type> formal_types;
+	vector<op_type> formal_names;
+	vector<op_type> attr_ret_types;
+	void handle_inheritance();
 
+	//op_type get_op_types(CgenNode *cls, op_type opt);
+	vector<op_type> get_parentnd_op_types(CgenNode *cls, op_type opt);
+	string ft_name;
+	string ft_return_type;
+	string ft_type_decl;
+	string ft_type;
+
+	bool just_checking;
 
 private:
     // Layout the methods and attributes for code generation
@@ -209,7 +224,6 @@ public:
 	// ADD CODE HERE
 
 };
-
 // Utitlity function
 // Generate any code necessary to convert from given operand to
 // dest_type, assuing it has already been checked to be compatible
