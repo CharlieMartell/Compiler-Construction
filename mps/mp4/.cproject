@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="cdt.managedbuild.toolchain.llvm.gnu.macosx.base.1904524482">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.llvm.gnu.macosx.base.1904524482" moduleId="org.eclipse.cdt.core.settings" name="Default">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" id="cdt.managedbuild.toolchain.llvm.gnu.macosx.base.1904524482" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+					<folderInfo id="cdt.managedbuild.toolchain.llvm.gnu.macosx.base.1904524482.1475893389" name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.llvm.gnu.macosx.base.1706325413" name="LLVM with GCC (MacOSX)" superClass="cdt.managedbuild.toolchain.llvm.gnu.macosx.base">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.MachO64" id="cdt.managedbuild.target.llvm.gnu.macosx.platform.base.1107442449" isAbstract="true" name="Debug Platform" osList="macosx" superClass="cdt.managedbuild.target.llvm.gnu.macosx.platform.base"/>
+							<builder buildPath="${workspace_loc:/426mp4}/Default" id="cdt.managedbuild.target.llvm.builder.base.1272824985" managedBuildOn="false" name="CDT Internal Builder.Default" superClass="cdt.managedbuild.target.llvm.builder.base"/>
+							<tool id="cdt.managedbuild.tool.llvm.assembler.base.1693054429" name="LLVM assembler" superClass="cdt.managedbuild.tool.llvm.assembler.base"/>
+							<tool id="cdt.managedbuild.tool.llvm.archiver.base.637219839" name="LLVM archiver" superClass="cdt.managedbuild.tool.llvm.archiver.base"/>
+							<tool id="cdt.managedbuild.tool.llvm.gnu.c.compiler.base.1180409876" name="LLVM GCC" superClass="cdt.managedbuild.tool.llvm.gnu.c.compiler.base"/>
+							<tool id="cdt.managedbuild.tool.llvm.gnu.cpp.compiler.base.810031308" name="LLVM G++" superClass="cdt.managedbuild.tool.llvm.gnu.cpp.compiler.base"/>
+							<tool id="cdt.managedbuild.tool.llvm.gnu.c.linker.base.102813852" name="LLVM GNU C linker" superClass="cdt.managedbuild.tool.llvm.gnu.c.linker.base"/>
+							<tool id="cdt.managedbuild.tool.llvm.gnu.cpp.linker.base.1010399768" name="LLVM GNU C++ linker" superClass="cdt.managedbuild.tool.llvm.gnu.cpp.linker.base"/>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="426mp4.null.928758681" name="426mp4"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>

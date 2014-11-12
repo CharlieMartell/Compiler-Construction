@@ -42,7 +42,6 @@ public:
 	// CgenClassTable constructor begins and ends the code generation process
 	CgenClassTable(Classes, ostream& str);
 	~CgenClassTable();
-
 	// Get the root of the class Tree, i.e. Object
 	CgenNode *root();
 	int get_num_classes() const		{ return current_tag; }
@@ -141,7 +140,7 @@ public:
 
 	// Class codegen. You need to write the body of this function.
 	void code_class();
-
+	void decl_name(char* x, CgenEnvironment *env);
 	// ADD CODE HERE
 	string get_type_name() { return string(name->get_string()); }
 

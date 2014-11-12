@@ -338,7 +338,7 @@ Int* IO_in_int(IO *self)
 //Create new objects!
 Object* Object_new(void){
   Object result;
-  result.type = Object_string;
+  //result.type = Object_string;
   Object* o = malloc(sizeof(Object));
   memcpy(o, &result, sizeof(Object));
   return o;
@@ -346,7 +346,7 @@ Object* Object_new(void){
 
 IO* IO_new(void){
   IO result;
-  result.type = Object_string;
+  //result.type = IO_string;
   IO* o = malloc(sizeof(IO));
   memcpy(o, &result, sizeof(IO));
   return o;
@@ -354,7 +354,7 @@ IO* IO_new(void){
 
 Int* Int_new(void){
   Int result;
-  result.type = Object_string;
+  //result.type = Int_string;
   Int* o = malloc(sizeof(Int));
   memcpy(o, &result, sizeof(Int));
   return o;
@@ -362,7 +362,7 @@ Int* Int_new(void){
 
 Bool* Bool_new(void){
   Bool result;
-  result.type = Object_string;
+  //result.type = Bool_string;
   Bool* o = malloc(sizeof(Bool));
   memcpy(o, &result, sizeof(Bool));
   return o;
@@ -370,7 +370,7 @@ Bool* Bool_new(void){
 
 String* String_new(void){
   String result;
-  result.type = Object_string;
+  //result.type = String_string;
   String* o = malloc(sizeof(String));
   memcpy(o, &result, sizeof(String));
   return o;
@@ -404,24 +404,24 @@ String* String_substr(String* x, int i, int l){
 
 //Boxing/Unboxing Methods
 Int* boxInt(int32_t value) {
-    Int* r = Int_new();
-    r->type = Int_vtable_prototype();
-    r->val = value;
-    return r;
+  Int* r = Int_new();
+  r->type = Int_vtable_prototype();
+  r->val = value;
+  return r;
 }
 
 Bool* boxBool(_Bool value) {
-    Bool* b = Bool_new();
-    b->type = Bool_vtable_prototype();
-    b->val = value;
-    return b;
+  Bool* b = Bool_new();
+  b->type = Bool_vtable_prototype();
+  b->val = value;
+  return b;
 }
 
 String* boxString(const char* data) {
-    String* result = String_new();
-    result->type = Int_vtable_prototype();
-    result->val = data;
-    return result;
+  String* result = String_new();
+  result->type = Int_vtable_prototype();
+  result->val = data;
+  return result;
 }
 
 char* unboxString(String* x){

@@ -248,3 +248,9 @@ String* String_new(void);
 int String_length(String *x);
 String* String_concat(String* x, String s);
 String* String_substr(String*, int i, int l);
+
+//Boxing/Unboxing Methods
+Int* boxInt(int32_t value);
+Bool* boxBool(_Bool value);
+String* boxString(const char* data);
+char* unboxString(String* x);
