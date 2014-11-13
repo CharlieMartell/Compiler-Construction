@@ -149,6 +149,7 @@ public:
 	vector<op_type> formal_types;
 	vector<op_type> formal_names;
 	vector<op_type> attr_ret_types;
+	vector<const_value> assign_vals;
 	void handle_inheritance();
 
 	//op_type get_op_types(CgenNode *cls, op_type opt);

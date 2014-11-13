@@ -759,9 +759,9 @@ void CgenNode::setup(int tag, int depth){
 	layout_features();
 	for(size_t i = 0; i < this->attr_ret_types.size(); i++){
 		type_def_vec.push_back(this->attr_ret_types.at(i));
-		std::cerr << " iterations: " << i << " types: " << this->attr_ret_types.at(i).get_name() << "\n";
+		//std::cerr << " iterations: " << i << " types: " << this->attr_ret_types.at(i).get_name() << "\n";
 	}
-	vp.type_define(name->get_string(), type_def_vec);
+	vp.type_define(name->get_string(), this->type_def_vec);
 
 //	if(this->name->get_string() != "Object"){
 //		std::string func_decl_str;
@@ -776,8 +776,16 @@ void CgenNode::setup(int tag, int depth){
 //		cls->method_op_types.push_back(to_push);
 //	}
 	handle_inheritance();
+
 	vp.type_define(std::string(name->get_string()) + "_vtable", this->method_op_types);
-	//vp.init_struct_constant();
+
+	//vtable prototypes:
+//	for(size_t i = 0; i < this->assign_vals.size(); i++){
+//		std::cerr << "Name: " << this->assign_vals.at(i).get_name() <<"  " << i<< endl;
+//	}
+	op_type proto_const_op(std::string(std::string(name->get_string()) + std::string("_vtable")));
+	global_value prototype_glbl(proto_const_op, std::string(name->get_string()) + std::string("_vtable_prototype"));
+	vp.init_struct_constant(prototype_glbl, this->method_op_types, this->assign_vals);
 
 
 #endif
@@ -792,7 +800,7 @@ void CgenNode::handle_inheritance(){
 			if(std::string(parent_node->class_ret_types.at(i)) != std::string("SELF_TYPE"))
 					func_decl_str = parent_node->class_ret_types.at(i);
 				else
-					func_decl_str = parent_node->get_type_name();
+					func_decl_str = this->get_type_name();
 				func_decl_str = func_decl_str + "* (";
 				func_decl_str = func_decl_str + class_param.get_name();
 				func_decl_str = func_decl_str + "*) ";
@@ -1152,12 +1160,12 @@ operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {
 }
 
 string string_to_typestring(string x){
-	if(x == "Object")
-		return "Object*";
+	if(x == "Object" || x == "sbyte*")
+		return "Object";
 	else if(x == "Bool" || x == "bool")
-		return "i1";
+		return "Bool";
 	else if(x == "Int" || x == "int")
-		return "i32";
+		return "Int";
 	else if(x == "String")
 		return "String";
 	else if(x == "IO")
@@ -1600,7 +1608,7 @@ void method_class::layout_feature(CgenNode *cls){
 //	cls->ft_return_type = return_type->get_string();
 //	cls->ft_type = cls->get_type_name();
 //	cls->ft_type_decl = "";
-//	//std::cerr << "ZZZZ ft name: " << cls->ft_name << "  ft ret type:  " << cls->ft_return_type << "  ft_type:   " << cls->ft_type << endl;
+	//std::cerr << "ZZZZ ft name: " << cls->ft_name << "  ft ret type:  " << cls->ft_return_type << "  ft_type:   " << cls->ft_type << endl;
 //	for(int x = formals->first(); formals->more(x); x = formals->next(x)){
 //		cls->formal_types.push_back(formals->nth(x)->get_type_decl());
 //		cls->formal_names.push_back(formals->nth(x)->get_name());
@@ -1642,7 +1650,9 @@ void method_class::layout_feature(CgenNode *cls){
 		cls->formal_types.push_back(class_ret_type);
 		cls->formal_names.push_back(class_ret_type);
 	}
-
+	CgenEnvironment* env = new CgenEnvironment(*(cls->get_classtable()->ct_stream), cls);
+//	operand x = expr->code(env);
+//	cls->assign_vals.push_back(x);
 
 	cls->class_ret_types.push_back(return_type->get_string());
 
@@ -1653,7 +1663,7 @@ void method_class::layout_feature(CgenNode *cls){
 		func_decl_str = string_to_typestring(return_type->get_string());
 	else
 		func_decl_str = cls->get_type_name();
-	func_decl_str = func_decl_str + " (";
+	func_decl_str = func_decl_str + "* (";
 	if(cls->formal_types.size() < 2)
 		func_decl_str = func_decl_str + class_param.get_name();
 	else{
@@ -1664,7 +1674,7 @@ void method_class::layout_feature(CgenNode *cls){
 				func_decl_str = func_decl_str + cls->formal_types.at(i).get_name() + ",";
 		}
 	}
-	func_decl_str = func_decl_str + ") ";
+	func_decl_str = func_decl_str + "*) ";
 	op_type to_push(func_decl_str, 1);
 	cls->method_op_types.push_back(to_push);
 
@@ -1844,7 +1854,7 @@ void attr_class::layout_feature(CgenNode *cls)
 //		cls->method_op_types.push_back(to_push);
 //	}
 //
-
+	CgenEnvironment* env = new CgenEnvironment(*(cls->get_classtable()->ct_stream), cls);
 	if(std::string(type_decl->get_string()) == std::string("Int")
 	|| std::string(type_decl->get_string()) == std::string("int")){
 		op_type class_ret_type(INT32);
@@ -1868,13 +1878,17 @@ void attr_class::layout_feature(CgenNode *cls)
 		cls->attr_ret_types.push_back(class_ret_type);
 	}
 
+	operand x = init->code(env);
+	const_value const_x(x.get_type(), x.get_name(), false);
+	cls->assign_vals.push_back(const_x);
+
 	op_type class_param(cls->get_type_name());
 	std::string func_decl_str;
 	if(std::string(type_decl->get_string()) != std::string("SELF_TYPE"))
 		func_decl_str = string_to_typestring(type_decl->get_string());
 	else
 		func_decl_str = cls->get_type_name();
-	func_decl_str = func_decl_str + " (";
+	func_decl_str = func_decl_str + "* (";
 	func_decl_str = func_decl_str + class_param.get_name();
 	func_decl_str = func_decl_str + "*) ";
 	op_type to_push(func_decl_str, 1);
@@ -1888,7 +1902,7 @@ void attr_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-
+	std::cerr <<  "this got called"<<endl;
 #endif
 }
 
