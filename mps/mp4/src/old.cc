@@ -61,11 +61,8 @@ EXTERN Symbol
 
 
 //My Functions
-
-string CgenNode::process_ret_type(string x){
-	if(x == "SELF_TYPE")
-		return this->get_type_name();
-	else if(x == "Bool" || x == "bool")
+string process_ret_type(string x){
+	if(x == "Bool" || x == "bool")
 		return "i1";
 	else if(x == "Int" || x == "int")
 		return "i32";
@@ -133,90 +130,53 @@ void CgenNode::handle_vtable_defaults(){
 	this->vtable_values.push_back(new_const);
 
 	//Layout basic functions
-	if(this->get_type_name() == "Object")
+	if(true == false)//this->get_type_name() == "Object")
 	{
 		//TYPES
 		//%Object* (%Object*) *
-		op_type cool_abort_type(std::string("Object* (%Object*)"), 1);
+		op_type cool_abort_type(std::string(
+							  std::string(name->get_string())
+							+ std::string("* (")
+							+ std::string(process_ret_type(name->get_string()))
+							+ std::string(") ")), 1);
 		this->vtable_types.push_back(cool_abort_type);
 		//%String* (%Object*) *
-		op_type cool_type_name(std::string("String* (%Object*)"), 1);
+		op_type cool_type_name(std::string(
+							  std::string("String* (")
+							+ std::string(process_ret_type(name->get_string()))
+							+ std::string(") ")), 1);
 		this->vtable_types.push_back(cool_type_name);
 		//%Object* (%Object*) *
-		op_type cool_copy_type(std::string("Object* (%Object*)"), 1);
+		op_type cool_copy_type(std::string(
+							  std::string(name->get_string())
+							+ std::string("* (")
+							+ std::string(process_ret_type(name->get_string()))
+							+ std::string(") ")), 1);
 		this->vtable_types.push_back(cool_copy_type);
 
 		//VALUES
-		//@Object_abort
+		//%Object* (%Object*) * @Object_abort,
 		string abort_string = this->get_type_name();
 		abort_string = abort_string + "_abort";
 		global_value abort_glbl(cool_type, abort_string);
 		const_value abort_const(cool_type, abort_glbl.get_name(), false);
 		this->vtable_values.push_back(abort_const);
 
-		//@Object_type_name
+		//%String* (%Object*) * @Object_type_name,
 		string type_name_string = this->get_type_name();
 		type_name_string = type_name_string + "_type_name";
 		global_value type_name_glbl(cool_type, type_name_string);
 		const_value type_name_const(cool_type, type_name_glbl.get_name(), false);
 		this->vtable_values.push_back(type_name_const);
 
-		//@Object_copy
+		//%Object* (%Object*) * @Object_copy
 		string copy_string = this->get_type_name();
 		copy_string = copy_string + "_copy";
 		global_value copy_glbl(cool_type, copy_string);
 		const_value copy_const(cool_type, copy_glbl.get_name(), false);
 		this->vtable_values.push_back(copy_const);
 	}
-	else{
-		//%Object* (%SELF_TYPE*) *
-		op_type cool_abort_type(std::string(
-							  std::string("Object* (%")
-							+ std::string(this->process_ret_type(name->get_string()))
-							+ std::string("*) ")), 1);
-		this->vtable_types.push_back(cool_abort_type);
 
-		//%String* (%SELF_TYPE*) *
-		op_type cool_type_name(std::string(
-							  std::string("String* (%")
-							+ std::string(this->process_ret_type(name->get_string()))
-							+ std::string("*) ")), 1);
-		this->vtable_types.push_back(cool_type_name);
-
-		//%SELF_TYPE* (%SELF_TYPE*) *
-		op_type cool_copy_type(std::string(
-							  std::string(this->process_ret_type(name->get_string()))
-							+ std::string("* (%")
-							+ std::string(this->process_ret_type(name->get_string()))
-							+ std::string("*) ")), 1);
-		this->vtable_types.push_back(cool_copy_type);
-
-		//VALUES
-		//Note I did this using the operand bitcast previously but it just
-		//hardcodes it anyway..
-		//bitcast (%Object* (%Object*) * @Object_abort to %Object* (%SELF_TYPE*) *)
-		string abort_string = "bitcast (%Object* (%Object*) * @Object_abort to %Object* (%";
-		abort_string = abort_string + this->process_ret_type(name->get_string());
-		abort_string = abort_string + "*) *)";
-		const_value abort_const(cool_type, abort_string, false);
-		this->vtable_values.push_back(abort_const);
-
-		//bitcast (%String* (%Object*) * @Object_type_name to %String* (%SELF_TYPE*) *)
-		string type_name_string = "bitcast (%String* (%Object*) * @Object_type_name to %String* (%";
-		type_name_string = type_name_string + this->process_ret_type(name->get_string());
-		type_name_string = type_name_string + "*) *)";
-		const_value type_name_const(cool_type, type_name_string, false);
-		this->vtable_values.push_back(type_name_const);
-
-		//bitcast (%Object* (%Object*) * @Object_copy to %SELF_TYPE* (%SELF_TYPE*) *)
-		string copy_string = "bitcast (%Object* (%Object*) * @Object_copy to %";
-		copy_string = copy_string + this->process_ret_type(name->get_string());
-		copy_string = copy_string + "* (%";
-		copy_string = copy_string + this->process_ret_type(name->get_string());
-		copy_string = copy_string + "*) *)";
-		const_value copy_const(cool_type, copy_string, false);
-		this->vtable_values.push_back(copy_const);
-	}
 
 }
 
@@ -1556,7 +1516,7 @@ void method_class::layout_feature(CgenNode *cls)
     	}
 
     	//add the id and type of the feature to attr_types
-    	cls->add_attr_type(cls->process_ret_type(return_type->get_string()), name->get_string());
+    	cls->add_attr_type(process_ret_type(return_type->get_string()), name->get_string());
 
     	std::string return_type_str = cls->get_type_name();
     	if(std::string(return_type->get_string()) != std::string("SELF_TYPE"))
@@ -1564,10 +1524,10 @@ void method_class::layout_feature(CgenNode *cls)
     	//TODO:Pretty sure I need to handle main differently
 
     	//Means we have expressions!
-//	    if(std::string(expr->get_type()->get_string()).length() > 0){
-//		    operand expr_op = expr->code(env);
-//		    cls->vtable_types.push_back(expr_op.get_name());
-//	    }
+	    if(std::string(expr->get_type()->get_string()).length() > 0){
+		    operand expr_op = expr->code(env);
+		    cls->vtable_types.push_back(expr_op.get_name());
+	    }
 
 	    //TODO: handle the bitcase and getelementptr
 
@@ -1666,9 +1626,11 @@ void attr_class::layout_feature(CgenNode *cls)
    CgenEnvironment*  env = new CgenEnvironment(*(cls->get_classtable()->ct_stream), cls);
    //get the return type and correctly process it
    string ret_type = type_decl->get_string();
+   if(ret_type == "SELF_TYPE")
+	   ret_type = cls->get_type_name();
 
    //add the type and name to attr_type and attr_id vectors
-   cls->add_attr_type(cls->process_ret_type(type_decl->get_string()), name->get_string());
+   cls->add_attr_type(process_ret_type(type_decl->get_string()), name->get_string());
 
    //Means we have expressions to assign
 //   if(std::string(init->get_type()->get_string()).length() > 0){
