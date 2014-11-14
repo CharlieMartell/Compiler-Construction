@@ -146,13 +146,14 @@ public:
 	string get_type_name() { return string(name->get_string()); }
 
 	//MY ADDITIONS VV
-	void add_attr_type(string type, string id);
+	void add_attr_type(Symbol type, Symbol id);
 	void handle_vtable_defaults();
-	void handle_vtable_inherited();
 	void setup_ret_types(Symbol type_decl, CgenNode* cls);
-	string process_ret_type(string x);
-	vector<string> attr_types;
-	vector<string> attr_ids;
+	op_type process_ret_type(string x);
+	string new_process_ret_type(string x);
+	void handle_new_classes();
+	vector<Symbol> attr_types;
+	vector<Symbol> attr_ids;
 	vector<string> attr_ret_vals;
 
 	vector<op_type> attr_only_ret_types;
@@ -160,8 +161,7 @@ public:
 	vector<op_type> vtable_types;
 	vector<const_value> vtable_values;
 
-	vector<op_type> formal_types;
-	vector<op_type> formal_ids;
+	//vector<vector<string>> formal_types;
 
 
 private:
