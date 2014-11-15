@@ -148,6 +148,7 @@ public:
 	//MY ADDITIONS VV
 	void add_attr_type(Symbol type, Symbol id);
 	void handle_vtable_defaults();
+	void check_inherited();
 	void setup_ret_types(Symbol type_decl, CgenNode* cls);
 	op_type process_ret_type(string x);
 	string new_process_ret_type(string x);
@@ -160,6 +161,10 @@ public:
 
 	vector<op_type> vtable_types;
 	vector<const_value> vtable_values;
+
+	vector<op_type> new_vtable_types;
+	vector<const_value> new_vtable_values;
+	vector<string> new_vtable_return_types;
 
 	//vector<vector<string>> formal_types;
 

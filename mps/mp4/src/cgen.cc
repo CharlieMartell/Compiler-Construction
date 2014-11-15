@@ -132,6 +132,34 @@ void CgenNode::setup_ret_types(Symbol type_decl, CgenNode* cls){
 //	}
 //}
 
+void CgenNode::check_inherited(){
+	string parent_no_self_type = (this->get_parentnd()->name->get_string() == "SELF_TYPE") ? this->get_parentnd()->get_type_name() : this->get_parentnd()->name->get_string();
+	string no_self_type = (name->get_string() == "SELF_TYPE") ? this->get_type_name() : name->get_string();
+	//add inherited functions to vtable and check to make sure you don't override them
+	for(size_t i = 0; i < this->get_parentnd()->new_vtable_types.size(); i++){
+		op_type vt_ft_func(this->get_parentnd()->new_vtable_return_types.at(i) + "*");
+		vector<op_type> empty;
+		op_type mytype(no_self_type + "*");
+		empty.push_back(mytype);
+		op_func_type vt_ft_op_func_ptr_type(vt_ft_func, empty);
+		vtable_types.push_back(vt_ft_op_func_ptr_type);
+
+		string inherited_string = "bitcast (%";
+		inherited_string = inherited_string + this->get_parentnd()->new_vtable_return_types.at(i);
+		inherited_string = inherited_string + "* (%";
+		inherited_string = inherited_string + parent_no_self_type;
+		inherited_string = inherited_string + "*) * ";
+		inherited_string = inherited_string + this->get_parentnd()->new_vtable_values.at(i).get_name();
+		inherited_string = inherited_string + " to %";
+		inherited_string = inherited_string + this->get_parentnd()->name->get_string();
+		inherited_string = inherited_string + "* (%";
+		inherited_string = inherited_string + no_self_type;
+		inherited_string = inherited_string + "*) *)";
+		const_value inherited_const(INT32, inherited_string, false);
+		this->vtable_values.push_back(inherited_const);
+	}
+}
+
 void CgenNode::handle_vtable_defaults(){
     op_type i32_type(INT32), i1_type(INT1), i8_ptr_type(INT8_PTR);
 	std::string name_type(name->get_string());
@@ -254,6 +282,19 @@ void CgenNode::handle_vtable_defaults(){
 
 		//VALUES
 		//bitcast (%Object* (%Object*) * @Object_abort to %Object* (%SELF_TYPE*) *)
+		//NOTE: I know this method uses provided functionality of casted value,
+		//however it doesnt actually do anything useful!
+//		op_type res_type("Object*");
+//		vector<op_type> arg_types;
+//		arg_types.push_back(no_self_type + "*");
+//		op_func_ptr_type cast_to(res_type, arg_types);
+//		op_type pre_res_type("Object*");
+//		op_type pre_arg_type(no_self_type + "*");
+//		op_func_ptr_type pre_cast_to(res_type, pre_arg_type);
+//
+//		global_value abort_global(res_type, "Object_abort");
+//		casted_value abort_casted(cast_to, abort_global.get_name(), pre_arg_type);
+//		const_value abort_const(cool_type, abort_casted.get_name(), false);
 		string abort_string = "bitcast (%Object* (%Object*) * @Object_abort to %Object* (%";
 		abort_string = abort_string + no_self_type;
 		abort_string = abort_string + "*) *)";
@@ -1112,6 +1153,14 @@ void CgenNode::setup(int tag, int depth)
 	const_value strConst(op_type_array, strToPass, true);
 	vp.init_constant(std::string("str.") + std::string(name->get_string()), strConst);
 
+	//after adding basic classes to vtables add new ones
+	for(size_t i = 0; i < this->new_vtable_types.size(); i++)
+		vtable_types.push_back(this->new_vtable_types.at(i));
+	for(size_t i = 0; i < this->new_vtable_values.size(); i++)
+		vtable_values.push_back(this->new_vtable_values.at(i));
+	//then add inherited ones
+	if(!basic())
+		this->check_inherited();
 
 	op_type obj_vtable_type(std::string(name->get_string()) + "_vtable", 1);
 	vector<op_type> type_def_vec;
@@ -1709,6 +1758,7 @@ void method_class::layout_feature(CgenNode *cls)
     //Establish environment
     CgenEnvironment* env = new CgenEnvironment(*(cls->get_classtable()->ct_stream), cls);
     //add all information about formals to vectors
+
     vector<op_type> temp_formal_vec;
     temp_formal_vec.push_back(cls->process_ret_type(cls->get_type_name()));
     for(int x = formals->first(); formals->more(x); x = formals->next(x)){
@@ -1732,7 +1782,8 @@ void method_class::layout_feature(CgenNode *cls)
 		//add the new feature to vtable
 		op_type vt_ft_func(cls->process_ret_type(return_type->get_string()));
 		op_func_type vt_ft_op_func_ptr_type(vt_ft_func, temp_formal_vec);
-		cls->vtable_types.push_back(vt_ft_op_func_ptr_type);
+		cls->new_vtable_types.push_back(vt_ft_op_func_ptr_type);
+		cls->new_vtable_return_types.push_back(return_type->get_string());
 
 		//add the new feature to vtable prototype
 		std::string vtp_ft_string = cls->get_type_name();
@@ -1741,7 +1792,7 @@ void method_class::layout_feature(CgenNode *cls)
 		op_type vtp_ft_op_type(vtp_ft_string);
 		global_value vtp_ft_glbl(vtp_ft_op_type, vtp_ft_string);
 		const_value vtp_ft_const(vtp_ft_op_type, vtp_ft_glbl.get_name(), false);
-		cls->vtable_values.push_back(vtp_ft_const);
+		cls->new_vtable_values.push_back(vtp_ft_const);
 	}
 
     	//Means we have expressions!
