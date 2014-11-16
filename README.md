@@ -42,3 +42,5 @@ MP2: This mp implements the recursive descent parser without the use of bison.
 
 MP3: This mp implements the conversion of our Abstract Syntax Tree, to
       LLVM intermediate representation. (without objects)
+
+MP4: This mp finishes the LLVM code generation supporting basic classes and new objects.
