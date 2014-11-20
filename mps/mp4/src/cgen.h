@@ -166,7 +166,7 @@ public:
 	vector<const_value> new_vtable_values;
 	vector<string> new_vtable_return_types;
 
-	//vector<vector<string>> formal_types;
+	vector<operand> formal_ops;
 
 
 private:

@@ -89,6 +89,17 @@ op_type CgenNode::process_ret_type(string x){
 	op_type temp(x + "*");
 	return temp;
 }
+op_type method_type_gen(string x){
+	if(x == "Bool" || x == "bool")
+		return INT1;
+	else if(x == "Int" || x == "int")
+		return INT32;
+	//not sure about string
+	else if(x == "String")
+		return INT8_PTR;
+	op_type temp("%" + x + "*");
+	return temp;
+}
 
 void CgenNode::setup_ret_types(Symbol type_decl, CgenNode* cls){
 	op_type i32_type(INT32), i1_type(INT1), i8_ptr_type(INT8_PTR);
@@ -444,7 +455,6 @@ void CgenNode::add_attr_type(Symbol type, Symbol id){
 	this->attr_types.push_back(id);
 }
 
-
 //********************************************************
 //
 // PREDEFINED FUNCTIONS:
@@ -508,7 +518,6 @@ void program_class::cgen(ostream &os)
     initialize_constants();
     class_table = new CgenClassTable(classes,os);
 }
-
 
 // Create definitions for all String constants
 void StrTable::code_string_table(ostream& s, CgenClassTable* ct)
@@ -999,12 +1008,10 @@ void CgenClassTable::setup_classes(CgenNode *c, int depth)
 
 	c->set_max_child(current_tag-1);
 
-	/*
-	if (cgen_debug)
-		std::cerr << "Class " << c->get_name() << " assigned tag "
-			<< c->get_tag() << ", max child " << c->get_max_child()
-			<< ", depth " << c->get_depth() << endl;
-	*/
+//	std::cerr << "Class " << c->get_name() << " assigned tag "
+//		<< c->get_tag() << ", max child " << c->get_max_child()
+//		<< endl;
+
 }
 
 
@@ -1020,24 +1027,25 @@ void CgenClassTable::code_module()
     CgenNode* mainNode = getMainmain(root());
     mainNode->codeGenMainmain(*ct_stream);
 #endif
+    //Code the main functions
     code_main();
 
 #ifdef MP4
+    //code the individual classes
     code_classes(root());
 #else
 #endif
 }
 
-
 #ifdef MP4
 void CgenClassTable::code_classes(CgenNode *c)
 {
-
-	// ADD CODE HERE
-
+	c->code_class();
+	List<CgenNode> *children = c->get_children();
+	for (List<CgenNode> *child = children; child; child = child->tl())
+		code_classes(child->hd());
 }
 #endif
-
 
 //
 // Create LLVM entry point. This function will initiate our Cool program
@@ -1047,21 +1055,98 @@ void CgenClassTable::code_main()
 {
 	ValuePrinter vp(*ct_stream);
 	//return value
-	op_type i32_type(INT32);
+	op_type main_type("Main*");
 
 	//argument for declare type
 	vector<op_type> main_args_types;
 	vector<operand> main_args;
 
 	// Define a function main that has no parameters and returns an i32
-	vp.define(i32_type, "main", main_args);
+	vp.define(main_type, "Main_new", main_args);
 
 	// Define an entry basic block
 	string mainString("entry");
 	vp.begin_block(mainString);
-	operand result = vp.call(main_args_types, i32_type, "Main_main", true, main_args);
 	// Call Main_main(). This returns int for phase 1, Object for phase 2
+	//operand result = vp.call(main_args_types, main_type, "Main_new", true, main_args);
+//	define %Main* @Main_new() {
+//
+//	entry:
+//		%tmp.8 = getelementptr %Main_vtable* @Main_vtable_prototype, i32 0, i32 1
+//		%tmp.9 = load i32* %tmp.8
+//		%tmp.10 = call i8*(i32 )* @malloc( i32 %tmp.9 )
+//		%tmp.11 = bitcast i8* %tmp.10 to %Main*
+//		%tmp.12 = getelementptr %Main* %tmp.11, i32 0, i32 0
+//		store %Main_vtable* @Main_vtable_prototype, %Main_vtable** %tmp.12
+//		%tmp.13 = alloca %Main*
+//		store %Main* %tmp.11, %Main** %tmp.13
+//		ret %Main* %tmp.11
+//
+//	abort:
+//		call void @abort(  )
+//		unreachable
+//	}
+	//%tmp.8 = getelementptr %Main_vtable* @Main_vtable_prototype, i32 0, i32 1
+	op_type main_vtable_ptr_type("Main_vtable*");
+	global_value main_vtable_ptr_operand(main_vtable_ptr_type, "Main_vtable_prototype");
+	int_value zero_int_op(0);
+	int_value one_int_op(1);
+	op_type i32_ptr_type(INT32_PTR);
+	operand vtable_op = vp.getelementptr(
+			main_vtable_ptr_operand,
+			zero_int_op,
+			one_int_op,
+			i32_ptr_type);
 
+	//%tmp.9 = load i32* %tmp.8
+	operand load_return = vp.load(vtable_op);
+
+	//%tmp.10 = call i8*(i32 )* @malloc( i32 %tmp.9 )
+	op_type i8_ptr_type(INT8_PTR);
+	vector<op_type> args_types;
+	op_type i32_type(INT32);
+	args_types.push_back(i32_type);
+	vector<operand> args;
+	args.push_back(load_return);
+	operand call_return = vp.call(
+			args_types,
+			i8_ptr_type,
+			"malloc",
+			true,
+			args);
+
+	//%tmp.11 = bitcast i8* %tmp.10 to %Main*
+	operand bitcast_result = vp.bitcast(call_return, main_type);
+
+	//%tmp.12 = getelementptr %Main* %tmp.11, i32 0, i32 0
+	op_type main_element_ptr_result_type("Main_vtable**");
+	operand main_element_ptr_result = vp.getelementptr(
+			bitcast_result,
+			zero_int_op,
+			zero_int_op,
+			main_element_ptr_result_type);
+
+	//store %Main_vtable* @Main_vtable_prototype, %Main_vtable** %tmp.12
+	vp.store(main_vtable_ptr_operand, main_element_ptr_result);
+
+	//%tmp.13 = alloca %Main*
+	operand alloca_result = vp.alloca_mem(main_type);
+
+	//store %Main* %tmp.11, %Main** %tmp.13
+	vp.store(bitcast_result, alloca_result);
+
+	//ret %Main* %tmp.11
+	vp.ret(bitcast_result);
+
+	//abort:
+	//	call void @abort(  )
+	//	unreachable
+	//}
+	vp.begin_block("abort");
+	vector<op_type> abort_args_types;
+	vector<operand> abort_args;
+	operand ab_call = vp.call(abort_args_types, VOID, "abort", true, abort_args);
+	vp.unreachable();
 
 #ifndef MP4
 //  // Get the address of the string "Main_main() returned %d\n" using
@@ -1088,7 +1173,6 @@ void CgenClassTable::code_main()
 #endif
   vp.end_define();
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -1129,7 +1213,6 @@ void CgenNode::set_parentnd(CgenNode *p)
 void CgenNode::setup(int tag, int depth)
 {
 #ifdef MP4
-	std::cerr << "Class Name:  "<<this->get_type_name()<<endl;
     this->handle_vtable_defaults();
     this->layout_features();
 
@@ -1191,8 +1274,24 @@ void CgenNode::code_class()
 	// No code generation for basic classes. The runtime will handle that.
 	if (basic())
 		return;
+	std::cerr << "SETTING UP CODE FOR: " << this->get_type_name() << endl;
 
-		// ADD CODE HERE
+//	ValuePrinter vp(*ct_stream);
+//	//return value
+//	op_type main_type("Main*");
+//
+//	//argument for declare type
+//	vector<op_type> main_args_types;
+//	vector<operand> main_args;
+//
+//	// Define a function main that has no parameters and returns an i32
+//	vp.define(main_type, "Main_new", main_args);
+//
+//	// Define an entry basic block
+//	string mainString("entry");
+//	vp.begin_block(mainString);
+//	// Call Main_main(). This returns int for phase 1, Object for phase 2
+//	operand result = vp.call(main_args_types, main_type, "Main_new", true, main_args);
 }
 
 // Laying out the features involves creating a Function for each method
@@ -1288,7 +1387,6 @@ void CgenEnvironment::kill_local() {
 	var_table.exitscope();
 }
 
-
 ////////////////////////////////////////////////////////////////////////////
 //
 // APS class methods
@@ -1328,10 +1426,37 @@ operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {
 //
 void method_class::code(CgenEnvironment *env)
 {
-  ValuePrinter vp(*(env->cur_stream));
-  if (cgen_debug) std::cerr << "method\n";
+	ValuePrinter vp(*(env->cur_stream));
+	if (cgen_debug) std::cerr << "method\n";
+
+//  	ValuePrinter vp(*ct_stream);
+//	//return value
+//	op_type i32_type(INT32);
+//
+//	//argument for declare type
+//	vector<op_type> main_args_types;
+//	vector<operand> main_args;
+//
+//	// Define a function main that has no parameters and returns an i32
+//	vp.define(i32_type, "main", main_args);
+//
+//	// Define an entry basic block
+//	string mainString("entry");
+//	vp.begin_block(mainString);
+//	operand result = vp.call(main_args_types, i32_type, "Main_main", true, main_args);
+//	// Call Main_main(). This returns int for phase 1, Object for phase 2
+
+	//code all objects!
+	op_type ret_type = method_type_gen(return_type->get_string());
+
+	vp.define(ret_type, name->get_string(), env->get_class()->formal_ops);
+	vp.end_define();
+
+
   //Return before abort so you dont end up aborting
   vp.ret(expr->code(env));
+
+  //LEAVE THE ABORT THE WAY IT IS
   //Setup the abort call at the end of each method
   vp.begin_block("abort");
   vector<op_type> abort_args_types;
@@ -1761,9 +1886,13 @@ void method_class::layout_feature(CgenNode *cls)
 
     vector<op_type> temp_formal_vec;
     temp_formal_vec.push_back(cls->process_ret_type(cls->get_type_name()));
+    operand formal_self_op(cls->process_ret_type(cls->get_type_name()), name->get_string());
+    cls->formal_ops.push_back(formal_self_op);
     for(int x = formals->first(); formals->more(x); x = formals->next(x)){
     	op_type temp_type(cls->process_ret_type(this->formals->nth(x)->get_type_decl()->get_string()));
     	temp_formal_vec.push_back(temp_type);
+    	operand formal_temp_op(temp_type, /*maybe process ret_type here*/this->formals->nth(x)->get_name()->get_string());
+    	cls->formal_ops.push_back(formal_temp_op);
     }
 
 	//add the id and type of the feature to attr_types
