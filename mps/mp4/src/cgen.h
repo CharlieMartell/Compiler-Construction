@@ -169,6 +169,8 @@ public:
 	vector<operand> formal_ops;
 
 
+
+
 private:
     // Layout the methods and attributes for code generation
     // You need to write the body of this function.
@@ -214,22 +216,27 @@ public:
 	string next_label;
 	operand branch_operand;
     void add_local(Symbol name, operand &vb);
-		void cc_add_symbol(Symbol name, operand &vb);
+	void cc_add_symbol(Symbol name, operand &vb);
     void kill_local();
     // end of helpers for provided code
 
-	CgenEnvironment(ostream &strea, CgenNode *cur_class);
+	CgenEnvironment(ostream &stream, CgenNode *cur_class);
 
 
-	operand *lookup(Symbol name)		{ return var_table.lookup(name); }
+	operand *lookup(Symbol name){return var_table.lookup(name);}
+	void dump(){var_table.dump();}
+	operand *probe(Symbol name){return var_table.probe(name);}
 
 	CgenNode *get_class() { return cur_class; }
 	void set_class(CgenNode *c) { cur_class = c; }
+
+	Symbol no_self_type;
 
     // INCOMPLETE FUNCTIONS
 
     // Must return the CgenNode for a class given the symbol of its name
 	CgenNode *type_to_class(Symbol t);
+
 
 
 
