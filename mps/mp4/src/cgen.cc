@@ -151,7 +151,7 @@ void CgenNode::check_inherited(){
 		inherited_string = inherited_string + "*) * ";
 		inherited_string = inherited_string + this->get_parentnd()->new_vtable_values.at(i).get_name();
 		inherited_string = inherited_string + " to %";
-		inherited_string = inherited_string + this->get_parentnd()->name->get_string();
+		inherited_string = inherited_string + this->get_parentnd()->new_vtable_return_types.at(i);
 		inherited_string = inherited_string + "* (%";
 		inherited_string = inherited_string + no_self_type;
 		inherited_string = inherited_string + "*) *)";
