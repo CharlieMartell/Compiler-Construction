@@ -215,7 +215,7 @@ public:
     // Used in provided code for the (case..of) construct
 	string next_label;
 	operand branch_operand;
-    void add_local(Symbol name, operand &vb);
+    void add_local(Symbol name, operand *vb);
 	void cc_add_symbol(Symbol name, operand &vb);
     void kill_local();
     // end of helpers for provided code
@@ -231,6 +231,8 @@ public:
 	void set_class(CgenNode *c) { cur_class = c; }
 
 	Symbol no_self_type;
+
+	bool methods_only;
 
     // INCOMPLETE FUNCTIONS
 

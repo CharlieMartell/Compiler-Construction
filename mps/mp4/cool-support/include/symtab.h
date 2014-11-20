@@ -145,7 +145,6 @@ public:
        for(ScopeList *i = tbl; i != NULL; i=i->tl()) {
 	   for( Scope *j = i->hd(); j != NULL; j = j->tl()) {
 	       if (s == j->hd()->get_id()) {
-	    	   std::cerr << "it makes it here and crashes on get_info..\n";
 	    	   return (j->hd()->get_info());
 	       }
 	   }

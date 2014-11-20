@@ -134,27 +134,6 @@ void CgenNode::setup_ret_types(Symbol type_decl, CgenNode* cls){
 	}
 }
 
-//void CgenNode::handle_new_classes(){
-////	vector<Symbol> attr_types;
-////	vector<Symbol> attr_ids;
-//
-//	//Handle the vtable
-//	//symbols of each feature
-//	for(size_t i = 0; i < this->attr_types.size(); i++){
-//		std::string formal_params = "";
-//		//vector of vectors
-//		for(size_t j = 0; j < this->formal_types.size(); j++){
-//			//vector of strings for each parameter
-//			for(size_t k = 0; k < this->formal_types.at(j).size(); k++){
-//				formal_params = formal_params + formal_types.at(j).at(k);
-//			}
-//
-//		}
-//
-//
-//	}
-//}
-
 void CgenNode::check_inherited(){
 	string parent_no_self_type = (this->get_parentnd()->name->get_string() == "SELF_TYPE") ? this->get_parentnd()->get_type_name() : this->get_parentnd()->name->get_string();
 	string no_self_type = (name->get_string() == "SELF_TYPE") ? this->get_type_name() : name->get_string();
@@ -1071,10 +1050,9 @@ void CgenClassTable::setup_classes(CgenNode *c, int depth)
 
 //	std::cerr << "Class " << c->get_name() << " assigned tag "
 //		<< c->get_tag() << ", max child " << c->get_max_child()
-//		<< endl;
+//		<< "\n";
 
 }
-
 
 // The code generation second pass. Add code here to traverse the tree and
 // emit code for each CgenNode
@@ -1157,12 +1135,12 @@ void CgenClassTable::code_main()
 				//std::cerr << "CGENNODE: " << child->hd()->get_type_name() << " vtable_values " << child->hd()->vtable_values.at(i).get_value()<<  "\n";
 				if(child->hd()->vtable_values.at(i).get_value() == "@Main_main"){
 					op_type main_main_ret_type = child->hd()->vtable_types.at(i);
-					//std::cerr << "MAIN MAIN RET TYPE: " << main_main_ret_type.get_name() << endl;
+					//std::cerr << "MAIN MAIN RET TYPE: " << main_main_ret_type.get_name() << "\n";
 					string original = main_main_ret_type.get_name();
 					string ret_type_only;
 					stringstream ssNew(original);
 					ssNew >> ret_type_only;
-					//std::cerr << "NEW RET TYPE: " << ret_type_only << endl;
+					//std::cerr << "NEW RET TYPE: " << ret_type_only << "\n";
 					op_type ret_temp_type = get_main_main_ret_type(ret_type_only);
 					main_ret_type = ret_temp_type;
 				}
@@ -1263,6 +1241,7 @@ void CgenNode::setup(int tag, int depth)
 		this->attr_only_ret_types.push_back(temp);
 	}
 
+
 	//Make new ValuePrinter
 	ValuePrinter vp(*(this->get_classtable()->ct_stream));
 
@@ -1311,13 +1290,14 @@ void CgenNode::code_class()
 	if (basic())
 		return;
 
-	//std::cerr << "SETTING UP CODE FOR: " << this->get_type_name() << endl;
+	//std::cerr << "SETTING UP CODE FOR: " << this->get_type_name() << "\n";
 	//define %RETURN_TYPE* @CLASS_FUNCTION(SELF_PARAM, OTHERPARAMS) {
 	//%return_type*
 	CgenEnvironment *env = new CgenEnvironment(*(this->get_classtable()->ct_stream), this);
 	ValuePrinter vp(*(env->cur_stream));
 
 	//Code methods only!
+	env->methods_only = true;
 	int i = features->first();
 	while(features->more(i)){
 		features->nth(i)->code(env);
@@ -1380,12 +1360,15 @@ void CgenNode::code_class()
 			args);
 
 	//%tmp.11 = bitcast i8* %tmp.10 to %Main*
-	operand bitcast_result = vp.bitcast(call_return, class_ptr_type);
+	operand *bitcast_result = new operand(vp.bitcast(call_return, class_ptr_type));
+
+	//add result of bitcast to var_table
+	env->add_local(self, bitcast_result);
 
 	//%tmp.12 = getelementptr %Main* %tmp.11, i32 0, i32 0
 	op_type class_element_ptr_result_type(this->get_type_name() + "_vtable**");
 	operand class_element_ptr_result = vp.getelementptr(
-			bitcast_result,
+			*bitcast_result,
 			zero_int_op,
 			zero_int_op,
 			class_element_ptr_result_type);
@@ -1397,12 +1380,19 @@ void CgenNode::code_class()
 	operand alloca_result = vp.alloca_mem(class_ptr_type);
 
 	//store %Main* %tmp.11, %Main** %tmp.13
-	vp.store(bitcast_result, alloca_result);
-//	std::cerr << "XXXXXXX adding : " + this->get_type_name() << " " << bitcast_result.get_name() << endl;
-//	env->add_local(this->get_type_name(), bitcast_result);
+	vp.store(*bitcast_result, alloca_result);
+	//TODO:figure out what to store here
+
+	//Code attr only!
+	env->methods_only = false;
+	int x = features->first();
+	while(features->more(x)){
+		features->nth(x)->code(env);
+		x = features->next(x);
+	}
 
 	//ret %Main* %tmp.11
-	vp.ret(bitcast_result);
+	vp.ret(*bitcast_result);
 
 	//abort:
 	//	call void @abort(  )
@@ -1415,7 +1405,6 @@ void CgenNode::code_class()
 	vp.unreachable();
 
 	vp.end_define();
-
 }
 
 // Laying out the features involves creating a Function for each method
@@ -1499,9 +1488,9 @@ const std::string CgenEnvironment::new_label(const std::string& prefix,
     block_count += increment;
     return prefix + suffix;
 }
-void CgenEnvironment::add_local(Symbol name, operand &vb) {
+void CgenEnvironment::add_local(Symbol name, operand *vb) {
 	var_table.enterscope();
-	var_table.addid(name, &vb);
+	var_table.addid(name, vb);
 }
 void CgenEnvironment::cc_add_symbol(Symbol name, operand &vb) {
   var_table.addid(name, &vb);
@@ -1550,6 +1539,8 @@ operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {
 //
 void method_class::code(CgenEnvironment *env)
 {
+	if(!(env->methods_only))
+		return;
 	ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "method\n";
 
@@ -1570,18 +1561,21 @@ void method_class::code(CgenEnvironment *env)
 //	   getSelf() : Alpha {self};
 //	};
 
-
-	//	define RETURN_TYPE @CLASS_FEATURENAME(SELF< .. OTHER PARAMS) {
+	//define RETURN_TYPE @CLASS_FEATURENAME(SELF< .. OTHER PARAMS) {
 	op_type ret_type = method_type_gen(return_type->get_string());
 	string fn_name = std::string(env->get_class()->get_type_name()) + "_" + std::string(name->get_string());
+
+	vector<Symbol> symbol_vec;
 	vector<operand> fn_args;
 	op_type class_type(env->get_class()->get_type_name() + "*");
 	operand self_arg(class_type, "self");
 	fn_args.push_back(self_arg);
+	symbol_vec.push_back(self);
 	for(int x = formals->first(); formals->more(x); x = formals->next(x)){
 		op_type temp_type(this->formals->nth(x)->get_type_decl()->get_string());
 		operand formal_temp_op(temp_type,this->formals->nth(x)->get_name()->get_string());
 		fn_args.push_back(formal_temp_op);
+		symbol_vec.push_back(this->formals->nth(x)->get_type_decl());
 	}
 
 	vp.define(ret_type, fn_name, fn_args);
@@ -1589,17 +1583,15 @@ void method_class::code(CgenEnvironment *env)
 	//entry:
 	vp.begin_block("entry");
 
+	operand *alloca_result;
+
+	//GO ONTO OTHER FORMALS
 	for(size_t i = 0; i < fn_args.size(); i++){
 		//%tmp.0 = alloca %Main*
-		operand alloca_result = vp.alloca_mem(fn_args.at(i).get_type());
-		env->add_local(return_type, alloca_result/*operand(op_type(INT32), "TESTING")*/);
-
+		alloca_result = new operand(vp.alloca_mem(fn_args.at(i).get_type()));
+		env->add_local(symbol_vec.at(i), alloca_result);
 		//store %Main* %self, %Main** %tmp.0
-		vp.store(fn_args.at(i), alloca_result);
-		std::cerr <<  "adding local name: " << return_type->get_string()<<endl;
-		std::cerr << "ALLOCA_RESULT NAME: " << alloca_result.get_name() <<endl;
-		std::cerr << "ALLOCA_RESULT TYPENAME: " << alloca_result.get_typename() <<endl;
-		env->no_self_type = return_type;
+		vp.store(fn_args.at(i), *alloca_result);
 	}
 
 	operand result = expr->code(env);
@@ -1623,9 +1615,13 @@ operand assign_class::code(CgenEnvironment *env)
   ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "assign\n";
   //Get the operand from the var table
-  std::cerr << "IN ASSIGN name: " << name->get_string() << endl;
   operand assign_operand = *(env->var_table.lookup(name));
   operand expr_operand = expr->code(env);
+  std::cerr << "Symbol name: " << name->get_string() <<"\n";
+  std::cerr << "Expr_operand tn: " << expr_operand.get_typename() <<"\n";
+  std::cerr << "Expr_operand n: " << expr_operand.get_name() <<"\n";
+  std::cerr << "assign_operand tn: " << assign_operand.get_typename() <<"\n";
+  std::cerr << "assign_operand n: " << assign_operand.get_name() <<"\n";
   //Store the new value into the var table
   vp.store(*(env->cur_stream), expr_operand, assign_operand);
   return expr_operand;
@@ -1725,7 +1721,7 @@ operand let_class::code(CgenEnvironment *env)
   string iden_temp(identifier->get_string());
   operand identifier_op(type, iden_temp);
   //allocate memory for the type assigned
-  operand new_var = vp.alloca_mem(type);
+  operand *new_var = new operand(vp.alloca_mem(type));
   //add what we just allocated memory for into the var table.
   env->add_local(identifier, new_var);
 
@@ -1733,14 +1729,14 @@ operand let_class::code(CgenEnvironment *env)
   //default values of false and 0 for bool and int respectively into
   //the value.
   if(!(new_op.get_type().get_id() == EMPTY))
-    vp.store(*(env->cur_stream), new_op, new_var);
+    vp.store(*(env->cur_stream), new_op, *new_var);
   else{
     string val;
     if(type.get_id() == INT1)
       val = "false";
     else if(type.get_id() == INT32)
       val = "0";
-    vp.store(*(env->cur_stream), const_value(type, val, true), new_var);
+    vp.store(*(env->cur_stream), const_value(type, val, true), *new_var);
   }
   //return the body->code(env)
   return body->code(env);
@@ -1868,17 +1864,14 @@ operand bool_const_class::code(CgenEnvironment *env)
 
 operand object_class::code(CgenEnvironment *env)
 {
-  //std::cerr << "Object name:  " << name->get_string() << endl;
+  //std::cerr << "Object name:  " << name->get_string() << "\n";
   ValuePrinter vp(*(env->cur_stream));
   if (cgen_debug) std::cerr << "Object\n";
-  std::cerr << "Object name NO SELF: " << env->no_self_type->get_string() << endl;
-  std::cerr << "DUMPING: \n";
-  env->dump();
-  std::cerr << "\n DUMPING COMPLETE\n";
-  operand ret_op;
-  std::cerr << ((env->lookup(env->no_self_type) != NULL) ? "TRUE\n" : "FALSE\n");
-  ret_op = *(env->lookup(env->no_self_type));
-  operand object_operand = vp.load(ret_op);
+  //std::cerr << "Object name NO SELF: " << env->no_self_type->get_string() << "\n";
+  operand ret_op = *(env->lookup(name));
+  operand ret_op_ptr(ret_op);
+  ret_op_ptr.set_type(ret_op.get_type().get_ptr_type());
+  operand object_operand = vp.load(ret_op_ptr);
   return object_operand;
 }
 
@@ -1902,8 +1895,7 @@ operand static_dispatch_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
+
 #endif
 	return nothing;
 }
@@ -1928,8 +1920,49 @@ operand dispatch_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
+//	ValuePrinter vp(*(env->cur_stream));
+//	operand expr_op = expr->code(env);
+//	operand icmp_result;
+//	operand null_op(op_type("N/A"), "null");
+//	vp.icmp(
+//			*(env->cur_stream),
+//			EQ,
+//			expr_op,
+//			null_op,
+//			icmp_result);
+//	string ok_label = env->new_ok_label();
+//	vp.branch_cond(
+//			*(env->cur_stream),
+//			icmp_result,
+//			"abort",
+//			ok_label
+//			);
+
+
+	//ok label
+//	vp.begin_block(ok_label);
+//	//%tmp.3 = getelementptr %Alpha* %tmp.1, i32 0, i32 0
+//	operand expr_name_operand = *(env->lookup(name));
+//	int_value zero_val(0);
+//	int_value one_val(1);
+//	operand first_element_ptr_op;
+//	vp.getelementptr(
+//			*(env->cur_stream),
+//			expr_name_operand,
+//			zero_val,
+//			one_val,
+//			first_element_ptr_op
+//			);
+//	//%tmp.4 = load %Alpha_vtable** %tmp.3
+//	operand second_element_ptr_op;
+//	vp.load(
+//			*(env->cur_stream),
+//			first_element_ptr_op,
+//			second_element_ptr_op
+//			);
+
+
+
 #endif
 	return nothing;
 }
@@ -2011,8 +2044,25 @@ operand new__class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
+	//%tmp.1 = call %Alpha* @Alpha_new(  )
+	ValuePrinter vp(*(env->cur_stream));
+	vector<op_type> arg_types;
+	op_type no_op_type;
+	arg_types.push_back(no_op_type);
+	vector<operand> args;
+	operand no_op;
+	args.push_back(no_op);
+	operand temp_result_op(op_type("Not sure yet"),
+			env->get_class()->get_type_name() + "*");
+	operand *result_op = new operand(temp_result_op);
+	vp.call(*(env->cur_stream),
+			arg_types,
+			env->get_class()->get_type_name() + "_new",
+			false,
+			args,
+			*result_op
+			);
+	env->add_local(type_name, result_op);
 #endif
 	return nothing;;
 }
@@ -2132,9 +2182,9 @@ operand branch_class::code(operand expr_val, operand tag,
 		expr_val = conform(expr_val, lbl_t, env);
 	}
 	op_type alloc_type(cls->get_type_name(), 1);
-	operand alloc_op = vp.alloca_mem(alloc_type);
+	operand *alloc_op = new operand(vp.alloca_mem(alloc_type));
 	operand conf_result = conform(expr_val, alloc_type,  env);
-	vp.store(conf_result, alloc_op);
+	vp.store(conf_result, *alloc_op);
 	env->add_local(name, alloc_op);
 	operand val = conform(expr->code(env), join_type.get_ptr_type(), env);
 	operand conformed = conform(val, env->branch_operand.get_type(), env);
@@ -2180,28 +2230,44 @@ void attr_class::code(CgenEnvironment *env)
 #ifndef MP4
     assert(0 && "Unsupported case for phase 1");
 #else
+
+    if(env->methods_only){
+    	op_type type_decl_op_type(type_decl->get_string());
+    	operand temp_empty_op(type_decl_op_type, "empty for now");
+    	operand *empty_op = new operand(temp_empty_op);
+    	env->add_local(name, empty_op);
+    	return;
+    }
     ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "attribute!\n";
 
-//	%tmp.24 = getelementptr %Main* %tmp.21, i32 0, i32 1
-//	store i32 5, i32* %tmp.24
-//	ret %Main* %tmp.21
-	std::cerr << "ATTR CLASS name: " << name->get_string() <<endl;
-	std::cerr << "CUR CLASS name: " << env->get_class()->get_type_name() <<endl;
+	std::cerr << "ATTR CLASS name: " << name->get_string() <<"\n";
+//	std::cerr << "CUR CLASS name: " << env->get_class()->get_type_name() <<"\n";
 
+	//evaluate the expression
+	operand *attr_expr_operand = new operand(init->code(env));
+	std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_name() <<"\n";
+	std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_typename() <<"\n";
+	//	%tmp.24 = getelementptr %Main* %tmp.21, i32 0, i32 1
+	//	store i32 5, i32* %tmp.24
+	//	ret %Main* %tmp.21
 
-//	operand class_ret_op = *(env->lookup(env->get_class()->get_type_name()));
-//	int_value zero_int_op(0);
-//	int_value one_int_op(1);
-//	operand attr_ret_op = vp.getelementptr(
-//					operand(
-//						op_type(std::string(env->get_class()->get_type_name()) + "*"),
-//						class_ret_op.get_name()),
-//					zero_int_op,
-//					one_int_op,
-//					op_type(std::string(env->get_class()->get_type_name()) + "*"));
-//
-//	env->add_local(name, attr_ret_op);
+	operand *self_from_var = env->lookup(self);
+	operand new_op(op_type(INT32_PTR), self_from_var->get_name());
+
+	int_value zero_int_op(0);
+	int_value one_int_op(1);
+	op_type attr_op_type(std::string(env->get_class()->get_type_name()) + "*");
+	operand attr_operand(attr_op_type, env->get_class()->get_type_name() + "*");
+	operand attr_ret_op = vp.getelementptr(
+			attr_operand,
+			zero_int_op,
+			one_int_op,
+			attr_op_type);
+
+	vp.store(*(env->cur_stream),
+			*attr_expr_operand,
+			new_op);
 
 #endif
 }
