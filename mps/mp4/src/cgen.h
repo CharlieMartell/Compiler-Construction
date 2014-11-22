@@ -154,8 +154,6 @@ public:
 	string new_process_ret_type(string x);
 	void handle_new_classes();
 
-	operand bitcast_res;
-
 	vector<Symbol> attr_types;
 	vector<Symbol> attr_ids;
 	vector<string> attr_ret_vals;
@@ -168,8 +166,14 @@ public:
 	vector<op_type> io_vtable_types;
 	vector<const_value> io_vtable_values;
 
+	vector<op_type> io_self_vtable_types;
+	vector<const_value> io_self_vtable_values;
+
 	vector<op_type> string_vtable_types;
 	vector<const_value> string_vtable_values;
+
+	vector<op_type> string_self_vtable_types;
+	vector<const_value> string_self_vtable_values;
 
 	vector<op_type> new_vtable_types;
 	vector<const_value> new_vtable_values;
@@ -240,6 +244,8 @@ public:
 	void set_class(CgenNode *c) { cur_class = c; }
 
 	Symbol no_self_type;
+
+	operand bitcast_res;
 
 	bool methods_only;
 

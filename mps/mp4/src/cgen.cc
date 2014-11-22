@@ -170,9 +170,41 @@ void CgenNode::check_inherited(){
 	else{
 		//Add the basic classes inherited functions
 		if(this->get_parentnd()->get_type_name() == "IO"){
-			//TYPES
+			//TYPES with self
 			//%SELF_TYPE* (%SELF_TYPE*,%String*) *
-			//%Main* (%Main*,%String*) * bitcast (%IO* (%IO*,%String*) * @IO_out_string to %Main* (%Main*,%String*) *),
+			vector<op_type> io_self_out_string_op_type_vec;
+			op_type io_self_out_string_func_io(std::string(name->get_string()) + "*");
+			op_type io_self_out_string_func_str("String*");
+			io_self_out_string_op_type_vec.push_back(io_self_out_string_func_io);
+			io_self_out_string_op_type_vec.push_back(io_self_out_string_func_str);
+			op_func_type io_self_out_string_op_func_ptr_type(io_self_out_string_func_io, io_self_out_string_op_type_vec);
+			this->io_self_vtable_types.push_back(io_self_out_string_op_func_ptr_type);
+
+			//%SELF_TYPE* (%SELF_TYPE*,i32) *
+			vector<op_type> io_self_out_int_op_type_vec;
+			op_type io_self_out_int_func_io(std::string(name->get_string()) + "*");
+			io_self_out_int_op_type_vec.push_back(io_self_out_int_func_io);
+			io_self_out_int_op_type_vec.push_back(INT32);
+			op_func_type io_self_out_int_op_func_ptr_type(io_self_out_int_func_io, io_self_out_int_op_type_vec);
+			this->io_self_vtable_types.push_back(io_self_out_int_op_func_ptr_type);
+
+			//%String* (%SELF_TYPE*) *
+			vector<op_type> io_self_in_string_op_type_vec;
+			op_type io_self_in_string_func_io(std::string(name->get_string()) + "*");
+			op_type io_self_in_string_func_str("String*");
+			io_self_in_string_op_type_vec.push_back(io_self_in_string_func_io);
+			op_func_type io_self_in_string_op_func_ptr_type(io_self_in_string_func_str, io_self_in_string_op_type_vec);
+			this->io_self_vtable_types.push_back(io_self_in_string_op_func_ptr_type);
+
+			//i32 (%SELF_TYPE*) *
+			vector<op_type> io_self_in_int_op_type_vec;
+			op_type io_self_in_int_func_io(std::string(name->get_string()) + "*");
+			io_self_in_int_op_type_vec.push_back(io_self_in_int_func_io);
+			op_func_type io_self_in_int_op_func_ptr_type(INT32, io_self_in_int_op_type_vec);
+			this->io_self_vtable_types.push_back(io_self_in_int_op_func_ptr_type);
+
+			//TYPES inherited
+			//%IO* (%IO*,%String*) *
 			vector<op_type> io_out_string_op_type_vec;
 			op_type io_out_string_func_io("IO*");
 			op_type io_out_string_func_str("String*");
@@ -229,61 +261,19 @@ void CgenNode::check_inherited(){
 			const_value in_int_const(cool_type, in_int_glbl.get_name(), false);
 			this->io_vtable_values.push_back(in_int_const);
 
-			//%Main* (%Main*) * bitcast (%Object* (%Object*) * @Object_copy to %Main* (%Main*) *),
-			for(size_t i = 0; i < this->string_vtable_types.size(); i++){
-				vp.bitcast(
-						*(env->cur_stream),
-						)
+			for(size_t i = 0; i < this->io_vtable_types.size(); i++){
+				//bitcast (%IO* (%IO*,%String*) * @IO_out_string to %Main* (%Main*,%String*) *),
+				string bitcast_val = "bitcast (";
+						bitcast_val = bitcast_val + this->io_vtable_types.at(i).get_name();
+						bitcast_val = bitcast_val + " ";
+						bitcast_val = bitcast_val + io_vtable_values.at(i).get_name();
+						bitcast_val = bitcast_val + " to ";
+						bitcast_val = bitcast_val + this->io_self_vtable_types.at(i).get_name();
+						bitcast_val = bitcast_val + ")";
+				const_value old_type_val(io_vtable_types.at(i), bitcast_val, false);
+				this->vtable_types.push_back(this->io_self_vtable_types.at(i));
+				this->vtable_values.push_back(old_type_val);
 			}
-		}
-		else if(this->get_type_name() == "String"){
-			//TYPES
-			//i32 (%String*) *
-			vector<op_type> str_len_op_type_vec;
-			op_type str_len_func("String*");
-			str_len_op_type_vec.push_back(str_len_func);
-			op_func_type str_len_op_func_ptr_type(INT32, str_len_op_type_vec);
-			this->vtable_types.push_back(str_len_op_func_ptr_type);
-
-			//%String* (%String*,%String*) *
-			vector<op_type> str_concat_op_type_vec;
-			op_type str_concat_func("String*");
-			str_concat_op_type_vec.push_back(str_concat_func);
-			str_concat_op_type_vec.push_back(str_concat_func);
-			op_func_type str_concat_op_func_ptr_type(str_concat_func, str_concat_op_type_vec);
-			this->string_vtable_types.push_back(str_concat_op_func_ptr_type);
-
-			//%String* (%String*,i32,i32) *
-			vector<op_type> str_substr_op_type_vec;
-			op_type str_substr_func("String*");
-			str_substr_op_type_vec.push_back(str_substr_func);
-			str_substr_op_type_vec.push_back(INT32);
-			str_substr_op_type_vec.push_back(INT32);
-			op_func_type str_substr_op_func_ptr_type(str_substr_func, str_substr_op_type_vec);
-			this->string_vtable_types.push_back(str_substr_op_func_ptr_type);
-
-			//VALUES
-			//@String_length
-			string length_string = this->get_type_name();
-			length_string = length_string + "_length";
-			global_value length_glbl(cool_type, length_string);
-			const_value length_const(cool_type, length_glbl.get_name(), false);
-			this->string_vtable_values.push_back(length_const);
-
-			//@String_concat
-			string concat_string = this->get_type_name();
-			concat_string = concat_string + "_concat";
-			global_value concat_glbl(cool_type, concat_string);
-			const_value concat_const(cool_type, concat_glbl.get_name(), false);
-			this->string_vtable_values.push_back(concat_const);
-
-			//@String_substr
-			string substr_string = this->get_type_name();
-			substr_string = substr_string + "_substr";
-			global_value substr_glbl(cool_type, substr_string);
-			const_value substr_const(cool_type, substr_glbl.get_name(), false);
-			this->string_vtable_values.push_back(substr_const);
-
 		}
 	}
 }
@@ -1252,27 +1242,27 @@ void CgenClassTable::code_main()
 			main_obj_operand);
 
 	//%main.retval = call RETURN_TYPE(%Main*)* @Main_main( %Main* %main.obj )
-	op_type main_ret_type;
+	op_type main_ret_type("Object*");
 	List<CgenNode> *children = root()->get_children();
-	for (List<CgenNode> *child = children; child; child = child->tl()){
-		//std::cerr << "CGENNODE NAME: " << child->hd()->get_type_name() << "\n";
-		if(child->hd()->get_type_name() == "Main"){
-			for(size_t i = 0; i < child->hd()->vtable_values.size(); i++){
-				//std::cerr << "CGENNODE: " << child->hd()->get_type_name() << " vtable_values " << child->hd()->vtable_values.at(i).get_value()<<  "\n";
-				if(child->hd()->vtable_values.at(i).get_value() == "@Main_main"){
-					op_type main_main_ret_type = child->hd()->vtable_types.at(i);
-					//std::cerr << "MAIN MAIN RET TYPE: " << main_main_ret_type.get_name() << "\n";
-					string original = main_main_ret_type.get_name();
-					string ret_type_only;
-					stringstream ssNew(original);
-					ssNew >> ret_type_only;
-					//std::cerr << "NEW RET TYPE: " << ret_type_only << "\n";
-					op_type ret_temp_type = get_main_main_ret_type(ret_type_only);
-					main_ret_type = ret_temp_type;
-				}
-			}
-		}
-	}
+//	for (List<CgenNode> *child = children; child; child = child->tl()){
+//		std::cerr << "CGENNODE NAME: " << child->hd()->get_type_name() << "\n";
+//		if(child->hd()->get_type_name() == "Main"){
+//			for(size_t i = 0; i < child->hd()->vtable_values.size(); i++){
+//				std::cerr << "CGENNODE: " << child->hd()->get_type_name() << " vtable_values " << child->hd()->vtable_values.at(i).get_value()<<  "\n";
+//				if(child->hd()->vtable_values.at(i).get_value() == "@Main_main"){
+//					op_type main_main_ret_type = child->hd()->vtable_types.at(i);
+//					std::cerr << "MAIN MAIN RET TYPE: " << main_main_ret_type.get_name() << "\n";
+//					string original = main_main_ret_type.get_name();
+//					string ret_type_only;
+//					stringstream ssNew(original);
+//					ssNew >> ret_type_only;
+//					//std::cerr << "NEW RET TYPE: " << ret_type_only << "\n";
+//					op_type ret_temp_type = get_main_main_ret_type(ret_type_only);
+//					main_ret_type = ret_temp_type;
+//				}
+//			}
+//		}
+//	}
 	operand main_retval_operand(main_ret_type,"main.retval");
 	vector<operand> main_retval_args;
 	main_retval_args.push_back(main_obj_operand);
@@ -1374,7 +1364,7 @@ void CgenNode::setup(int tag, int depth)
 	const_value strConst(op_type_array, strToPass, true);
 	vp.init_constant(std::string("str.") + std::string(name->get_string()), strConst);
 
-	//Add inherited classes
+	//Add inherited clas ses
 	if(!basic())
 		this->check_inherited();
 	//after adding basic classes to vtables add new ones
@@ -1486,7 +1476,7 @@ void CgenNode::code_class()
 	//%tmp.11 = bitcast i8* %tmp.10 to %Main*
 	operand bitcast_result = vp.bitcast(call_return, class_ptr_type);
 	//store result of bitcast
-	this->bitcast_res = bitcast_result;
+	env->bitcast_res = bitcast_result;
 
 	//%tmp.12 = getelementptr %Main* %tmp.11, i32 0, i32 0
 	op_type class_element_ptr_result_type(this->get_type_name() + "_vtable**");
@@ -1498,14 +1488,14 @@ void CgenNode::code_class()
 
 	//store %Main_vtable* @Main_vtable_prototype, %Main_vtable** %tmp.12
 	vp.store(class_vtable_ptr_operand, *class_element_ptr_result);
-	env->add_local(self, class_element_ptr_result);
 
 	//%tmp.13 = alloca %Main*
-	operand alloca_result = vp.alloca_mem(class_ptr_type);
+	operand *alloca_result = new operand(vp.alloca_mem(class_ptr_type));
 
 	//store %Main* %tmp.11, %Main** %tmp.13
-	vp.store(bitcast_result, alloca_result);
+	vp.store(bitcast_result, *alloca_result);
 	//TODO:figure out what to store here
+	env->add_local(self, alloca_result);
 
 	//Code attr only!
 	env->methods_only = false;
@@ -1738,16 +1728,37 @@ operand assign_class::code(CgenEnvironment *env)
 {
   ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "assign\n";
+	operand *self_op = env->lookup(self);
+
+	operand expr_operand = expr->code(env);
+	//Load what you stored in code_class
+	operand load_result = vp.load(*self_op);
+
+	//getelementptr of what you just loaded!
+	//%tmp.2 = getelementptr %Main* %tmp.1, i32 0, i32 1
+	int_value zero_op(0);
+	int_value one_op(1);
+	op_type store_type(expr_operand.get_type().get_ptr_type());
+	operand elementptr_result_type = vp.getelementptr(
+			load_result,
+			zero_op,
+			one_op,
+			store_type
+			);
+
   //Get the operand from the var table
-  operand assign_operand = *(env->var_table.lookup(name));
-  operand expr_operand = expr->code(env);
-  std::cerr << "Symbol name: " << name->get_string() <<"\n";
-  std::cerr << "Expr_operand tn: " << expr_operand.get_typename() <<"\n";
-  std::cerr << "Expr_operand n: " << expr_operand.get_name() <<"\n";
-  std::cerr << "assign_operand tn: " << assign_operand.get_typename() <<"\n";
-  std::cerr << "assign_operand n: " << assign_operand.get_name() <<"\n";
-  //Store the new value into the var table
-  vp.store(*(env->cur_stream), expr_operand, assign_operand);
+//  operand assign_operand = *(env->var_table.lookup(name));
+
+//  std::cerr << "----------------------------------" <<"\n\n";
+//  std::cerr << "Symbol name: " << name->get_string() <<"\n";
+//  std::cerr << "Expr_operand tn: " << expr_operand.get_typename() <<"\n";
+//  std::cerr << "Expr_operand n: " << expr_operand.get_name() <<"\n";
+//  std::cerr << "assign_operand tn: " << assign_operand.get_typename() <<"\n";
+//  std::cerr << "assign_operand n: " << assign_operand.get_name() <<"\n";
+//  std::cerr << "\n\n----------------------------------" <<"\n";
+
+
+  vp.store(*(env->cur_stream), expr_operand, elementptr_result_type);
   return expr_operand;
 }
 
@@ -1990,14 +2001,37 @@ operand object_class::code(CgenEnvironment *env)
 {
   ValuePrinter vp(*(env->cur_stream));
   if (cgen_debug) std::cerr << "Object\n";
-  std::cerr << "Searching var table for: " << name->get_string() << "\n";;
-  env->dump();
-  std::cerr << "\nDone Searching!\n";
-  operand ret_op = *(env->lookup(name));
-  operand ret_op_ptr(ret_op);
-  ret_op_ptr.set_type(ret_op.get_type().get_ptr_type());
-  operand object_operand = vp.load(ret_op_ptr);
-  return object_operand;
+//  std::cerr << "Searching var table for: " << name->get_string() << "\n";;
+//  env->dump();
+//  std::cerr << "\nDone Searching!\n";
+  	operand *self_op = env->lookup(self);
+  	operand load_result = vp.load(*self_op);
+
+  	//getelementptr of what you just loaded!
+	//%tmp.2 = getelementptr %Main* %tmp.1, i32 0, i32 1
+	int_value zero_op(0);
+	int_value one_op(1);
+	operand *name_op = env->lookup(name);
+	op_type store_type(name_op->get_type());
+	operand *elementptr_result = new operand(
+			vp.getelementptr(
+				load_result,
+				zero_op,
+				one_op,
+				store_type
+				)
+			);
+	std::cerr << "OBJECT NAME: " <<  name->get_string() << endl;
+	env->add_local(name, elementptr_result);
+
+//	  std::cerr << "-------------DUMPING SELFOP---------------------" <<"\n\n";
+//	  std::cerr << "self_op name: " << self_op->get_name() <<"\n";
+//	  std::cerr << "self_op tn: " << self_op->get_typename() <<"\n";
+//	  std::cerr << "self op type : " << self_op->get_type().get_name() <<"\n";
+//	  std::cerr << "\n\n----------------------------------" <<"\n";
+
+
+  return load_result;
 }
 
 operand no_expr_class::code(CgenEnvironment *env)
@@ -2045,7 +2079,61 @@ operand dispatch_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-//	ValuePrinter vp(*(env->cur_stream));
+
+//	method
+//	block
+//	assign
+//	Integer Constant
+//	Object
+//	dispatch
+//	Object
+//	attribute!
+//	Integer Constant
+//
+//	%tmp.0 = alloca %Main*
+//	store %Main* %self, %Main** %tmp.0
+	//assign + int const
+//	%tmp.1 = load %Main** %tmp.0
+//	%tmp.2 = getelementptr %Main* %tmp.1, i32 0, i32 1
+//	store i32 878, i32* %tmp.2
+	//object
+//	%tmp.3 = load %Main** %tmp.0
+//	%tmp.4 = getelementptr %Main* %tmp.3, i32 0, i32 1
+	//dispatch
+//	%tmp.5 = load i32* %tmp.4
+//	%tmp.6 = load %Main** %tmp.0
+//	%tmp.7 = getelementptr %Main* %tmp.6, i32 0, i32 1
+//	%tmp.8 = load i32* %tmp.7
+//	%tmp.9 = load %Main** %tmp.0
+//	%tmp.10 = icmp eq %Main* %tmp.9, null
+//	br i1 %tmp.10, label %abort, label %ok.0
+//
+//	class Main inherits IO
+//	{
+//	   x : Int <- 5;
+//	   main() : Object {		method/block
+//			{
+//				x<-878; 		assign/int const
+//				x; 				object
+//				out_int(x);		dispatch
+//				self;			Object
+//			}
+//		};
+//	};
+
+	ValuePrinter vp(*(env->cur_stream));
+//	std::cerr << "DISPATCH NAME: " <<  name->get_string() << endl;
+//	std::cerr << "DISPATCH expr: " <<  expr->get_type() << endl;
+	int i = actual->first();
+		while(actual->more(i)){
+			//actual->nth(i)->code(env);
+			std::cerr << "DISPATCH actual: " <<  actual->nth(i)->get_type() << endl;
+			i = actual->next(i);
+		}
+//	operand *name_op = env->lookup(name);
+//	operand load_op_result = vp.load(*name_op);
+
+
 //	operand expr_op = expr->code(env);
 //	operand icmp_result;
 //	operand null_op(op_type("N/A"), "null");
@@ -2062,9 +2150,9 @@ operand dispatch_class::code(CgenEnvironment *env)
 //			"abort",
 //			ok_label
 //			);
-
-
-	//ok label
+//
+//
+//	//ok label
 //	vp.begin_block(ok_label);
 //	//%tmp.3 = getelementptr %Alpha* %tmp.1, i32 0, i32 0
 //	operand expr_name_operand = *(env->lookup(name));
@@ -2355,8 +2443,13 @@ void attr_class::code(CgenEnvironment *env)
 #ifndef MP4
     assert(0 && "Unsupported case for phase 1");
 #else
-
+    //NOTE: each attr has getelementptr -> store
     if(env->methods_only){
+    	  std::cerr << "----------------------------------" <<"\n\n";
+    	  std::cerr << "Symbol name: " << name->get_string() <<"\n";
+    	  std::cerr << "type_decl: " << type_decl->get_string() <<"\n";
+    	  std::cerr << "init ret type: " << init->get_type() <<"\n";
+    	  std::cerr << "\n----------------------------------" <<"\n";
     	op_type type_decl_op_type(type_decl->get_string());
     	operand temp_empty_op(type_decl_op_type, "empty for now");
     	operand *empty_op = new operand(temp_empty_op);
@@ -2367,12 +2460,13 @@ void attr_class::code(CgenEnvironment *env)
 	if (cgen_debug) std::cerr << "attribute!\n";
 
 	//std::cerr << "ATTR CLASS name: " << name->get_string() <<"\n";
-//	std::cerr << "CUR CLASS name: " << env->get_class()->get_type_name() <<"\n";
+	//std::cerr << "CUR CLASS name: " << env->get_class()->get_type_name() <<"\n";
 
 	//evaluate the expression
 	operand *attr_expr_operand = new operand(init->code(env));
 	//std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_name() <<"\n";
 	//std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_typename() <<"\n";
+
 	//	%tmp.24 = getelementptr %Main* %tmp.21, i32 0, i32 1
 	//	store i32 5, i32* %tmp.24
 	//	ret %Main* %tmp.21
@@ -2383,7 +2477,7 @@ void attr_class::code(CgenEnvironment *env)
 	int_value zero_int_op(0);
 	int_value one_int_op(1);
 	op_type attr_op_type(std::string(env->get_class()->get_type_name()) + "*");
-	operand attr_operand(attr_op_type, env->get_class()->get_type_name() + "*");
+	operand attr_operand(attr_op_type, env->bitcast_res.get_name().substr(1,env->bitcast_res.get_name().length()-1));
 	operand attr_ret_op = vp.getelementptr(
 			attr_operand,
 			zero_int_op,
@@ -2392,7 +2486,7 @@ void attr_class::code(CgenEnvironment *env)
 
 	vp.store(*(env->cur_stream),
 			*attr_expr_operand,
-			new_op);
+			attr_ret_op);
 
 #endif
 }
