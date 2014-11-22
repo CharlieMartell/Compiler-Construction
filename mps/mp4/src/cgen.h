@@ -153,6 +153,9 @@ public:
 	op_type process_ret_type(string x);
 	string new_process_ret_type(string x);
 	void handle_new_classes();
+
+	operand bitcast_res;
+
 	vector<Symbol> attr_types;
 	vector<Symbol> attr_ids;
 	vector<string> attr_ret_vals;
@@ -161,6 +164,12 @@ public:
 
 	vector<op_type> vtable_types;
 	vector<const_value> vtable_values;
+
+	vector<op_type> io_vtable_types;
+	vector<const_value> io_vtable_values;
+
+	vector<op_type> string_vtable_types;
+	vector<const_value> string_vtable_values;
 
 	vector<op_type> new_vtable_types;
 	vector<const_value> new_vtable_values;

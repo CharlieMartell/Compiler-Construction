@@ -135,30 +135,156 @@ void CgenNode::setup_ret_types(Symbol type_decl, CgenNode* cls){
 }
 
 void CgenNode::check_inherited(){
+
+	CgenEnvironment *env = new CgenEnvironment(*(this->get_classtable()->ct_stream), this);
+	ValuePrinter vp(*(env->cur_stream));
+
+	op_type cool_type(std::string(std::string(name->get_string()) + std::string("* () ")), 1);
 	string parent_no_self_type = (this->get_parentnd()->name->get_string() == "SELF_TYPE") ? this->get_parentnd()->get_type_name() : this->get_parentnd()->name->get_string();
 	string no_self_type = (name->get_string() == "SELF_TYPE") ? this->get_type_name() : name->get_string();
 	//add inherited functions to vtable and check to make sure you don't override them
-	for(size_t i = 0; i < this->get_parentnd()->new_vtable_types.size(); i++){
-		op_type vt_ft_func(this->get_parentnd()->new_vtable_return_types.at(i) + "*");
-		vector<op_type> empty;
-		op_type mytype(no_self_type + "*");
-		empty.push_back(mytype);
-		op_func_type vt_ft_op_func_ptr_type(vt_ft_func, empty);
-		vtable_types.push_back(vt_ft_op_func_ptr_type);
+	if(!(this->get_parentnd()->basic())){
+		for(size_t i = 0; i < this->get_parentnd()->new_vtable_types.size(); i++){
+			op_type vt_ft_func(this->get_parentnd()->new_vtable_return_types.at(i) + "*");
+			vector<op_type> empty;
+			op_type mytype(no_self_type + "*");
+			empty.push_back(mytype);
+			op_func_type vt_ft_op_func_ptr_type(vt_ft_func, empty);
+			vtable_types.push_back(vt_ft_op_func_ptr_type);
 
-		string inherited_string = "bitcast (%";
-		inherited_string = inherited_string + this->get_parentnd()->new_vtable_return_types.at(i);
-		inherited_string = inherited_string + "* (%";
-		inherited_string = inherited_string + parent_no_self_type;
-		inherited_string = inherited_string + "*) * ";
-		inherited_string = inherited_string + this->get_parentnd()->new_vtable_values.at(i).get_name();
-		inherited_string = inherited_string + " to %";
-		inherited_string = inherited_string + this->get_parentnd()->new_vtable_return_types.at(i);
-		inherited_string = inherited_string + "* (%";
-		inherited_string = inherited_string + no_self_type;
-		inherited_string = inherited_string + "*) *)";
-		const_value inherited_const(INT32, inherited_string, false);
-		this->vtable_values.push_back(inherited_const);
+			string inherited_string = "bitcast (%";
+			inherited_string = inherited_string + this->get_parentnd()->new_vtable_return_types.at(i);
+			inherited_string = inherited_string + "* (%";
+			inherited_string = inherited_string + parent_no_self_type;
+			inherited_string = inherited_string + "*) * ";
+			inherited_string = inherited_string + this->get_parentnd()->new_vtable_values.at(i).get_name();
+			inherited_string = inherited_string + " to %";
+			inherited_string = inherited_string + this->get_parentnd()->new_vtable_return_types.at(i);
+			inherited_string = inherited_string + "* (%";
+			inherited_string = inherited_string + no_self_type;
+			inherited_string = inherited_string + "*) *)";
+			const_value inherited_const(INT32, inherited_string, false);
+			this->vtable_values.push_back(inherited_const);
+		}
+	}
+	else{
+		//Add the basic classes inherited functions
+		if(this->get_parentnd()->get_type_name() == "IO"){
+			//TYPES
+			//%SELF_TYPE* (%SELF_TYPE*,%String*) *
+			//%Main* (%Main*,%String*) * bitcast (%IO* (%IO*,%String*) * @IO_out_string to %Main* (%Main*,%String*) *),
+			vector<op_type> io_out_string_op_type_vec;
+			op_type io_out_string_func_io("IO*");
+			op_type io_out_string_func_str("String*");
+			io_out_string_op_type_vec.push_back(io_out_string_func_io);
+			io_out_string_op_type_vec.push_back(io_out_string_func_str);
+			op_func_type io_out_string_op_func_ptr_type(io_out_string_func_io, io_out_string_op_type_vec);
+			this->io_vtable_types.push_back(io_out_string_op_func_ptr_type);
+
+			//%IO* (%IO*,i32) *
+			vector<op_type> io_out_int_op_type_vec;
+			op_type io_out_int_func_io("IO*");
+			io_out_int_op_type_vec.push_back(io_out_int_func_io);
+			io_out_int_op_type_vec.push_back(INT32);
+			op_func_type io_out_int_op_func_ptr_type(io_out_int_func_io, io_out_int_op_type_vec);
+			this->io_vtable_types.push_back(io_out_int_op_func_ptr_type);
+
+			//%String* (%IO*) *
+			vector<op_type> io_in_string_op_type_vec;
+			op_type io_in_string_func_io("IO*");
+			op_type io_in_string_func_str("String*");
+			io_in_string_op_type_vec.push_back(io_in_string_func_io);
+			op_func_type io_in_string_op_func_ptr_type(io_in_string_func_str, io_in_string_op_type_vec);
+			this->io_vtable_types.push_back(io_in_string_op_func_ptr_type);
+
+			//i32 (%IO*) *
+			vector<op_type> io_in_int_op_type_vec;
+			op_type io_in_int_func_io("IO*");
+			io_in_int_op_type_vec.push_back(io_in_int_func_io);
+			op_func_type io_in_int_op_func_ptr_type(INT32, io_in_int_op_type_vec);
+			this->io_vtable_types.push_back(io_in_int_op_func_ptr_type);
+
+			//VALUES
+			//@IO_out_string
+			string out_string_io = "IO_out_string";
+			global_value out_string_glbl(cool_type, out_string_io);
+			const_value out_string_const(cool_type, out_string_glbl.get_name(), false);
+			this->io_vtable_values.push_back(out_string_const);
+
+			//@IO_out_int
+			string out_int_io = "IO_out_int";
+			global_value out_int_glbl(cool_type, out_int_io);
+			const_value out_int_const(cool_type, out_int_glbl.get_name(), false);
+			this->io_vtable_values.push_back(out_int_const);
+
+			//@IO_in_string
+			string in_string_io = "IO_in_string";
+			global_value in_string_glbl(cool_type, in_string_io);
+			const_value in_string_const(cool_type, in_string_glbl.get_name(), false);
+			this->io_vtable_values.push_back(in_string_const);
+
+			//@IO_in_int
+			string in_int_io = "IO_in_int";
+			global_value in_int_glbl(cool_type, in_int_io);
+			const_value in_int_const(cool_type, in_int_glbl.get_name(), false);
+			this->io_vtable_values.push_back(in_int_const);
+
+			//%Main* (%Main*) * bitcast (%Object* (%Object*) * @Object_copy to %Main* (%Main*) *),
+			for(size_t i = 0; i < this->string_vtable_types.size(); i++){
+				vp.bitcast(
+						*(env->cur_stream),
+						)
+			}
+		}
+		else if(this->get_type_name() == "String"){
+			//TYPES
+			//i32 (%String*) *
+			vector<op_type> str_len_op_type_vec;
+			op_type str_len_func("String*");
+			str_len_op_type_vec.push_back(str_len_func);
+			op_func_type str_len_op_func_ptr_type(INT32, str_len_op_type_vec);
+			this->vtable_types.push_back(str_len_op_func_ptr_type);
+
+			//%String* (%String*,%String*) *
+			vector<op_type> str_concat_op_type_vec;
+			op_type str_concat_func("String*");
+			str_concat_op_type_vec.push_back(str_concat_func);
+			str_concat_op_type_vec.push_back(str_concat_func);
+			op_func_type str_concat_op_func_ptr_type(str_concat_func, str_concat_op_type_vec);
+			this->string_vtable_types.push_back(str_concat_op_func_ptr_type);
+
+			//%String* (%String*,i32,i32) *
+			vector<op_type> str_substr_op_type_vec;
+			op_type str_substr_func("String*");
+			str_substr_op_type_vec.push_back(str_substr_func);
+			str_substr_op_type_vec.push_back(INT32);
+			str_substr_op_type_vec.push_back(INT32);
+			op_func_type str_substr_op_func_ptr_type(str_substr_func, str_substr_op_type_vec);
+			this->string_vtable_types.push_back(str_substr_op_func_ptr_type);
+
+			//VALUES
+			//@String_length
+			string length_string = this->get_type_name();
+			length_string = length_string + "_length";
+			global_value length_glbl(cool_type, length_string);
+			const_value length_const(cool_type, length_glbl.get_name(), false);
+			this->string_vtable_values.push_back(length_const);
+
+			//@String_concat
+			string concat_string = this->get_type_name();
+			concat_string = concat_string + "_concat";
+			global_value concat_glbl(cool_type, concat_string);
+			const_value concat_const(cool_type, concat_glbl.get_name(), false);
+			this->string_vtable_values.push_back(concat_const);
+
+			//@String_substr
+			string substr_string = this->get_type_name();
+			substr_string = substr_string + "_substr";
+			global_value substr_glbl(cool_type, substr_string);
+			const_value substr_const(cool_type, substr_glbl.get_name(), false);
+			this->string_vtable_values.push_back(substr_const);
+
+		}
 	}
 }
 
@@ -1233,10 +1359,7 @@ void CgenNode::setup(int tag, int depth)
     this->layout_features();
 
 	//check if you inherit and if so add to attr_only_ret_types
-	if(std::string(this->get_parentnd()->get_type_name()) != "Object"
-	&& std::string(this->get_parentnd()->get_type_name()) != "_no_class"
-	&& std::string(this->get_parentnd()->get_type_name()) != "SELF_TYPE*"
-	&& std::string(this->get_parentnd()->get_type_name()) != "Int*"){
+	if(!(this->get_parentnd()->basic())){
 		op_type temp(std::string(this->get_parentnd()->get_type_name()) + std::string("*"));
 		this->attr_only_ret_types.push_back(temp);
 	}
@@ -1251,14 +1374,15 @@ void CgenNode::setup(int tag, int depth)
 	const_value strConst(op_type_array, strToPass, true);
 	vp.init_constant(std::string("str.") + std::string(name->get_string()), strConst);
 
+	//Add inherited classes
+	if(!basic())
+		this->check_inherited();
 	//after adding basic classes to vtables add new ones
 	for(size_t i = 0; i < this->new_vtable_types.size(); i++)
 		vtable_types.push_back(this->new_vtable_types.at(i));
 	for(size_t i = 0; i < this->new_vtable_values.size(); i++)
 		vtable_values.push_back(this->new_vtable_values.at(i));
-	//then add inherited ones
-	if(!basic())
-		this->check_inherited();
+
 
 	op_type obj_vtable_type(std::string(name->get_string()) + "_vtable", 1);
 	vector<op_type> type_def_vec;
@@ -1360,27 +1484,27 @@ void CgenNode::code_class()
 			args);
 
 	//%tmp.11 = bitcast i8* %tmp.10 to %Main*
-	operand *bitcast_result = new operand(vp.bitcast(call_return, class_ptr_type));
-
-	//add result of bitcast to var_table
-	env->add_local(self, bitcast_result);
+	operand bitcast_result = vp.bitcast(call_return, class_ptr_type);
+	//store result of bitcast
+	this->bitcast_res = bitcast_result;
 
 	//%tmp.12 = getelementptr %Main* %tmp.11, i32 0, i32 0
 	op_type class_element_ptr_result_type(this->get_type_name() + "_vtable**");
-	operand class_element_ptr_result = vp.getelementptr(
-			*bitcast_result,
+	operand *class_element_ptr_result = new operand(vp.getelementptr(
+			bitcast_result,
 			zero_int_op,
 			zero_int_op,
-			class_element_ptr_result_type);
+			class_element_ptr_result_type));
 
 	//store %Main_vtable* @Main_vtable_prototype, %Main_vtable** %tmp.12
-	vp.store(class_vtable_ptr_operand, class_element_ptr_result);
+	vp.store(class_vtable_ptr_operand, *class_element_ptr_result);
+	env->add_local(self, class_element_ptr_result);
 
 	//%tmp.13 = alloca %Main*
 	operand alloca_result = vp.alloca_mem(class_ptr_type);
 
 	//store %Main* %tmp.11, %Main** %tmp.13
-	vp.store(*bitcast_result, alloca_result);
+	vp.store(bitcast_result, alloca_result);
 	//TODO:figure out what to store here
 
 	//Code attr only!
@@ -1392,7 +1516,7 @@ void CgenNode::code_class()
 	}
 
 	//ret %Main* %tmp.11
-	vp.ret(*bitcast_result);
+	vp.ret(bitcast_result);
 
 	//abort:
 	//	call void @abort(  )
@@ -1864,10 +1988,11 @@ operand bool_const_class::code(CgenEnvironment *env)
 
 operand object_class::code(CgenEnvironment *env)
 {
-  //std::cerr << "Object name:  " << name->get_string() << "\n";
   ValuePrinter vp(*(env->cur_stream));
   if (cgen_debug) std::cerr << "Object\n";
-  //std::cerr << "Object name NO SELF: " << env->no_self_type->get_string() << "\n";
+  std::cerr << "Searching var table for: " << name->get_string() << "\n";;
+  env->dump();
+  std::cerr << "\nDone Searching!\n";
   operand ret_op = *(env->lookup(name));
   operand ret_op_ptr(ret_op);
   ret_op_ptr.set_type(ret_op.get_type().get_ptr_type());
@@ -2241,13 +2366,13 @@ void attr_class::code(CgenEnvironment *env)
     ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "attribute!\n";
 
-	std::cerr << "ATTR CLASS name: " << name->get_string() <<"\n";
+	//std::cerr << "ATTR CLASS name: " << name->get_string() <<"\n";
 //	std::cerr << "CUR CLASS name: " << env->get_class()->get_type_name() <<"\n";
 
 	//evaluate the expression
 	operand *attr_expr_operand = new operand(init->code(env));
-	std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_name() <<"\n";
-	std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_typename() <<"\n";
+	//std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_name() <<"\n";
+	//std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_typename() <<"\n";
 	//	%tmp.24 = getelementptr %Main* %tmp.21, i32 0, i32 1
 	//	store i32 5, i32* %tmp.24
 	//	ret %Main* %tmp.21
