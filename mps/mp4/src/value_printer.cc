@@ -1,13 +1,14 @@
 #include "value_printer.h"
 #include "cool-io.h"     // for cerr, <<, manipulators
 #include <sstream>
+#include <iostream>
 
 static int value_printer_counter = 0;
 static void embed_getelementptr (ostream &o, operand op1, operand op2, operand op3);
 
 operand make_fresh_operand(op_type type) {
 	stringstream out;
-	out << "vtpm." << (value_printer_counter++);
+	out << "tmp." << (value_printer_counter++);
 	string name = out.str();
  	return operand(type, name);
 }
@@ -156,7 +157,6 @@ void ValuePrinter::init_struct_constant(operand constant,
         vector<op_type> field_types, vector<const_value> init_values) {
   init_struct_constant(*stream, constant, field_types, init_values);
 }
-
 
 
 void ValuePrinter::begin_block(string label)

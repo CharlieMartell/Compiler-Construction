@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <string.h>
 
 /* This file provides the runtime library for cool. It implements
    the functions of the cool classes in C
@@ -39,15 +40,15 @@ const char default_string[]	= "";
   %Object* (%Object*) * @Object_copy
 }
 */
-const Object_vtable Object_vtable_prototype = {
-    .ID = 0,
-    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
-    .name = (char*)Object_string,
-    .Object_new = Object_new,
-    .Object_abort = (Object* (*) (Object*)) Object_abort,
-    .Object_type_name = (const String* (*) (Object*)) Object_type_name,
-    .Object_copy = (Object* (*) (Object*)) Object_copy;
-};
+//const Object_vtable Object_vtable_prototype = {
+//    .ID = 0,
+//    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
+//    .name = (char*)Object_string,
+//    .Object_new = Object_new,
+//    .Object_abort = (Object* (*) (Object*)) Object_abort,
+//    .Object_type_name = (const String* (*) (Object*)) Object_type_name,
+//    .Object_copy = (Object* (*) (Object*)) Object_copy
+//};
 
 /*
 %Int_vtable = type {
@@ -71,15 +72,15 @@ const Object_vtable Object_vtable_prototype = {
 }
 
 */
-const Int_vtable Int_vtable_prototype = {
-    .ID = 1,
-    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
-    .name = (char*)Int_string,
-    .Int_new = Int_new,
-    .Object_abort = (Object* (*) (Int*)) Object_abort,
-    .Object_type_name = (const String* (*) (Int*)) Object_type_name,
-    .Object_copy = (Int* (*) (Int*)) Object_copy;
-};
+//const Int_vtable Int_vtable_prototype = {
+//    .ID = 1,
+//    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
+//    .name = (char*)Int_string,
+//    .Int_new = Int_new,
+//    .Object_abort = (Object* (*) (Int*)) Object_abort,
+//    .Object_type_name = (const String* (*) (Int*)) Object_type_name,
+//    .Object_copy = (Int* (*) (Int*)) Object_copy
+//};
 
 /*
 %IO_vtable = type {
@@ -110,19 +111,19 @@ const Int_vtable Int_vtable_prototype = {
   i32 (%IO*) * @IO_in_int
 }
 */
-const IO_vtable IO_vtable_prototype = {
-    .ID = 4,
-    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
-    .name = (char*)IO_string,
-    .IO_new = IO_new,
-    .Object_abort = (Object* (*) (IO*)) Object_abort,
-    .Object_type_name = (const String* (*) (IO*)) Object_type_name,
-    .Object_copy = (IO* (*) (IO*)) Object_copy,
-    .IO_out_string = IO_out_string,
-    .IO_out_int = IO_out_int,
-    .IO_in_string = IO_in_string,
-    .IO_oin_int= IO_in_int;
-};
+//const IO_vtable IO_vtable_prototype = {
+//    .ID = 4,
+//    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
+//    .name = (char*)IO_string,
+//    .IO_new = IO_new,
+//    .Object_abort = (Object* (*) (IO*)) Object_abort,
+//    .Object_type_name = (const String* (*) (IO*)) Object_type_name,
+//    .Object_copy = (IO* (*) (IO*)) Object_copy,
+//    .IO_out_string = IO_out_string,
+//    .IO_out_int = IO_out_int,
+//    .IO_in_string = IO_in_string,
+//    .IO_in_int= IO_in_int
+//};
 
 /*
 %Bool_vtable = type {
@@ -145,15 +146,15 @@ const IO_vtable IO_vtable_prototype = {
   %Bool* (%Bool*) * bitcast (%Object* (%Object*) * @Object_copy to %Bool* (%Bool*) *)
 }
 */
-const Bool_vtable Bool_vtable_prototype = {
-    .ID = 2,
-    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
-    .name = (char*)Bool_string,
-    .Bool_new = Bool_new,
-    .Object_abort = (Object* (*) (Bool*)) Object_abort,
-    .Object_type_name = (const String* (*) (Bool*)) Object_type_name,
-    .Object_copy = (Bool* (*) (Bool*)) Object_copy;
-};
+//const Bool_vtable Bool_vtable_prototype = {
+//    .ID = 2,
+//    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
+//    .name = (char*)Bool_string,
+//    .Bool_new = Bool_new,
+//    .Object_abort = (Object* (*) (Bool*)) Object_abort,
+//    .Object_type_name = (const String* (*) (Bool*)) Object_type_name,
+//    .Object_copy = (Bool* (*) (Bool*)) Object_copy
+//};
 
 /*
 %String_vtable = type {
@@ -182,18 +183,24 @@ const Bool_vtable Bool_vtable_prototype = {
   %String* (%String*,i32,i32) * @String_substr
 }
 */
-const String_vtable String_vtable_prototype = {
-    .ID = 3,
-    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
-    .name = (char*)String_string,
-    .String_new = String_new,
-    .Object_abort = (Object* (*) (String*)) Object_abort,
-    .Object_type_name = (const String* (*) (String*)) Object_type_name,
-    .Object_copy = (String* (*) (String*)) Object_copy,
-    .String_length = String_length,
-    .String_concat = String_concat,
-    .String_substr = String_substr;
-};
+//const String_vtable String_vtable_prototype = {
+//    .ID = 3,
+//    .address = 0, /*i32 ptrtoint (%Int* getelementptr (%Int* null, i32 1) to i32)*/
+//    .name = (char*)String_string,
+//    .String_new = String_new,
+//    .Object_abort = (Object* (*) (String*)) Object_abort,
+//    .Object_type_name = (const String* (*) (String*)) Object_type_name,
+//    .Object_copy = (String* (*) (String*)) Object_copy,
+//    .String_length = String_length,
+//    .String_concat = String_concat,
+//    .String_substr = String_substr
+//};
+
+extern const Object_vtable Object_vtable_prototype;
+extern const String_vtable String_vtable_prototype;
+extern const IO_vtable IO_vtable_prototype;
+extern const Int_vtable Int_vtable_prototype;
+extern const Bool_vtable Bool_vtable_prototype;
 
 /*
 // Methods in class object (only some are provided to you)
@@ -201,7 +208,7 @@ const String_vtable String_vtable_prototype = {
 Object* Object_abort(Object *self)
 {
     printf("Abort called from class %s\n",
-           !self? "Unknown" : self->vtblptr->name);
+           !self? "Unknown" : self->type->name);
     exit(1);
     return self;
 }
@@ -213,20 +220,12 @@ const String* Object_type_name(Object *self)
       abort();
     }
     String *s = String_new();
-    s->val = self->vtblptr->name;
+    s->val = self->type->name;
     return s;
 }
 
 
 /* ADD CODE HERE FOR MORE METHODS OF CLASS OBJECT */
-//Not sure if this works
-  Object* create_object() {
-      Object result;
-      result.type = type_Object;
-      Object* o = malloc(sizeof(Object));
-      memcpy(o, &result, sizeof(Object));
-      return o;
-  }
 
 
 /*
@@ -336,6 +335,22 @@ Int* IO_in_int(IO *self)
 }
 
 //Create new objects!
+//Not sure if this works
+Object* create_object() {
+  Object result;
+//  result.type = Object_vtable;
+//  Object* o = malloc(sizeof(Object));
+//  memcpy(o, &result, sizeof(Object));
+//  return o;
+  return Object_new();
+}
+
+Object* Object_copy(Object *self){
+	Object *copied = Object_new();
+	copied->type = self->type;
+	return copied;
+}
+
 Object* Object_new(void){
   Object result;
   //result.type = Object_string;
@@ -376,54 +391,35 @@ String* String_new(void){
   return o;
 }
 
-int String_length(){
-  return boxString((int32_t)strlen(s));
+int String_length(String* s) {
+    return (int)strlen(s->val);
 }
 
 String* String_concat(String* x, String* s){
-  char* self = unboxString(x);
-  size_t selfLen = strlen(self);
-  size_t sLen = strlen(s);
+  char* self = x->val;
+  int selfLen = strlen(self);
+  char* self_2 = s->val;
+  int sLen = strlen(self_2);
   char* result = malloc(selfLen + sLen + 1);
   memcpy(result, self, selfLen);
   memcpy(result + selfLen, s, sLen);
   result[selfLen + sLen] = '\0';
-  return boxString(result);
+  String* boxed = String_new();
+    boxed->type = x->type;
+    boxed->val = result;
+    return boxed;
 }
 
 String* String_substr(String* x, int i, int l){
-  char* self = unboxString(x);
+  char* self = x->val;
   size_t selfLen = strlen(self);
   if(selfLen < (i + l))
       error("Index out of range");
   char* result = malloc(l+1);
   memcpy(result, self+i, l);
   result[l] = '\0';
-  return boxString(result);
-}
-
-//Boxing/Unboxing Methods
-Int* boxInt(int32_t value) {
-  Int* r = Int_new();
-  r->type = Int_vtable_prototype();
-  r->val = value;
-  return r;
-}
-
-Bool* boxBool(_Bool value) {
-  Bool* b = Bool_new();
-  b->type = Bool_vtable_prototype();
-  b->val = value;
-  return b;
-}
-
-String* boxString(const char* data) {
-  String* result = String_new();
-  result->type = Int_vtable_prototype();
-  result->val = data;
-  return result;
-}
-
-char* unboxString(String* x){
-  return x->val;
+  String* boxed = String_new();
+  boxed->type = x->type;
+  boxed->val = result;
+  return boxed;
 }

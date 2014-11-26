@@ -1,5 +1,5 @@
 #include "operand.h"
-
+#include <iostream>
 op_type::op_type(op_type_id i) : id(i){
 	switch (id) {
 		case EMPTY:
@@ -141,6 +141,7 @@ op_type op_type::get_deref_type() {
 			deref_id = OBJ_PTR;
 			break;
 		default:
+			std::cerr << "Follow this command: " << id << "\n" ;
 			assert(0 && "get_deref_type(): Cannot get type after dereferencing");
 	}
 	op_type deref_type;

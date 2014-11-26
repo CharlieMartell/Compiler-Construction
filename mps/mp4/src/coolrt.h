@@ -110,11 +110,10 @@ struct IO_vtable {
     Object* (*Object_abort)(IO*);
     String* (*Object_type_name)(IO*);
     IO* (*Object_copy)(IO*);
-    IO* (*Object_copy)(IO*);
     IO* (*IO_out_string)(IO*, String*);
     IO* (*IO_out_int)(IO*, Int*);
     String* (*IO_in_string)(IO*);
-    Int* (*IO_in_int)(IO*)
+    Int* (*IO_in_int)(IO*);
 };
 
 /*
@@ -145,7 +144,7 @@ struct Int_vtable {
   Int* (*Int_new)(void);
   Object* (*Object_abort)(Int*);
   String* (*Object_type_name)(Int*);
-  Int* (*Object_copy)(Int*)
+  Int* (*Object_copy)(Int*);
 };
 
 /*
@@ -177,7 +176,7 @@ struct Bool_vtable {
   Bool* (*Bool_new)(void);
   Object* (*Object_abort)(Bool*);
   String* (*Object_type_name)(Bool*);
-  Int* (*Object_copy)(Bool*)
+  Bool* (*Object_copy)(Bool*);
 };
 
 /*
@@ -215,10 +214,10 @@ struct String_vtable {
   String* (*String_new)(void);
   Object* (*Object_abort)(String*);
   String* (*Object_type_name)(String*);
-  String* (*Object_type_name)(String*);
-  Int* (*String_length)(String*)
-  String* (*String_concat)(String*, String*)
-  String* (*String_substr)(String*)
+  String* (*Object_copy)(String*);
+  Int* (*String_length)(String*);
+  String* (*String_concat)(String*, String*);
+  String* (*String_substr)(String*);
 };
 
 /* methods in class Object */
@@ -245,12 +244,10 @@ Bool* Bool_new(void);
 
 /* methods in class String */
 String* String_new(void);
-int String_length(String *x);
-String* String_concat(String* x, String s);
+int String_length(String* x);
+String* String_concat(String* x, String* s);
 String* String_substr(String*, int i, int l);
 
 //Boxing/Unboxing Methods
-Int* boxInt(int32_t value);
-Bool* boxBool(_Bool value);
-String* boxString(const char* data);
-char* unboxString(String* x);
+//Int* boxInt(int value);
+//Bool* boxBool(bool value);

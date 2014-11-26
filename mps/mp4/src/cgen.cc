@@ -91,14 +91,44 @@ op_type CgenNode::process_ret_type(string x){
 	return temp;
 }
 
-op_type get_main_main_ret_type(string x){
+op_type CgenNode::process_ret_ptr_type(string x){
+	if(x == "SELF_TYPE"){
+		op_type temp(this->get_type_name());
+		return temp;
+	}
+	else if(x == "Bool" || x == "bool")
+		return INT1_PTR;
+	else if(x == "Int" || x == "int")
+		return INT32_PTR;
+	else if(x == "String")
+		return INT8_PPTR;
+	op_type temp(x + "*");
+	return temp;
+}
+
+op_type CgenNode::process_formal_type(string x){
+	if(x == "SELF_TYPE"){
+		op_type temp(this->get_type_name());
+		return temp;
+	}
+	else if(x == "Bool" || x == "bool")
+		return INT1;
+	else if(x == "Int" || x == "int")
+		return INT32;
+	else if(x == "String")
+		return INT8_PTR;
+	op_type temp(x);
+	return temp;
+}
+
+op_type CgenEnvironment::get_op_type(string x){
 	if(x == "i32")
 		return op_type(INT32);
 	else if(x == "i1")
 		return op_type(INT1);
 	else if(x == "i8*")
 		return op_type(INT8_PTR);
-	return op_type(x.substr(1,x.length()-1));
+	return op_type(x.substr(1));
 }
 
 op_type method_type_gen(string x){
@@ -134,6 +164,80 @@ void CgenNode::setup_ret_types(Symbol type_decl, CgenNode* cls){
 	}
 }
 
+string remove_class(string x){
+	std::stringstream test(x);
+	int begin_length;
+	std::string segment;
+	std::getline(test, segment, '_');
+	begin_length = segment.length();
+	return x.substr(begin_length+1);
+}
+
+void CgenEnvironment::remove_space(string& str)
+{
+    int len = str.length();
+    int j = 0;
+
+    for (int i = 0; i < len;)
+    {
+        if (str.at(i) == ' ')
+        {
+            i++;
+            continue;
+        }
+
+        str.at(j++) = str.at(i++);
+    }
+    str.resize(j);
+}
+
+vector<op_type> CgenEnvironment::parse_args(string x){
+//	%Main*(%Main*, i32 ) *
+//	%Main*, i32
+	vector<op_type> ret_vec;
+
+	if(x.find('(', 0) == std::string::npos){
+		ret_vec.push_back(op_type(x));
+		return ret_vec;
+	}
+	std::stringstream test(x);
+
+	std::string segment;
+	std::getline(test, segment, '(');
+	std::string segment2;
+	std::getline(test, segment2, ')');
+	string params = x.substr(segment.length()+1, x.length() - 1 - (segment2.length() + 1));
+//	std::cerr << "x " <<  x << endl;
+//	std::cerr << "params " <<  params << endl;
+	this->remove_space(params);
+	int pos = 0;
+
+	char str[params.length()];
+	strcpy(str,params.c_str());
+	char * pch;
+	pch = strtok(str,",");
+	while (pch != NULL)
+	{
+		op_type temp_type = get_op_type(pch);
+		std::cerr << "temp_type " <<  temp_type.get_name() << endl;
+		ret_vec.push_back(temp_type);
+		pch = strtok(NULL, ",");
+	}
+//	while(params.find(',', pos) != std::string::npos){
+//		string param_string = params.substr(pos, params.find(',', pos));
+//		op_type temp_type = get_op_type(param_string);
+//		pos = params.find(',', pos);
+//		ret_vec.push_back(temp_type);
+//	}
+//	string param_string = params.substr(pos,params.find(')'));
+//	op_type temp_type = get_op_type(param_string);
+//	std::cerr << "params " <<  params << endl;
+//	std::cerr << "pos: " <<  pos << endl;
+//	std::cerr << "temp_type2: " <<  temp_type.get_name() << endl;
+//	ret_vec.push_back(temp_type);
+	return ret_vec;
+}
+
 void CgenNode::check_inherited(){
 
 	CgenEnvironment *env = new CgenEnvironment(*(this->get_classtable()->ct_stream), this);
@@ -165,6 +269,7 @@ void CgenNode::check_inherited(){
 			inherited_string = inherited_string + "*) *)";
 			const_value inherited_const(INT32, inherited_string, false);
 			this->vtable_values.push_back(inherited_const);
+			this->function_names.push_back(remove_class(this->get_parentnd()->new_vtable_values.at(i).get_name()));
 		}
 	}
 	else{
@@ -266,13 +371,14 @@ void CgenNode::check_inherited(){
 				string bitcast_val = "bitcast (";
 						bitcast_val = bitcast_val + this->io_vtable_types.at(i).get_name();
 						bitcast_val = bitcast_val + " ";
-						bitcast_val = bitcast_val + io_vtable_values.at(i).get_name();
+						bitcast_val = bitcast_val + this->io_vtable_values.at(i).get_name();
 						bitcast_val = bitcast_val + " to ";
 						bitcast_val = bitcast_val + this->io_self_vtable_types.at(i).get_name();
 						bitcast_val = bitcast_val + ")";
 				const_value old_type_val(io_vtable_types.at(i), bitcast_val, false);
 				this->vtable_types.push_back(this->io_self_vtable_types.at(i));
 				this->vtable_values.push_back(old_type_val);
+				this->function_names.push_back(remove_class(this->io_vtable_values.at(i).get_name()));
 			}
 		}
 	}
@@ -301,11 +407,13 @@ void CgenNode::handle_vtable_defaults(){
 
 	const_value id_const(i32_type, SSTR(count++), false);
 	this->vtable_values.push_back(id_const);
+	this->function_names.push_back("counter");
 
 	//i32 ptrtoint (%Class* getelementptr (%Class* null, i32 1) to i32),
 	string ptr_string = "ptrtoint (%" + this->get_type_name() + "* getelementptr (%" + this->get_type_name() + "* null, i32 1) to i32)";
 	const_value address_const(i32_type, ptr_string, false);
 	this->vtable_values.push_back(address_const);
+	this->function_names.push_back("memory address");
 
 	//i8* getelementptr ([class.length+1 x i8]* @str.Class, i32 0, i32 0),
 	int class_length = ((int)(this->get_type_name().length()) + 1);
@@ -317,6 +425,7 @@ void CgenNode::handle_vtable_defaults(){
 	element_ptr_string = element_ptr_string + ", i32 0, i32 0)";
 	const_value name_const(i8_ptr_type, element_ptr_string, false);
 	this->vtable_values.push_back(name_const);
+	this->function_names.push_back("main pointer func");
 
 	//%Class* () * @Class_new,
 	string new_string = this->get_type_name();
@@ -324,6 +433,7 @@ void CgenNode::handle_vtable_defaults(){
 	global_value new_glbl(cool_type, new_string);
 	const_value new_const(cool_type, new_glbl.get_name(), false);
 	this->vtable_values.push_back(new_const);
+	this->function_names.push_back("class new func");
 
 	//Layout basic Object functions
 	if(this->get_type_name() == "Object")
@@ -418,6 +528,7 @@ void CgenNode::handle_vtable_defaults(){
 		abort_string = abort_string + "*) *)";
 		const_value abort_const(cool_type, abort_string, false);
 		this->vtable_values.push_back(abort_const);
+		this->function_names.push_back("abort");
 
 		//bitcast (%String* (%Object*) * @Object_type_name to %String* (%SELF_TYPE*) *)
 		string type_name_string = "bitcast (%String* (%Object*) * @Object_type_name to %String* (%";
@@ -425,6 +536,7 @@ void CgenNode::handle_vtable_defaults(){
 		type_name_string = type_name_string + "*) *)";
 		const_value type_name_const(cool_type, type_name_string, false);
 		this->vtable_values.push_back(type_name_const);
+		this->function_names.push_back("type_name");
 
 		//bitcast (%Object* (%Object*) * @Object_copy to %SELF_TYPE* (%SELF_TYPE*) *)
 		string copy_string = "bitcast (%Object* (%Object*) * @Object_copy to %";
@@ -434,6 +546,7 @@ void CgenNode::handle_vtable_defaults(){
 		copy_string = copy_string + "*) *)";
 		const_value copy_const(cool_type, copy_string, false);
 		this->vtable_values.push_back(copy_const);
+		this->function_names.push_back("copy");
 	}
 
 	//Layout basic String Functions
@@ -1364,7 +1477,7 @@ void CgenNode::setup(int tag, int depth)
 	const_value strConst(op_type_array, strToPass, true);
 	vp.init_constant(std::string("str.") + std::string(name->get_string()), strConst);
 
-	//Add inherited clas ses
+	//Add inherited classes
 	if(!basic())
 		this->check_inherited();
 	//after adding basic classes to vtables add new ones
@@ -1679,17 +1792,17 @@ void method_class::code(CgenEnvironment *env)
 	op_type ret_type = method_type_gen(return_type->get_string());
 	string fn_name = std::string(env->get_class()->get_type_name()) + "_" + std::string(name->get_string());
 
-	vector<Symbol> symbol_vec;
 	vector<operand> fn_args;
 	op_type class_type(env->get_class()->get_type_name() + "*");
 	operand self_arg(class_type, "self");
 	fn_args.push_back(self_arg);
-	symbol_vec.push_back(self);
+	env->symbol_vec.push_back(self);
 	for(int x = formals->first(); formals->more(x); x = formals->next(x)){
-		op_type temp_type(this->formals->nth(x)->get_type_decl()->get_string());
-		operand formal_temp_op(temp_type,this->formals->nth(x)->get_name()->get_string());
+		op_type formal_type = env->get_class()->process_formal_type(this->formals->nth(x)->get_type_decl()->get_string());
+		operand formal_temp_op(formal_type,  std::string(this->formals->nth(x)->get_name()->get_string()));
+		//std::cerr << "formal temp op : " << this->formals->nth(x)->get_name()->get_string() << endl;
 		fn_args.push_back(formal_temp_op);
-		symbol_vec.push_back(this->formals->nth(x)->get_type_decl());
+		env->symbol_vec.push_back(this->formals->nth(x)->get_name());
 	}
 
 	vp.define(ret_type, fn_name, fn_args);
@@ -1703,12 +1816,21 @@ void method_class::code(CgenEnvironment *env)
 	for(size_t i = 0; i < fn_args.size(); i++){
 		//%tmp.0 = alloca %Main*
 		alloca_result = new operand(vp.alloca_mem(fn_args.at(i).get_type()));
-		env->add_local(symbol_vec.at(i), alloca_result);
+		//std::cerr << "symbol vec at i " << symbol_vec.at(i)->get_string() <<endl;
+		if(std::string(env->symbol_vec.at(i)->get_string()) == std::string("self")){
+			op_type *temp_type = new op_type(alloca_result->get_type());
+			temp_type->set_id(OBJ_PPTR);
+			*alloca_result = operand(*temp_type, alloca_result->get_name().substr(1));
+		}
+		env->add_local(env->symbol_vec.at(i), alloca_result);
 		//store %Main* %self, %Main** %tmp.0
 		vp.store(fn_args.at(i), *alloca_result);
 	}
-
+	std::cerr <<"calling code env from "<< name->get_string() <<endl;
 	operand result = expr->code(env);
+	std::cerr <<"done calling "<<endl;
+	if(result.get_type().get_name() != ret_type.get_name())
+		result = vp.bitcast(result, ret_type);
 
 	vp.ret(result);
 
@@ -1722,8 +1844,6 @@ void method_class::code(CgenEnvironment *env)
 	vp.end_define();
 }
 
-// Codegen for expressions.  Note that each expression has a value.
-
 operand assign_class::code(CgenEnvironment *env)
 {
   ValuePrinter vp(*(env->cur_stream));
@@ -1733,6 +1853,7 @@ operand assign_class::code(CgenEnvironment *env)
 	operand expr_operand = expr->code(env);
 	//Load what you stored in code_class
 	operand load_result = vp.load(*self_op);
+
 
 	//getelementptr of what you just loaded!
 	//%tmp.2 = getelementptr %Main* %tmp.1, i32 0, i32 1
@@ -1764,17 +1885,11 @@ operand assign_class::code(CgenEnvironment *env)
 
 operand cond_class::code(CgenEnvironment *env)
 {
-	if (cgen_debug) std::cerr << "cond\n";
+  if (cgen_debug) std::cerr << "cond\n";
   ValuePrinter vp(*(env->cur_stream));
   operand second_reg;
   string result1, result2, result3;
-  //This is somewhat "hacky" in order to keep track of the type
-  //for what I need to alloc for I evaluate the code and move the
-  //stream buffer back (but angrave 241 professor would be pleased).
-  std::fpos<std::char_traits<char>::state_type> pos = env->cur_stream->tellp();
-  operand get_type_op = then_exp->code(env);
-  env->cur_stream->seekp(pos);
-  second_reg = vp.alloca_mem(get_type_op.get_type());
+  second_reg = vp.alloca_mem(env->get_class()->process_formal_type(then_exp->get_type()->get_string()));
   //I was getting errors with the default count in env so implemented new
   env->block_count++;
   result1 = env->new_label("end.", false);
@@ -1982,7 +2097,7 @@ operand comp_class::code(CgenEnvironment *env)
   operand comp_op = vp.xor_in(e1_code, bool_value(true, true));
   return comp_op;
 }
-//INITIALIZE CONSTANTS
+
 operand int_const_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "Integer Constant\n";
@@ -2001,35 +2116,44 @@ operand object_class::code(CgenEnvironment *env)
 {
   ValuePrinter vp(*(env->cur_stream));
   if (cgen_debug) std::cerr << "Object\n";
-//  std::cerr << "Searching var table for: " << name->get_string() << "\n";;
-//  env->dump();
-//  std::cerr << "\nDone Searching!\n";
-  	operand *self_op = env->lookup(self);
-  	operand load_result = vp.load(*self_op);
+	operand *self_op = env->lookup(name);
 
-  	//getelementptr of what you just loaded!
-	//%tmp.2 = getelementptr %Main* %tmp.1, i32 0, i32 1
-	int_value zero_op(0);
-	int_value one_op(1);
-	operand *name_op = env->lookup(name);
-	op_type store_type(name_op->get_type());
-	operand *elementptr_result = new operand(
-			vp.getelementptr(
-				load_result,
-				zero_op,
-				one_op,
-				store_type
-				)
-			);
-	std::cerr << "OBJECT NAME: " <<  name->get_string() << endl;
-	env->add_local(name, elementptr_result);
+	std::cerr << "loading:  " << name->get_string() << " " <<   self_op->get_name() << " " << self_op->get_typename()<<endl;
+	std::cerr << "loading:  " << self_op->get_type().get_id() << endl;
+	operand load_result = vp.load(*self_op);
+//	bool is_local = false;
+//	for(int i = 1; i < env->symbol_vec.size();i++){
+//		if(std::string(env->symbol_vec.at(i)->get_string())
+//			== std::string(name->get_string())){
+//			std::cerr << env->symbol_vec.at(i)->get_string() << " " << name->get_string() <<endl;
+//			is_local = true;
+//			break;
+//		}
+//	}
+	//if(!is_local){
+		//%tmp.2 = getelementptr %Main* %tmp.1, i32 0, i32 1
+		int_value zero_op(0);
+		int_value one_op(1);
+		operand *name_op = env->lookup(name);
+		op_type store_type(name_op->get_type());
+		operand *elementptr_result = new operand(
+				vp.getelementptr(
+					load_result,
+					zero_op,
+					one_op,
+					store_type
+					)
+				);
+
+		std::cerr << "OBJECT NAME: " <<  name->get_string() << endl;
+		env->add_local(SELF_TYPE, elementptr_result);
+	//}
 
 //	  std::cerr << "-------------DUMPING SELFOP---------------------" <<"\n\n";
 //	  std::cerr << "self_op name: " << self_op->get_name() <<"\n";
 //	  std::cerr << "self_op tn: " << self_op->get_typename() <<"\n";
 //	  std::cerr << "self op type : " << self_op->get_type().get_name() <<"\n";
 //	  std::cerr << "\n\n----------------------------------" <<"\n";
-
 
   return load_result;
 }
@@ -2040,12 +2164,6 @@ operand no_expr_class::code(CgenEnvironment *env)
   operand nothing;
   return nothing;
 }
-
-//*****************************************************************
-// The next few functions are for node types not supported in Phase 1
-// but these functions must be defined because they are declared as
-// methods via the Expression_SHARED_EXTRAS hack.
-//*****************************************************************
 
 operand static_dispatch_class::code(CgenEnvironment *env)
 {
@@ -2107,7 +2225,17 @@ operand dispatch_class::code(CgenEnvironment *env)
 //	%tmp.9 = load %Main** %tmp.0
 //	%tmp.10 = icmp eq %Main* %tmp.9, null
 //	br i1 %tmp.10, label %abort, label %ok.0
-//
+
+//	ok.0:
+//	%tmp.11 = getelementptr %Main* %tmp.9, i32 0, i32 0
+//	%tmp.12 = load %Main_vtable** %tmp.11
+//	%tmp.13 = getelementptr %Main_vtable* %tmp.12, i32 0, i32 8
+//	%tmp.14 = load %Main* (%Main*,i32) ** %tmp.13
+//	%tmp.15 = call %Main*(%Main*, i32 )* %tmp.14( %Main* %tmp.9, i32 %tmp.8 )
+//	%tmp.16 = load %Main** %tmp.0
+//	%tmp.17 = bitcast %Main* %tmp.16 to %Object*
+//	ret %Object* %tmp.17
+
 //	class Main inherits IO
 //	{
 //	   x : Int <- 5;
@@ -2123,58 +2251,108 @@ operand dispatch_class::code(CgenEnvironment *env)
 
 	ValuePrinter vp(*(env->cur_stream));
 //	std::cerr << "DISPATCH NAME: " <<  name->get_string() << endl;
-//	std::cerr << "DISPATCH expr: " <<  expr->get_type() << endl;
+//	std::cerr << "DISPATCH expr: " <<  expr->get_type()->get_string() << endl;
+
+	//if(std::string(expr->get_type()->get_string()) != std::string("SELF_TYPE")){
+	op_type param_op_type;
 	int i = actual->first();
-		while(actual->more(i)){
-			//actual->nth(i)->code(env);
-			std::cerr << "DISPATCH actual: " <<  actual->nth(i)->get_type() << endl;
-			i = actual->next(i);
+	vector<operand> args;
+	while(actual->more(i)){
+		param_op_type = (env->get_class()->process_ret_type(actual->nth(i)->get_type()->get_string()));
+		operand *temp_param_op = env->lookup(expr->get_type());
+		operand param_op(param_op_type.get_ptr_type(), temp_param_op->get_name().substr(1, temp_param_op->get_name().length()-1));
+		operand load_op_result = vp.load(param_op);
+		actual->nth(i)->code(env);
+		i = actual->next(i);
+	}
+	//do second load i32
+	operand *temp_param_op = env->lookup(expr->get_type());
+	operand param_op(param_op_type.get_ptr_type(), temp_param_op->get_name().substr(1, temp_param_op->get_name().length()-1));
+	operand load_op_result = vp.load(param_op);
+
+	env->ok_count++;
+	operand expr_op = expr->code(env);
+
+	args.push_back(expr_op);
+	args.push_back(load_op_result);
+
+	op_type bool_type(INT1);
+	null_value null_op(expr_op.get_type());
+	operand icmp_result = vp.icmp(EQ,
+			expr_op,
+			null_op);
+
+	string ok_label = env->new_ok_label();
+	vp.branch_cond(
+			*(env->cur_stream),
+			icmp_result,
+			"abort",
+			ok_label
+			);
+
+
+	//ok label
+	vp.begin_block(ok_label);
+	//	%tmp.11 = getelementptr %Main* %tmp.9, i32 0, i32 0
+	//	%tmp.12 = load %Main_vtable** %tmp.11
+	//	%tmp.13 = getelementptr %Main_vtable* %tmp.12, i32 0, i32 8
+	//	%tmp.14 = load %Main* (%Main*,i32) ** %tmp.13
+	//	%tmp.15 = call %Main*(%Main*, i32 )* %tmp.14( %Main* %tmp.9, i32 %tmp.8 )
+	int_value zero_val(0);
+	string vtable_ptr_string(env->get_class()->get_type_name() + "_vtable**");
+	op_type vtable_ptr_type(vtable_ptr_string);
+	vtable_ptr_type.set_id(OBJ_PPTR);
+	operand get_main_vtable = vp.getelementptr(
+										expr_op,
+										zero_val,
+										zero_val,
+										vtable_ptr_type
+										);
+
+	//	%tmp.12 = load %Main_vtable** %tmp.11
+	operand vtable_load_result = vp.load(get_main_vtable);
+
+	//	%tmp.13 = getelementptr %Main_vtable* %tmp.12, i32 0, i32 8
+	int_value eight_val(8);
+	operand get_eight_offset = vp.getelementptr(
+										vtable_load_result,
+										zero_val,
+										eight_val,
+										vtable_ptr_type
+										);
+	//	%tmp.14 = load %Main* (%Main*,i32) ** %tmp.13
+	operand *load_func_op;
+	op_type func_type_ptr;
+	op_type *func_type;
+	std::cerr<< "WHAT WE WANT" << name->get_string() << endl;
+	for(int i = 0; i < env->get_class()->function_names.size();i++){
+		std::cerr << env->get_class()->function_names.at(i)<<endl;
+		if(std::string(env->get_class()->function_names.at(i)) == std::string(name->get_string())){
+			std::cerr << env->get_class()->function_names.at(i) << " matched " << name->get_string()<< endl;
+			func_type_ptr = op_type(env->get_class()->vtable_types.at(i).get_name().substr(1),1);
+			func_type = new op_type(env->get_class()->vtable_types.at(i).get_name());
+			func_type_ptr.set_id(OBJ_PPTR);
+			load_func_op = new operand(func_type_ptr, get_eight_offset.get_name().substr(1));
+			break;
 		}
-//	operand *name_op = env->lookup(name);
-//	operand load_op_result = vp.load(*name_op);
+	}
+	std::cerr << "loading:  " << name->get_string() << " name: " <<   load_func_op->get_name() << " typename: " << load_func_op->get_typename()<<endl;
+	std::cerr << "loading:  " << load_func_op->get_type().get_id() << endl;
+	operand load_func_result = vp.load(*load_func_op);
+	std::cerr << "func_type name: " <<   func_type->get_name()<<endl;
 
-
-//	operand expr_op = expr->code(env);
-//	operand icmp_result;
-//	operand null_op(op_type("N/A"), "null");
-//	vp.icmp(
-//			*(env->cur_stream),
-//			EQ,
-//			expr_op,
-//			null_op,
-//			icmp_result);
-//	string ok_label = env->new_ok_label();
-//	vp.branch_cond(
-//			*(env->cur_stream),
-//			icmp_result,
-//			"abort",
-//			ok_label
-//			);
-//
-//
-//	//ok label
-//	vp.begin_block(ok_label);
-//	//%tmp.3 = getelementptr %Alpha* %tmp.1, i32 0, i32 0
-//	operand expr_name_operand = *(env->lookup(name));
-//	int_value zero_val(0);
-//	int_value one_val(1);
-//	operand first_element_ptr_op;
-//	vp.getelementptr(
-//			*(env->cur_stream),
-//			expr_name_operand,
-//			zero_val,
-//			one_val,
-//			first_element_ptr_op
-//			);
-//	//%tmp.4 = load %Alpha_vtable** %tmp.3
-//	operand second_element_ptr_op;
-//	vp.load(
-//			*(env->cur_stream),
-//			first_element_ptr_op,
-//			second_element_ptr_op
-//			);
-
-
+	//	%tmp.15 = call %Main*(%Main*, i32 )* %tmp.14( %Main* %tmp.9, i32 %tmp.8 )
+	vector<op_type> arg_types = env->parse_args(func_type->get_name());
+//	for(int i = 0; i < param_op_vec.size(); i++)
+//		arg_types.push_back(param_op_vec.at(i).get_type());
+	op_type class_type(env->get_class()->get_type_name() + "*");
+	operand call_result = vp.call(
+								arg_types,
+								class_type,
+								load_func_result.get_name().substr(1),
+								false,
+								args);
+	return call_result;
 
 #endif
 	return nothing;
@@ -2341,6 +2519,7 @@ void method_class::layout_feature(CgenNode *cls)
 		global_value vtp_ft_glbl(vtp_ft_op_type, vtp_ft_string);
 		const_value vtp_ft_const(vtp_ft_op_type, vtp_ft_glbl.get_name(), false);
 		cls->new_vtable_values.push_back(vtp_ft_const);
+		cls->function_names.push_back(name->get_string());
 	}
 
 #endif
@@ -2445,12 +2624,12 @@ void attr_class::code(CgenEnvironment *env)
 #else
     //NOTE: each attr has getelementptr -> store
     if(env->methods_only){
-    	  std::cerr << "----------------------------------" <<"\n\n";
-    	  std::cerr << "Symbol name: " << name->get_string() <<"\n";
-    	  std::cerr << "type_decl: " << type_decl->get_string() <<"\n";
-    	  std::cerr << "init ret type: " << init->get_type() <<"\n";
-    	  std::cerr << "\n----------------------------------" <<"\n";
-    	op_type type_decl_op_type(type_decl->get_string());
+//    	  std::cerr << "----------------------------------" <<"\n\n";
+//    	  std::cerr << "Symbol name: " << name->get_string() <<"\n";
+//    	  std::cerr << "type_decl: " << type_decl->get_string() <<"\n";
+//    	  std::cerr << "init ret type: " << init->get_type() <<"\n";
+//    	  std::cerr << "\n----------------------------------" <<"\n";
+    	op_type type_decl_op_type(env->get_class()->process_ret_ptr_type(type_decl->get_string()));
     	operand temp_empty_op(type_decl_op_type, "empty for now");
     	operand *empty_op = new operand(temp_empty_op);
     	env->add_local(name, empty_op);
@@ -2476,13 +2655,14 @@ void attr_class::code(CgenEnvironment *env)
 
 	int_value zero_int_op(0);
 	int_value one_int_op(1);
+	op_type expr_op_type(attr_expr_operand->get_type().get_ptr_type());
 	op_type attr_op_type(std::string(env->get_class()->get_type_name()) + "*");
 	operand attr_operand(attr_op_type, env->bitcast_res.get_name().substr(1,env->bitcast_res.get_name().length()-1));
 	operand attr_ret_op = vp.getelementptr(
 			attr_operand,
 			zero_int_op,
 			one_int_op,
-			attr_op_type);
+			expr_op_type);
 
 	vp.store(*(env->cur_stream),
 			*attr_expr_operand,

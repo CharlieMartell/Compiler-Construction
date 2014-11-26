@@ -151,6 +151,8 @@ public:
 	void check_inherited();
 	void setup_ret_types(Symbol type_decl, CgenNode* cls);
 	op_type process_ret_type(string x);
+	op_type process_ret_ptr_type(string x);
+	op_type process_formal_type(string x);
 	string new_process_ret_type(string x);
 	void handle_new_classes();
 
@@ -180,6 +182,8 @@ public:
 	vector<string> new_vtable_return_types;
 
 	vector<operand> formal_ops;
+
+	vector<string> function_names;
 
 
 
@@ -248,11 +252,16 @@ public:
 	operand bitcast_res;
 
 	bool methods_only;
+	string most_recent_load;
+	vector<Symbol> symbol_vec;
 
     // INCOMPLETE FUNCTIONS
 
     // Must return the CgenNode for a class given the symbol of its name
 	CgenNode *type_to_class(Symbol t);
+	vector<op_type> parse_args(string x);
+	void remove_space(string& str);
+	op_type get_op_type(string x);
 
 
 
