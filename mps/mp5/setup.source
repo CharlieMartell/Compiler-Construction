@@ -1,0 +1,1 @@
+export PATH=$PATH:/class/cs426/llvm/llvm-3.4.2.build/Release+Asserts/bin/:

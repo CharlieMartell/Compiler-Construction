@@ -1,0 +1,1146 @@
+Compiling Parser...
+[5/5] Compilation completed without any errors or warnings
+----------------------------------
+Grading Parser...
+[1/1] err01.test: misspelled keyword
+[1/1] err02.test: omitted ID
+[1/1] err03.test: wrong punctuation
+[1/1] err04.test: omitted punctuation
+[1/1] err05.test: extra punctuation
+[1/1] err06.test: There must be at least one class in a Cool program.
+[1/1] err07.test: {-} blocks must contain at least one expression.
+[1/1] err08.test: case expressions must contain at least one branch.
+[1/1] err09.test: The following form of dispatch is not allowed by the grammar.
+[1/1] err10.test: Type identifiers can't be used where object id's are required.
+[1/1] err11.test: Object identifiers can't be used where type identifiers are required.
+[0/3] err12.test: Comparison operators are non-associative
+Diff for output on file: err12.test stdout
+--- Your output
++++ Reference output
+@@ -1,53 +1,0 @@
+-#5
+-_program
+-  #5
+-  _class
+-    Main
+-    Object
+-    "err12.test"
+-    (
+-    #3
+-    _attr
+-      a
+-      Bool
+-      #3
+-      _lt
+-        #3
+-        _leq
+-          #3
+-          _int
+-            1
+-          : _no_type
+-          #3
+-          _int
+-            2
+-          : _no_type
+-        : _no_type
+-        #3
+-        _int
+-          3
+-        : _no_type
+-      : _no_type
+-    #4
+-    _attr
+-      b
+-      Bool
+-      #4
+-      _eq
+-        #4
+-        _object
+-          a
+-        : _no_type
+-        #4
+-        _lt
+-          #4
+-          _object
+-            b
+-          : _no_type
+-          #4
+-          _int
+-            4
+-          : _no_type
+-        : _no_type
+-      : _no_type
+-    )
+ *****************************************
+Diff for output on file: err12.test stderr
+--- Your output
++++ Reference output
+@@ -1,0 +1,3 @@
++"err12.test", line 3: syntax error at or near '<'
++"err12.test", line 4: syntax error at or near '<'
++Compilation halted due to lex and parse errors
+ *****************************************
+[0/3] err13.test: Cannot assign to a constant (String, Int or Bool), recover from error in a block.
+Diff for output on file: err13.test stderr
+--- Your output
++++ Reference output
+@@ -1,2 +1,4 @@
++"err13.test", line 5: syntax error at or near ASSIGN
+ "err13.test", line 6: syntax error at or near ASSIGN
++"err13.test", line 8: syntax error at or near ASSIGN
+ Compilation halted due to lex and parse errors
+ *****************************************
+[0/3] err14.test: Recover from error in class definitions.
+Diff for output on file: err14.test stderr
+--- Your output
++++ Reference output
+@@ -1,2 +1,3 @@
+ "err14.test", line 7: syntax error at or near ')'
++"err14.test", line 18: syntax error at or near '.'
+ Compilation halted due to lex and parse errors
+ *****************************************
+[0/3] err15.test: Recover from error in feature definitions.
+Diff for output on file: err15.test stderr
+--- Your output
++++ Reference output
+@@ -1,2 +1,3 @@
+ "err15.test", line 5: syntax error at or near ')'
++"err15.test", line 11: syntax error at or near '.'
+ Compilation halted due to lex and parse errors
+ *****************************************
+[0/2] err16.test: Incorrect multiple let statements / Recover from error in feature definitions.
+Diff for output on file: err16.test stderr
+--- Your output
++++ Reference output
+@@ -1,2 +1,5 @@
+ "err16.test", line 3: syntax error at or near OBJECTID = z
++"err16.test", line 8: syntax error at or near INT_CONST = 0
++"err16.test", line 12: syntax error at or near IN
++"err16.test", line 15: syntax error at or near OBJECTID = y
+ Compilation halted due to lex and parse errors
+ *****************************************
+[2/2] test01.test: Implicit (Object) inherited class, explicit inherited class.
+[3/3] test02.test: Attribute features without initialization, attribute features with initialization and constant expression.
+[3/3] test03.test: Method features without formals, method features with formals, identifier expression.
+[2/2] test04.test: Let expression without initialization, let expression with initialization.
+[3/3] test05.test: implicit (self) dispatch without actuals,  implicit (self) dispatch with actuals,  dynamic dispatch (& associativity), new expression, static dispatch
+[3/3] test06.test: + - * / ~ operators (& associativity)
+[3/3] test07.test: < <= = operators, not operator (& associativity)
+[2/2] test08.test: assignment expression
+[0/3] test09.test: () grouping (& precedence)
+Diff for output on file: test09.test stdout
+--- Your output
++++ Reference output
+@@ -1,0 +1,112 @@
++#8
++_program
++  #8
++  _class
++    A
++    Object
++    "test09.test"
++    (
++    #5
++    _method
++      foo
++      Bool
++      #5
++      _assign
++        a
++        #5
++        _comp
++          #5
++          _eq
++            #4
++            _leq
++              #4
++              _plus
++                #4
++                _int
++                  1
++                : _no_type
++                #4
++                _mul
++                  #4
++                  _neg
++                    #4
++                    _static_dispatch
++                      #4
++                      _object
++                        self
++                      : _no_type
++                      A
++                      bar
++                      (
++                      )
++                    : _no_type
++                  : _no_type
++                  #4
++                  _sub
++                    #4
++                    _int
++                      2
++                    : _no_type
++                    #4
++                    _divide
++                      #4
++                      _int
++                        3
++                      : _no_type
++                      #4
++                      _int
++                        4
++                      : _no_type
++                    : _no_type
++                  : _no_type
++                : _no_type
++              : _no_type
++              #4
++              _int
++                5
++              : _no_type
++            : _no_type
++            #4
++            _lt
++              #4
++              _int
++                6
++              : _no_type
++              #4
++              _int
++                7
++              : _no_type
++            : _no_type
++          : _no_type
++        : _no_type
++      : _no_type
++    #7
++    _attr
++      b
++      Int
++      #7
++      _sub
++        #7
++        _plus
++          #7
++          _int
++            8
++          : _no_type
++          #7
++          _int
++            9
++          : _no_type
++        : _no_type
++        #7
++        _plus
++          #7
++          _int
++            10
++          : _no_type
++          #7
++          _int
++            11
++          : _no_type
++        : _no_type
++      : _no_type
++    )
+ *****************************************
+Diff for output on file: test09.test stderr
+--- Your output
++++ Reference output
+@@ -1,2 +1,0 @@
+-"test09.test", line 4: syntax error at or near '<'
+-Compilation halted due to lex and parse errors
+ *****************************************
+[0/2] test10.test: {} expression, while expression
+Diff for output on file: test10.test stdout
+--- Your output
++++ Reference output
+@@ -10,11 +10,22 @@
+     _method
+       foo
+       Int
++      #4
++      _block
++        #4
++        _int
++          2
++        : _no_type
++        #4
++        _int
++          3
++        : _no_type
++      : _no_type
+     #10
+     _method
+       bar
+       Int
+-      #10
++      #9
+       _loop
+         #9
+         _bool
+ *****************************************
+[2/2] test11.test: if expression, case expression
+[0/3] test12.test: complex test of operator precedence and associativity
+Diff for output on file: test12.test stdout
+--- Your output
++++ Reference output
+@@ -10,4 +10,70 @@
+     _attr
+       a
+       A
++      #3
++      _block
++        #3
++        _sub
++          #3
++          _sub
++            #3
++            _plus
++              #3
++              _mul
++                #3
++                _int
++                  9
++                : _no_type
++                #3
++                _int
++                  3
++                : _no_type
++              : _no_type
++              #3
++              _mul
++                #3
++                _int
++                  2
++                : _no_type
++                #3
++                _neg
++                  #3
++                  _int
++                    10
++                  : _no_type
++                : _no_type
++              : _no_type
++            : _no_type
++            #3
++            _divide
++              #3
++              _divide
++                #3
++                _int
++                  9
++                : _no_type
++                #3
++                _int
++                  9
++                : _no_type
++              : _no_type
++              #3
++              _int
++                8
++              : _no_type
++            : _no_type
++          : _no_type
++          #3
++          _neg
++            #3
++            _int
++              4
++            : _no_type
++          : _no_type
++        : _no_type
++        #3
++        _new
++          A
++        : _no_type
++      : _no_type
+     )
+ *****************************************
+[0/3] test13.test: another test of operator precedence and associativity
+Diff for output on file: test13.test stdout
+--- Your output
++++ Reference output
+@@ -10,4 +10,43 @@
+     _attr
+       b
+       Bool
++      #3
++      _block
++        #3
++        _eq
++          #3
++          _comp
++            #3
++            _comp
++              #3
++              _comp
++                #3
++                _comp
++                  #3
++                  _eq
++                    #3
++                    _bool
++                      1
++                    : _no_type
++                    #3
++                    _comp
++                      #3
++                      _comp
++                        #3
++                        _bool
++                          0
++                        : _no_type
++                      : _no_type
++                    : _no_type
++                  : _no_type
++                : _no_type
++              : _no_type
++            : _no_type
++          : _no_type
++          #3
++          _bool
++            1
++          : _no_type
++        : _no_type
++      : _no_type
+     )
+ *****************************************
+[2/2] test14.test: test of isvoid
+[0/2] test15.test: test of dispatch
+Diff for output on file: test15.test stdout
+--- Your output
++++ Reference output
+@@ -17,13 +17,13 @@
+     _method
+       g
+       Int
+-      #9
++      #8
+       _typcase
+         #6
+         _object
+           self
+         : _no_type
+-        #8
++        #7
+         _branch
+           x
+           B
+@@ -47,6 +47,17 @@
+         x
+         Int
+       B
++      #13
++      _block
++        #13
++        _new
++          A
++        : _no_type
++        #13
++        _new
++          B
++        : _no_type
++      : _no_type
+     #15
+     _method
+       h
+ *****************************************
+[0/2] test16.test: correct test of multiple let
+Diff for output on file: test16.test stdout
+--- Your output
++++ Reference output
+@@ -1,0 +1,53 @@
++#6
++_program
++  #6
++  _class
++    Main
++    IO
++    "test16.test"
++    (
++    #5
++    _method
++      main
++      Object
++      #5
++      _let
++        r
++        Main
++        #3
++        _no_expr
++        : _no_type
++        #5
++        _let
++          z
++          Object
++          #3
++          _int
++            0
++          : _no_type
++          #5
++          _let
++            i
++            Int
++            #3
++            _plus
++              #3
++              _int
++                3
++              : _no_type
++              #3
++              _int
++                4
++              : _no_type
++            : _no_type
++            #5
++            _isvoid
++              #5
++              _object
++                r
++              : _no_type
++            : _no_type
++          : _no_type
++        : _no_type
++      : _no_type
++    )
+ *****************************************
+Diff for output on file: test16.test stderr
+--- Your output
++++ Reference output
+@@ -1,2 +1,0 @@
+-"test16.test", line 3: syntax error at or near OBJECTID = z
+-Compilation halted due to lex and parse errors
+ *****************************************
+[0/5] test17.test: example program implementing lists
+Diff for output on file: test17.test stdout
+--- Your output
++++ Reference output
+@@ -18,10 +18,44 @@
+     _method
+       head
+       Int
++      #35
++      _block
++        #35
++        _dispatch
++          #35
++          _object
++            self
++          : _no_type
++          abort
++          (
++          )
++        : _no_type
++        #35
++        _int
++          0
++        : _no_type
++      : _no_type
+     #40
+     _method
+       tail
+       List
++      #40
++      _block
++        #40
++        _dispatch
++          #40
++          _object
++            self
++          : _no_type
++          abort
++          (
++          )
++        : _no_type
++        #40
++        _object
++          self
++        : _no_type
++      : _no_type
+     #51
+     _method
+       cons
+@@ -30,7 +64,7 @@
+         i
+         Int
+       List
+-      #51
++      #50
+       _dispatch
+         #50
+         _new
+@@ -105,6 +139,29 @@
+         rest
+         List
+       List
++      #87
++      _block
++        #84
++        _assign
++          car
++          #84
++          _object
++            i
++          : _no_type
++        : _no_type
++        #85
++        _assign
++          cdr
++          #85
++          _object
++            rest
++          : _no_type
++        : _no_type
++        #86
++        _object
++          self
++        : _no_type
++      : _no_type
+     )
+   #138
+   _class
+@@ -127,7 +184,7 @@
+         l
+         List
+       Object
+-      #115
++      #114
+       _cond
+         #108
+         _dispatch
+@@ -139,9 +196,9 @@
+           (
+           )
+         : _no_type
+-        #109
++        #108
+         _dispatch
+-          #109
++          #108
+           _object
+             self
+           : _no_type
+@@ -153,9 +210,174 @@
+           : _no_type
+           )
+         : _no_type
++        #113
++        _block
++          #110
++          _dispatch
++            #110
++            _object
++              self
++            : _no_type
++            out_int
++            (
++            #110
++            _dispatch
++              #110
++              _object
++                l
++              : _no_type
++              head
++              (
++              )
++            : _no_type
++            )
++          : _no_type
++          #111
++          _dispatch
++            #111
++            _object
++              self
++            : _no_type
++            out_string
++            (
++            #111
++            _string
++              " "
++            : _no_type
++            )
++          : _no_type
++          #112
++          _dispatch
++            #112
++            _object
++              self
++            : _no_type
++            print_list
++            (
++            #112
++            _dispatch
++              #112
++              _object
++                l
++              : _no_type
++              tail
++              (
++              )
++            : _no_type
++            )
++          : _no_type
++        : _no_type
+       : _no_type
+     #136
+     _method
+       main
+       Object
++      #135
++      _block
++        #128
++        _assign
++          mylist
++          #128
++          _dispatch
++            #128
++            _dispatch
++              #128
++              _dispatch
++                #128
++                _dispatch
++                  #128
++                  _dispatch
++                    #128
++                    _new
++                      List
++                    : _no_type
++                    cons
++                    (
++                    #128
++                    _int
++                      1
++                    : _no_type
++                    )
++                  : _no_type
++                  cons
++                  (
++                  #128
++                  _int
++                    2
++                  : _no_type
++                  )
++                : _no_type
++                cons
++                (
++                #128
++                _int
++                  3
++                : _no_type
++                )
++              : _no_type
++              cons
++              (
++              #128
++              _int
++                4
++              : _no_type
++              )
++            : _no_type
++            cons
++            (
++            #128
++            _int
++              5
++            : _no_type
++            )
++          : _no_type
++        : _no_type
++        #134
++        _loop
++          #129
++          _comp
++            #129
++            _dispatch
++              #129
++              _object
++                mylist
++              : _no_type
++              isNil
++              (
++              )
++            : _no_type
++          : _no_type
++          #133
++          _block
++            #131
++            _dispatch
++              #131
++              _object
++                self
++              : _no_type
++              print_list
++              (
++              #131
++              _object
++                mylist
++              : _no_type
++              )
++            : _no_type
++            #132
++            _assign
++              mylist
++              #132
++              _dispatch
++                #132
++                _object
++                  mylist
++                : _no_type
++                tail
++                (
++                )
++              : _no_type
++            : _no_type
++          : _no_type
++        : _no_type
++      : _no_type
+     )
+ *****************************************
+[0/5] test18.test: example program implementing a stack
+Diff for output on file: test18.test stdout
+--- Your output
++++ Reference output
+@@ -21,6 +21,21 @@
+         r
+         Stack
+       Stack
++      #28
++      _block
++        #26
++        _assign
++          rest
++          #26
++          _object
++            r
++          : _no_type
++        : _no_type
++        #27
++        _object
++          self
++        : _no_type
++      : _no_type
+     #31
+     _method
+       pop
+@@ -107,10 +122,72 @@
+         i
+         Int
+       Stack
++      #44
++      _block
++        #41
++        _dispatch
++          #41
++          _object
++            self
++          : _no_type
++          out_string
++          (
++          #41
++          _string
++            "No setval method for object on stack.\n"
++          : _no_type
++          )
++        : _no_type
++        #42
++        _dispatch
++          #42
++          _object
++            self
++          : _no_type
++          abort
++          (
++          )
++        : _no_type
++        #43
++        _object
++          self
++        : _no_type
++      : _no_type
+     #53
+     _method
+       getval
+       Int
++      #52
++      _block
++        #49
++        _dispatch
++          #49
++          _object
++            self
++          : _no_type
++          out_string
++          (
++          #49
++          _string
++            "No getval method for object on stack.\n"
++          : _no_type
++          )
++        : _no_type
++        #50
++        _dispatch
++          #50
++          _object
++            self
++          : _no_type
++          abort
++          (
++          )
++        : _no_type
++        #51
++        _int
++          0
++        : _no_type
++      : _no_type
+     )
+   #82
+   _class
+@@ -133,6 +210,21 @@
+         i
+         Int
+       Stack
++      #70
++      _block
++        #70
++        _assign
++          val
++          #70
++          _object
++            i
++          : _no_type
++        : _no_type
++        #70
++        _object
++          self
++        : _no_type
++      : _no_type
+     #72
+     _method
+       getval
+@@ -145,6 +237,51 @@
+     _method
+       show
+       Stack
++      #80
++      _block
++        #76
++        _dispatch
++          #76
++          _object
++            self
++          : _no_type
++          out_int
++          (
++          #76
++          _object
++            val
++          : _no_type
++          )
++        : _no_type
++        #77
++        _dispatch
++          #77
++          _object
++            self
++          : _no_type
++          out_string
++          (
++          #77
++          _string
++            "\n"
++          : _no_type
++          )
++        : _no_type
++        #78
++        _dispatch
++          #78
++          _object
++            rest
++          : _no_type
++          show
++          (
++          )
++        : _no_type
++        #79
++        _object
++          self
++        : _no_type
++      : _no_type
+     )
+   #102
+   _class
+@@ -156,7 +293,7 @@
+     _method
+       eval
+       Stack
+-      #93
++      #92
+       _dispatch
+         #92
+         _dispatch
+@@ -221,6 +358,37 @@
+     _method
+       show
+       Stack
++      #100
++      _block
++        #97
++        _dispatch
++          #97
++          _object
++            self
++          : _no_type
++          out_string
++          (
++          #97
++          _string
++            "+\n"
++          : _no_type
++          )
++        : _no_type
++        #98
++        _dispatch
++          #98
++          _object
++            rest
++          : _no_type
++          show
++          (
++          )
++        : _no_type
++        #99
++        _object
++          self
++        : _no_type
++      : _no_type
+     )
+   #126
+   _class
+@@ -274,7 +442,7 @@
+               (
+               )
+             : _no_type
+-            #116
++            #115
+             _dispatch
+               #115
+               _object
+@@ -305,6 +473,37 @@
+     _method
+       show
+       Stack
++      #124
++      _block
++        #121
++        _dispatch
++          #121
++          _object
++            self
++          : _no_type
++          out_string
++          (
++          #121
++          _string
++            "s\n"
++          : _no_type
++          )
++        : _no_type
++        #122
++        _dispatch
++          #122
++          _object
++            rest
++          : _no_type
++          show
++          (
++          )
++        : _no_type
++        #123
++        _object
++          self
++        : _no_type
++      : _no_type
+     )
+   #134
+   _class
+@@ -393,11 +592,38 @@
+     _method
+       prompt
+       String
++      #158
++      _block
++        #156
++        _dispatch
++          #156
++          _object
++            self
++          : _no_type
++          out_string
++          (
++          #156
++          _string
++            ">"
++          : _no_type
++          )
++        : _no_type
++        #157
++        _dispatch
++          #157
++          _object
++            self
++          : _no_type
++          in_string
++          (
++          )
++        : _no_type
++      : _no_type
+     #177
+     _method
+       main
+       Object
+-      #177
++      #176
+       _loop
+         #168
+         _comp
+@@ -426,11 +652,11 @@
+         #176
+         _assign
+           stack
+-          #176
++          #175
+           _dispatch
+             #175
+             _dispatch
+-              #175
++              #174
+               _cond
+                 #169
+                 _eq
+@@ -498,7 +724,7 @@
+                       _new
+                         E
+                       : _no_type
+-                      #174
++                      #173
+                       _dispatch
+                         #173
+                         _new
+ *****************************************
+----------------------------------
+Total for Parser = [36/75]
+----------------------------------
+The following files produced valgrind errors:
+test09.test
+test16.test
+No points have been deducted, but it indicates a memory leak in your code.
+----------------------------------
+[4/5] The code is easy to read but lacking in comments
+----------------------------------
+[0/5] Verbose errors are not reported
+----------------------------------
+[0/10] Did not implement a complete scanner (wrt test cases)
+----------------------------------
+Total for MP1 = [45/100]

@@ -145,48 +145,6 @@ public:
 	// ADD CODE HERE
 	string get_type_name() { return string(name->get_string()); }
 
-	//MY ADDITIONS VV
-	void add_attr_type(Symbol type, Symbol id);
-	void handle_vtable_defaults();
-	void check_inherited();
-	void setup_ret_types(Symbol type_decl, CgenNode* cls);
-	op_type process_ret_type(string x);
-	op_type process_ret_ptr_type(string x);
-	op_type process_formal_type(string x);
-	string new_process_ret_type(string x);
-	void handle_new_classes();
-
-	vector<Symbol> attr_types;
-	vector<Symbol> attr_ids;
-	vector<string> attr_ret_vals;
-
-	vector<op_type> attr_only_ret_types;
-
-	vector<op_type> vtable_types;
-	vector<const_value> vtable_values;
-
-	vector<op_type> io_vtable_types;
-	vector<const_value> io_vtable_values;
-
-	vector<op_type> io_self_vtable_types;
-	vector<const_value> io_self_vtable_values;
-
-	vector<op_type> string_vtable_types;
-	vector<const_value> string_vtable_values;
-
-	vector<op_type> string_self_vtable_types;
-	vector<const_value> string_self_vtable_values;
-
-	vector<op_type> new_vtable_types;
-	vector<const_value> new_vtable_values;
-	vector<string> new_vtable_return_types;
-
-	vector<operand> formal_ops;
-
-	vector<string> function_names;
-
-
-
 
 private:
     // Layout the methods and attributes for code generation
@@ -232,40 +190,24 @@ public:
     // Used in provided code for the (case..of) construct
 	string next_label;
 	operand branch_operand;
-    void add_local(Symbol name, operand *vb);
-	void cc_add_symbol(Symbol name, operand &vb);
+    void add_local(Symbol name, operand &vb);
+		void cc_add_symbol(Symbol name, operand &vb);
     void kill_local();
     // end of helpers for provided code
 
-	CgenEnvironment(ostream &stream, CgenNode *cur_class);
+	CgenEnvironment(ostream &strea, CgenNode *cur_class);
 
 
-	operand *lookup(Symbol name){return var_table.lookup(name);}
-	void dump(){var_table.dump();}
-	operand *probe(Symbol name){return var_table.probe(name);}
+	operand *lookup(Symbol name)		{ return var_table.lookup(name); }
 
 	CgenNode *get_class() { return cur_class; }
 	void set_class(CgenNode *c) { cur_class = c; }
-
-	Symbol no_self_type;
-
-	operand bitcast_res;
-
-	bool methods_only;
-	string most_recent_load;
-	vector<Symbol> symbol_vec;
-	vector<operand> fn_args;
 
     // INCOMPLETE FUNCTIONS
 
     // Must return the CgenNode for a class given the symbol of its name
 	CgenNode *type_to_class(Symbol t);
-	vector<op_type> parse_args(string x);
-	void remove_space(string& str);
-	op_type get_op_type(string x);
-
-
-
+	// ADD CODE HERE
 
 };
 

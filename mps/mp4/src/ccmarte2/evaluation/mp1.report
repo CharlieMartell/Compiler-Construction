@@ -1,0 +1,61 @@
+Compiling Scanner...
+[5/5] Compilation completed without any errors or warnings
+----------------------------------
+Grading Scanner...
+[2/2] b1: Check illegal characters and as a side effect white space. the file contains all printable chars less ", all non-printable chars less \0
+[2/2] b2: Test whether the scanner correctly detects the beginning of a legal token at the end of an illegal token
+[2/2] c1: Check for unnested comments
+[2/2] c2: Check for nested (* *) comments
+[2/2] c3: Check for the EOF in comment error
+[2/2] c4: Check for comment errors
+[1/1] e1: empty file
+[4/4] f1: Full test 1
+[2/2] f2: Full test 2
+[3/3] f3: Full test with strings
+[3/3] i1: Check for object identifiers and for keywords in object identifiers
+[3/3] i2: Check for type identifiers and for keywords in type identifiers
+[3/3] i3: Check for some identifier/operator/punctuation boundary conditions
+[2/2] k1: Check for one version of each non constant keyword
+[3/3] k2: Check case insensitivity for non constant keywords
+[2/2] k3: Check for boolean keywords
+[2/2] k4: Check case insensitivity for constant keywords
+[2/2] o1: single character operators
+[2/2] o2: multi-character operators
+[2/2] p1: punctuation
+[2/2] p2: Check some punctuation boundaries
+[2/2] p3: Check some operator/punctuation boundaries
+[3/3] s1: Check for strings and string boundaries
+[2/2] s2: Check for keywords, punctuation and comment characters inside strings
+[3/3] s3: Check for string length
+[4/4] s4: Check for escapes, tabs, and control-characters in strings, check for escaped and unescaped newlines in strings
+[2/2] s5: Check EOF in string error
+[3/3] s6: Check for string length when characters are escaped
+[4/4] s7: Check for string error precedence
+[0/3] s8.test: Check for escaped null characters in a string
+Diff for output on file: s8.test
+--- Your output
++++ Reference output
+@@ -1,3 +1,3 @@
+ #name "s8.test"
+-#1 STR_CONST "escaped null"
++#1 ERROR "Null in a string"
+ #2 ERROR "Unterminated string constant"
+ *****************************************
+[2/2] w1: Check whitespace
+[2/2] z1: Check some integers
+[2/2] z2: Check some integer/operator/identifier boundaries
+----------------------------------
+Total for Lexer = [77/80]
+----------------------------------
+The following files produced valgrind errors:
+b1.test
+b2.test
+No points have been deducted, but it indicates a memory leak in your code.
+----------------------------------
+[4/5] The code is easy to read but lacks comments
+----------------------------------
+[8/10] Implemented most of the scanner (wrt test cases)
+----------------------------------
+Total for MP1 = [94/100]
+
+Note: You are expected to submit files to a directory mp1 in your svn folder. Please make sure you submit that way from the next MP (mp3) onwards. I have moved it for mp2, so you don't lose any points for late submission.
