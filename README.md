@@ -44,3 +44,6 @@ MP3: This mp implements the conversion of our Abstract Syntax Tree, to
       LLVM intermediate representation. (without objects)
 
 MP4: This mp finishes the LLVM code generation supporting basic classes and new objects.
+
+MP5: This mp implements two optimizations to the LLVM Compiler. The LICM and ADCE 
+optimizations.
