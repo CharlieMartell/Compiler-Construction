@@ -2474,8 +2474,6 @@ operand isvoid_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
 #endif
 	return nothing;;
 }
@@ -2503,9 +2501,6 @@ void method_class::layout_feature(CgenNode *cls)
 
 	//add the id and type of the feature to attr_types
 	cls->add_attr_type(return_type, name);
-
-	//add the return_type to vtable
-	//cls->setup_ret_types(return_type, cls);
 
 	//If it is not a basic class add its features to the Main__main vtable
 	if(cls->get_type_name() != "Object"
@@ -2608,17 +2603,6 @@ void attr_class::layout_feature(CgenNode *cls)
 #else
    //setup an environment
    CgenEnvironment*  env = new CgenEnvironment(*(cls->get_classtable()->ct_stream), cls);
-   //get the return type and correctly process it
-   //string ret_type = type_decl->get_string();
-
-   //add the type and name to attr_type and attr_id vectors
-   //cls->add_attr_type(cls->process_ret_type(type_decl->get_string()), name->get_string());
-
-   //Means we have expressions to assign
-//   if(std::string(init->get_type()->get_string()).length() > 0){
-//	   operand init_op = init->code(env);
-//	   cls->attr_ret_vals.push_back(init_op.get_name());
-//   }
 
    cls->setup_ret_types(type_decl, cls);
 
@@ -2632,11 +2616,6 @@ void attr_class::code(CgenEnvironment *env)
 #else
     //NOTE: each attr has getelementptr -> store
     if(env->methods_only){
-//    	  std::cerr << "----------------------------------" <<"\n\n";
-//    	  std::cerr << "Symbol name: " << name->get_string() <<"\n";
-//    	  std::cerr << "type_decl: " << type_decl->get_string() <<"\n";
-//    	  std::cerr << "init ret type: " << init->get_type() <<"\n";
-//    	  std::cerr << "\n----------------------------------" <<"\n";
     	op_type type_decl_op_type(env->get_class()->process_ret_ptr_type(type_decl->get_string()));
     	operand temp_empty_op(type_decl_op_type, "empty for now");
     	operand *empty_op = new operand(temp_empty_op);
@@ -2651,17 +2630,8 @@ void attr_class::code(CgenEnvironment *env)
     ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "attribute!\n";
 
-	//std::cerr << "ATTR CLASS name: " << name->get_string() <<"\n";
-	//std::cerr << "CUR CLASS name: " << env->get_class()->get_type_name() <<"\n";
-
 	//evaluate the expression
 	operand *attr_expr_operand = new operand(init->code(env));
-	//std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_name() <<"\n";
-	//std::cerr << "attr_expr_operand name: " << attr_expr_operand->get_typename() <<"\n";
-
-	//	%tmp.24 = getelementptr %Main* %tmp.21, i32 0, i32 1
-	//	store i32 5, i32* %tmp.24
-	//	ret %Main* %tmp.21
 
 	operand *self_from_var = env->lookup(self);
 	operand new_op(op_type(INT32_PTR), self_from_var->get_name());

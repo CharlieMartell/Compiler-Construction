@@ -64,9 +64,6 @@ EXTERN Symbol
 //
 // PREDEFINED FUNCTIONS:
 //
-// The following functions are already coded, you should
-// not need to modify them, although you may if necessary.
-//
 //********************************************************
 
 //
@@ -172,7 +169,6 @@ void CgenClassTable::setup_external_functions()
 	vp.declare(*ct_stream, i8ptr_type, "malloc", malloc_args);
 
 #ifdef MP4
-	//ADD CODE HERE
 	//Setup external functions for built in object class functions
 #endif
 }
@@ -449,8 +445,6 @@ CgenNode* CgenClassTable::getMainmain(CgenNode* c)
 void CgenClassTable::code_constants()
 {
 #ifdef MP4
-
-	// ADD CODE HERE
 #endif
 }
 
@@ -458,7 +452,6 @@ void CgenClassTable::code_constants()
 void StringEntry::code_def(ostream& s, CgenClassTable* ct)
 {
 #ifdef MP4
-	// ADD CODE HERE
 #endif
 }
 
@@ -516,9 +509,6 @@ void CgenClassTable::setup()
 
 void CgenClassTable::setup_classes(CgenNode *c, int depth)
 {
-	// MAY ADD CODE HERE
-	// if you want to give classes more setup information
-
 	c->setup(current_tag++, depth);
 	List<CgenNode> *children = c->get_children();
 	for (List<CgenNode> *child = children; child; child = child->tl())
@@ -560,8 +550,6 @@ void CgenClassTable::code_module()
 void CgenClassTable::code_classes(CgenNode *c)
 {
 
-	// ADD CODE HERE
-
 }
 #endif
 
@@ -599,7 +587,8 @@ void CgenClassTable::code_main()
   // Define an entry basic block
   string mainString("entry");
   vp.begin_block(mainString);
-  operand result = vp.call(main_args_types, i32_type, "Main_main", true, main_args);
+  operand result = vp.call(main_args_types, i32_type,
+                  "Main_main", true, main_args);
   // Call Main_main(). This returns int for phase 1, Object for phase 2
 
 #ifndef MP4
@@ -610,7 +599,8 @@ void CgenClassTable::code_main()
   op_arr_type op_type_array2(INT8_PTR, strToPass.length()+1);
   global_value ptrString(op_type_array2, ".str", strConst);
   op_type i8_ptr(INT8_PTR);
-  operand pointer = vp.getelementptr(ptrString, int_value(0), int_value(0), i8_ptr);
+  operand pointer = vp.getelementptr(ptrString, int_value(0), 
+                  int_value(0), i8_ptr);
   // Call printf with the string address of "Main_main() returned %d\n"
   // and the return value of Main_main() as its arguments
   printf_args_types.push_back(i8_ptr);
@@ -618,7 +608,8 @@ void CgenClassTable::code_main()
   printf_args_types.push_back(varArg);
   printf_args.push_back(pointer);
   printf_args.push_back(result);
-  operand callprintf = vp.call(printf_args_types, i32_type, "printf", true, printf_args);
+  operand callprintf = vp.call(printf_args_types, i32_type,
+                  "printf", true, printf_args);
   // Insert return
   vp.ret(int_value(0));
 
@@ -639,7 +630,6 @@ CgenNode::CgenNode(Class_ nd, Basicness bstatus, CgenClassTable *ct)
 : class__class((const class__class &) *nd),
   parentnd(0), children(0), basic_status(bstatus), class_table(ct), tag(-1)
 {
-	// ADD CODE HERE
 }
 
 void CgenNode::add_child(CgenNode *n)
@@ -669,8 +659,6 @@ void CgenNode::setup(int tag, int depth)
 #ifdef MP4
     layout_features();
 
-	// ADD CODE HERE
-
 #endif
 }
 
@@ -684,15 +672,12 @@ void CgenNode::code_class()
 	// No code generation for basic classes. The runtime will handle that.
 	if (basic())
 		return;
-
-		// ADD CODE HERE
 }
 
 // Laying out the features involves creating a Function for each method
 // and assigning each attribute a slot in the class structure.
 void CgenNode::layout_features()
 {
-    // ADD CODE HERE
 }
 #else
 
@@ -801,7 +786,6 @@ void CgenEnvironment::kill_local() {
 // It should only be called when this condition holds.
 // (It's needed by the supplied code for typecase)
 operand conform(operand src, op_type type, CgenEnvironment *env) {
-	// ADD CODE HERE
 	return operand();
 }
 
@@ -810,7 +794,6 @@ operand conform(operand src, op_type type, CgenEnvironment *env) {
 // src_class is the CgenNode for the *static* class of the expression.
 // You need to look up and return the class tag for it's dynamic value
 operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {
-	// ADD CODE HERE
 	return operand();
 }
 
@@ -827,7 +810,8 @@ void method_class::code(CgenEnvironment *env)
   vp.begin_block("abort");
   vector<op_type> abort_args_types;
   vector<operand> abort_args;
-  operand ab_call = vp.call(abort_args_types, VOID, "abort", true, abort_args);
+  operand ab_call = vp.call(abort_args_types, VOID, 
+                  "abort", true, abort_args);
   vp.unreachable();
 }
 
@@ -850,63 +834,63 @@ operand assign_class::code(CgenEnvironment *env)
 operand cond_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "cond" << endl;
-  ValuePrinter vp(*(env->cur_stream));
-  operand second_reg;
-  string result1, result2, result3;
-  //This is somewhat "hacky" in order to keep track of the type
-  //for what I need to alloc for I evaluate the code and move the
-  //stream buffer back (but angrave 241 professor would be pleased).
-  std::fpos<std::char_traits<char>::state_type> pos = env->cur_stream->tellp();
-  operand get_type_op = then_exp->code(env);
-  env->cur_stream->seekp(pos);
-  second_reg = vp.alloca_mem(get_type_op.get_type());
-  //I was getting errors with the default count in env so implemented new
-  env->block_count++;
-  result1 = env->new_label("end.", false);
-  result2 = env->new_label("true.", false);
-  result3 = env->new_label("false.", false);
-  //based on pred->code(env) go to either true or false block
-  vp.branch_cond(*(env->cur_stream), pred->code(env), result2/*true*/, result3/*false*/);
-  //true
-  vp.begin_block(result2);
-  operand then_op = then_exp->code(env);
-  vp.store(*(env->cur_stream), then_op, second_reg);
-  vp.branch_uncond(*(env->cur_stream), result1);
-  //false
-  vp.begin_block(result3);
-  operand else_op = else_exp->code(env);
-  vp.store(*(env->cur_stream), else_op, second_reg);
-  vp.branch_uncond(*(env->cur_stream), result1);
-  //end
-  vp.begin_block(result1);
-  operand final_ret_op = vp.load(second_reg);
-  return final_ret_op;
+    ValuePrinter vp(*(env->cur_stream));
+    operand second_reg;
+    string result1, result2, result3;
+    //This is somewhat "hacky" in order to keep track of the type
+    //for what I need to alloc for I evaluate the code and move the
+    //stream buffer back (but angrave 241 professor would be pleased).
+    std::fpos<std::char_traits<char>::state_type> pos = env->cur_stream->tellp();
+    operand get_type_op = then_exp->code(env);
+    env->cur_stream->seekp(pos);
+    second_reg = vp.alloca_mem(get_type_op.get_type());
+    //I was getting errors with the default count in env so implemented new
+    env->block_count++;
+    result1 = env->new_label("end.", false);
+    result2 = env->new_label("true.", false);
+    result3 = env->new_label("false.", false);
+    //based on pred->code(env) go to either true or false block
+    vp.branch_cond(*(env->cur_stream), pred->code(env), result2/*true*/, result3/*false*/);
+    //true
+    vp.begin_block(result2);
+    operand then_op = then_exp->code(env);
+    vp.store(*(env->cur_stream), then_op, second_reg);
+    vp.branch_uncond(*(env->cur_stream), result1);
+    //false
+    vp.begin_block(result3);
+    operand else_op = else_exp->code(env);
+    vp.store(*(env->cur_stream), else_op, second_reg);
+    vp.branch_uncond(*(env->cur_stream), result1);
+    //end
+    vp.begin_block(result1);
+    operand final_ret_op = vp.load(second_reg);
+    return final_ret_op;
 
 }
 
 operand loop_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "loop" << endl;
-  ValuePrinter vp(*(env->cur_stream));
-  string result1, result2, result3;
-  //Needed new block counter
-  env->block_count++;
-  //create new labels
-  result1 = env->new_label("loop.", false);
-  result2 = env->new_label("true.", false);
-  result3 = env->new_label("false.", false);
-  //branch unconditionally to the evaluation part
-  vp.branch_uncond(*(env->cur_stream), result1);
-  vp.begin_block(result1);
-  operand pred_op = pred->code(env);
-  vp.branch_cond(*(env->cur_stream), pred_op, result2, result3);
-  vp.begin_block(result2);
-  ///evaluate body of the loop
-  operand ret_op = body->code(env);
-  //go back in loop
-  vp.branch_uncond(*(env->cur_stream), result1);
-  vp.begin_block(result3);
-  return ret_op;
+    ValuePrinter vp(*(env->cur_stream));
+    string result1, result2, result3;
+    //Needed new block counter
+    env->block_count++;
+    //create new labels
+    result1 = env->new_label("loop.", false);
+    result2 = env->new_label("true.", false);
+    result3 = env->new_label("false.", false);
+    //branch unconditionally to the evaluation part
+    vp.branch_uncond(*(env->cur_stream), result1);
+    vp.begin_block(result1);
+    operand pred_op = pred->code(env);
+    vp.branch_cond(*(env->cur_stream), pred_op, result2, result3);
+    vp.begin_block(result2);
+    ///evaluate body of the loop
+    operand ret_op = body->code(env);
+    //go back in loop
+    vp.branch_uncond(*(env->cur_stream), result1);
+    vp.begin_block(result3);
+    return ret_op;
 
 }
 
@@ -914,14 +898,14 @@ operand block_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "block" << endl;
 	int i = body->first();
-  operand complete_block;
-  //loop through the blocks untill more(i)
-  while(body->more(i)){
-    complete_block = body->nth(i)->code(env);
-    i = body->next(i);
-  }
-  //return the last code evaluation in the block
-  return complete_block;
+    operand complete_block;
+    //loop through the blocks untill more(i)
+    while(body->more(i)){
+      complete_block = body->nth(i)->code(env);
+      i = body->next(i);
+    }
+    //return the last code evaluation in the block
+    return complete_block;
 }
 
 operand let_class::code(CgenEnvironment *env)
@@ -967,130 +951,129 @@ operand plus_class::code(CgenEnvironment *env)
 {
   ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "plus" << endl;
-  operand e1_code = e1->code(env);
-  operand e2_code = e2->code(env);
-  //Simple to run the addition based on properties of ast
-	operand plus_op = vp.add(e1_code, e2_code);
-  return plus_op;
+    operand e1_code = e1->code(env);
+    operand e2_code = e2->code(env);
+    //Simple to run the addition based on properties of ast
+    operand plus_op = vp.add(e1_code, e2_code);
+    return plus_op;
 }
 
 operand sub_class::code(CgenEnvironment *env)
 {
 	ValuePrinter vp(*(env->cur_stream));
- if (cgen_debug) std::cerr << "sub" << endl;
- operand e1_code = e1->code(env);
- operand e2_code = e2->code(env);
- //Simple to run the subtration based on properties of ast
- operand sub_op = vp.sub(e1_code, e2_code);
- return sub_op;
+    if (cgen_debug) std::cerr << "sub" << endl;
+    operand e1_code = e1->code(env);
+    operand e2_code = e2->code(env);
+    //Simple to run the subtration based on properties of ast
+    operand sub_op = vp.sub(e1_code, e2_code);
+    return sub_op;
 }
 
 operand mul_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "mul" << endl;
 	ValuePrinter vp(*(env->cur_stream));
-  operand e1_code = e1->code(env);
-  operand e2_code = e2->code(env);
-  //Simple to run the multiplication based on properties of ast
-  operand mul_op = vp.mul(e1_code, e2_code);
-  return mul_op;
+    operand e1_code = e1->code(env);
+    operand e2_code = e2->code(env);
+    //Simple to run the multiplication based on properties of ast
+    operand mul_op = vp.mul(e1_code, e2_code);
+    return mul_op;
 }
 
 operand divide_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "div" << endl;
 	ValuePrinter vp(*(env->cur_stream));
-  env->ok_count++;
-  string ok_label_new = env->new_ok_label();
-  operand e1_code = e1->code(env);
-  operand e2_code = e2->code(env);
-  //if what you are dividing by is 0 go to abort because you
-  //cannot divide by 0
-  operand eq_op = vp.icmp(EQ, e2_code, int_value(0));
-  vp.branch_cond(eq_op, "abort", ok_label_new);
+    env->ok_count++;
+    string ok_label_new = env->new_ok_label();
+    operand e1_code = e1->code(env);
+    operand e2_code = e2->code(env);
+    //if what you are dividing by is 0 go to abort because you
+    //cannot divide by 0
+    operand eq_op = vp.icmp(EQ, e2_code, int_value(0));
+    vp.branch_cond(eq_op, "abort", ok_label_new);
 
-  //if it is not 0 just run divide method.
-  vp.begin_block(ok_label_new);
-  operand div_op = vp.div(e1_code, e2_code);
+    //if it is not 0 just run divide method.
+    vp.begin_block(ok_label_new);
+    operand div_op = vp.div(e1_code, e2_code);
 
-  return div_op;
+    return div_op;
 }
 
 operand neg_class::code(CgenEnvironment *env)
 {
-  ValuePrinter vp(*(env->cur_stream));
-	if (cgen_debug) std::cerr << "neg" << endl;
-  operand e1_code = e1->code(env);
-  //Negate the value by subtracting it from 0
-  operand negated = vp.sub(int_value(0), e1_code);
-  return negated;
+    ValuePrinter vp(*(env->cur_stream));
+    if (cgen_debug) std::cerr << "neg" << endl;
+    operand e1_code = e1->code(env);
+    //Negate the value by subtracting it from 0
+    operand negated = vp.sub(int_value(0), e1_code);
+    return negated;
 }
 
 operand lt_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "lt" << endl;
 	ValuePrinter vp(*(env->cur_stream));
-  operand e1_code = e1->code(env);
-  operand e2_code = e2->code(env);
-  //compare the value using icmp
-  operand lt_op = vp.icmp(LT, e1_code, e2_code);
-  return lt_op;
+    operand e1_code = e1->code(env);
+    operand e2_code = e2->code(env);
+    //compare the value using icmp
+    operand lt_op = vp.icmp(LT, e1_code, e2_code);
+    return lt_op;
 }
 
 operand eq_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "eq" << endl;
 	ValuePrinter vp(*(env->cur_stream));
-  operand e1_code = e1->code(env);
-  operand e2_code = e2->code(env);
-  //check if the two values are eq using icmp
-  operand eq_op = vp.icmp(EQ, e1_code, e2_code);
-  return eq_op;
+    operand e1_code = e1->code(env);
+    operand e2_code = e2->code(env);
+    //check if the two values are eq using icmp
+    operand eq_op = vp.icmp(EQ, e1_code, e2_code);
+    return eq_op;
 }
 
 operand leq_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "leq" << endl;
 	ValuePrinter vp(*(env->cur_stream));
-  operand e1_code = e1->code(env);
-  operand e2_code = e2->code(env);
-  //check if the first value is <= the second
-  operand leq_op = vp.icmp(LE, e1_code, e2_code);
-  return leq_op;
+    operand e1_code = e1->code(env);
+    operand e2_code = e2->code(env);
+    //check if the first value is <= the second
+    operand leq_op = vp.icmp(LE, e1_code, e2_code);
+    return leq_op;
 }
 
 operand comp_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "complement" << endl;
 	ValuePrinter vp(*(env->cur_stream));
-  operand e1_code = e1->code(env);
-  // xor with true to give the opposite value ie: true->false
-  operand comp_op = vp.xor_in(e1_code, bool_value(true, true));
-  return comp_op;
+    operand e1_code = e1->code(env);
+    // xor with true to give the opposite value ie: true->false
+    operand comp_op = vp.xor_in(e1_code, bool_value(true, true));
+    return comp_op;
 }
 //INITIALIZE CONSTANTS
 operand int_const_class::code(CgenEnvironment *env)
 {
 	if (cgen_debug) std::cerr << "Integer Constant" << endl;
-  int_value int_const(atoi(token->get_string()));
-  return int_const;
+    int_value int_const(atoi(token->get_string()));
+    return int_const;
 }
 
 operand bool_const_class::code(CgenEnvironment *env)
 {
-  if (cgen_debug) std::cerr << "bool Constant" << endl;
-  bool_value bool_const(val, false);
-  return bool_const;
+    if (cgen_debug) std::cerr << "bool Constant" << endl;
+    bool_value bool_const(val, false);
+    return bool_const;
 }
 
 operand object_class::code(CgenEnvironment *env)
 {
-  ValuePrinter vp(*(env->cur_stream));
+    ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "Object" << endl;
 	operand *ret_op;
-  ret_op = env->lookup(name);
-  return vp.load(*ret_op);
-
+    ret_op = env->lookup(name);
+    return vp.load(*ret_op);
 }
 
 operand no_expr_class::code(CgenEnvironment *env)
@@ -1113,8 +1096,6 @@ operand static_dispatch_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
 #endif
 	return nothing;
 }
@@ -1126,8 +1107,6 @@ operand string_const_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
 #endif
 	return nothing;
 }
@@ -1139,8 +1118,6 @@ operand dispatch_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
 #endif
 	return nothing;
 }
@@ -1222,8 +1199,6 @@ operand new__class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
 #endif
 	return nothing;;
 }
@@ -1235,9 +1210,6 @@ operand isvoid_class::code(CgenEnvironment *env)
 #ifndef MP4
 	assert(0 && "Unsupported case for phase 1");
 #else
-	// ADD CODE HERE AND REPLACE "return nothing" WITH SOMETHING
-	// MORE MEANINGFUL
-#endif
 	return nothing;;
 }
 
@@ -1247,7 +1219,6 @@ void method_class::layout_feature(CgenNode *cls)
 #ifndef MP4
     assert(0 && "Unsupported case for phase 1");
 #else
-    // ADD CODE HERE
 #endif
 }
 
@@ -1269,9 +1240,12 @@ operand branch_class::code(operand expr_val, operand tag,
 	int max_child = cls->get_max_child();
 
 	// Generate unique labels for branching into >= branch tag and <= max child
-	string sg_label = env->new_label(string("src_gte_br") + "." + itos(my_tag) + ".", false);
-	string sl_label = env->new_label(string("src_lte_mc") + "." + itos(my_tag) + ".", false);
-	string exit_label = env->new_label(string("br_exit") + "." + itos(my_tag) + ".", false);
+	string sg_label = env->new_label(string("src_gte_br") + 
+                    "." + itos(my_tag) + ".", false);
+	string sl_label = env->new_label(string("src_lte_mc") + 
+                    "." + itos(my_tag) + ".", false);
+	string exit_label = env->new_label(string("br_exit") + 
+                    "." + itos(my_tag) + ".", false);
 
 	op_type bool_type(INT1);
 	int_value my_tag_val(my_tag);
@@ -1324,7 +1298,6 @@ void attr_class::layout_feature(CgenNode *cls)
 #ifndef MP4
     assert(0 && "Unsupported case for phase 1");
 #else
-    // ADD CODE HERE
 #endif
 }
 
@@ -1333,6 +1306,5 @@ void attr_class::code(CgenEnvironment *env)
 #ifndef MP4
     assert(0 && "Unsupported case for phase 1");
 #else
-    // ADD CODE HERE
 #endif
 }
