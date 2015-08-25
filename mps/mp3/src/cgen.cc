@@ -802,17 +802,17 @@ operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {
 //
 void method_class::code(CgenEnvironment *env)
 {
-  ValuePrinter vp(*(env->cur_stream));
-  if (cgen_debug) std::cerr << "method" << endl;
-  //Return before abort so you dont end up aborting
-  vp.ret(expr->code(env));
-  //Setup the abort call at the end of each method
-  vp.begin_block("abort");
-  vector<op_type> abort_args_types;
-  vector<operand> abort_args;
-  operand ab_call = vp.call(abort_args_types, VOID, 
+    ValuePrinter vp(*(env->cur_stream));
+    if (cgen_debug) std::cerr << "method" << endl;
+    //Return before abort so you dont end up aborting
+    vp.ret(expr->code(env));
+    //Setup the abort call at the end of each method
+    vp.begin_block("abort");
+    vector<op_type> abort_args_types;
+    vector<operand> abort_args;
+    operand ab_call = vp.call(abort_args_types, VOID, 
                   "abort", true, abort_args);
-  vp.unreachable();
+    vp.unreachable();
 }
 
 //
@@ -821,13 +821,13 @@ void method_class::code(CgenEnvironment *env)
 
 operand assign_class::code(CgenEnvironment *env)
 {
-  ValuePrinter vp(*(env->cur_stream));
+    ValuePrinter vp(*(env->cur_stream));
 	if (cgen_debug) std::cerr << "assign" << endl;
-  //Get the operand from the var table
+    //Get the operand from the var table
 	operand assign_operand = *(env->var_table.lookup(name));
-  operand expr_operand = expr->code(env);
-  //Store the new value into the var table
-  vp.store(*(env->cur_stream), expr_operand, assign_operand);
+    operand expr_operand = expr->code(env);
+    //Store the new value into the var table
+    vp.store(*(env->cur_stream), expr_operand, assign_operand);
 	return expr_operand;
 }
 

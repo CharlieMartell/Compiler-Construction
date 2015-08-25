@@ -1,0 +1,1257 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ASSIGN	cool-support/include/ast-parse.h	/^# define	ASSIGN	/;"	d
+ASSIGN	cool-support/include/cool-parse.h	/^# define	ASSIGN	/;"	d
+ASSIGN	cool-support/src/ast-parse.cc	/^# define	ASSIGN	/;"	d	file:
+ATTR	cool-support/include/ast-parse.h	/^# define	ATTR	/;"	d
+ATTR	cool-support/src/ast-parse.cc	/^# define	ATTR	/;"	d	file:
+BEGIN	cool-support/src/ast-lex.cc	/^#define BEGIN /;"	d	file:
+BISON_AST_TAB_H	cool-support/include/ast-parse.h	/^# define BISON_AST_TAB_H$/;"	d
+BISON_COOL_TAB_H	cool-support/include/cool-parse.h	/^# define BISON_COOL_TAB_H$/;"	d
+BLOCK	cool-support/include/ast-parse.h	/^# define	BLOCK	/;"	d
+BLOCK	cool-support/src/ast-parse.cc	/^# define	BLOCK	/;"	d	file:
+BOOL	cool-support/include/ast-parse.h	/^# define	BOOL	/;"	d
+BOOL	cool-support/src/ast-parse.cc	/^# define	BOOL	/;"	d	file:
+BOOL_CONST	cool-support/include/cool-parse.h	/^# define	BOOL_CONST	/;"	d
+BRANCH	cool-support/include/ast-parse.h	/^# define	BRANCH	/;"	d
+BRANCH	cool-support/src/ast-parse.cc	/^# define	BRANCH	/;"	d	file:
+Basic	src/cgen.h	/^	{ Basic, NotBasic };$/;"	e	enum:CgenNode::Basicness
+Basicness	src/cgen.h	/^	enum Basicness$/;"	g	class:CgenNode
+Bool	src/cgen.cc	/^    Bool,$/;"	v
+Bool	src/coolrt.h	/^struct Bool {$/;"	s
+Bool	src/coolrt.h	/^typedef struct Bool Bool;$/;"	t	typeref:struct:Bool
+Bool_string	src/coolrt.c	/^const char Bool_string[] 	= "Bool";$/;"	v
+Bool_vtable	src/coolrt.h	/^struct Bool_vtable {$/;"	s
+Bool_vtable	src/coolrt.h	/^typedef struct Bool_vtable Bool_vtable;$/;"	t	typeref:struct:Bool_vtable
+Boolean	cool-support/include/ast-parse.h	/^typedef int Boolean;$/;"	t
+Boolean	cool-support/include/cool-parse.h	/^typedef int Boolean;$/;"	t
+Boolean	cool-support/include/cool.h	/^typedef int Boolean;$/;"	t
+CASE	cool-support/include/cool-parse.h	/^# define	CASE	/;"	d
+CGEN	test-1/Makefile	/^CGEN    = $(MPDIR)\/src\/cgen-1$/;"	m
+CGEN	test-2/Makefile	/^CGEN    = $(MPDIR)\/src\/cgen-2$/;"	m
+CLASS	cool-support/include/ast-parse.h	/^# define	CLASS	/;"	d
+CLASS	cool-support/include/cool-parse.h	/^# define	CLASS	/;"	d
+CLASS	cool-support/src/ast-parse.cc	/^# define	CLASS	/;"	d	file:
+CLEAN_LOCAL	src/Makefile	/^CLEAN_LOCAL= -rm -f core $(OBJS) cgen-1 cgen-2$/;"	m
+COMP	cool-support/include/ast-parse.h	/^# define	COMP	/;"	d
+COMP	cool-support/src/ast-parse.cc	/^# define	COMP	/;"	d	file:
+COND	cool-support/include/ast-parse.h	/^# define	COND	/;"	d
+COND	cool-support/src/ast-parse.cc	/^# define	COND	/;"	d	file:
+COOL_IO_H	cool-support/include/cool-io.h	/^#define COOL_IO_H$/;"	d
+COOL_TREE_H	cool-support/include/cool-tree.h	/^#define COOL_TREE_H$/;"	d
+COOL_TREE_HANDCODE_H	src/cool-tree.handcode.h	/^#define COOL_TREE_HANDCODE_H$/;"	d
+Case	cool-support/include/ast-parse.h	/^typedef class Case_class *Case;$/;"	t	typeref:class:Case_class
+Case	cool-support/include/cool-parse.h	/^typedef class Case_class *Case;$/;"	t	typeref:class:Case_class
+Case	cool-support/include/cool-tree.h	/^typedef class Case_class *Case;$/;"	t	typeref:class:Case_class
+Case	src/cool-tree.handcode.h	/^typedef Case_class *Case;$/;"	t
+Case_EXTRAS	src/cool-tree.handcode.h	/^#define Case_EXTRAS /;"	d
+Case_class	cool-support/include/cool-tree.h	/^class Case_class : public tree_node {$/;"	c
+Cases	cool-support/include/ast-parse.h	/^typedef Cases_class *Cases;$/;"	t
+Cases	cool-support/include/cool-parse.h	/^typedef Cases_class *Cases;$/;"	t
+Cases	cool-support/include/cool-tree.h	/^typedef Cases_class *Cases;$/;"	t
+Cases	src/cool-tree.handcode.h	/^typedef Cases_class *Cases;$/;"	t
+Cases_class	cool-support/include/ast-parse.h	/^typedef list_node<Case> Cases_class;$/;"	t
+Cases_class	cool-support/include/cool-parse.h	/^typedef list_node<Case> Cases_class;$/;"	t
+Cases_class	cool-support/include/cool-tree.h	/^typedef list_node<Case> Cases_class;$/;"	t
+Cases_class	src/cool-tree.handcode.h	/^typedef list_node<Case> Cases_class;$/;"	t
+CgenClassTable	src/cgen.cc	/^CgenClassTable::CgenClassTable(Classes classes, ostream& s)$/;"	f	class:CgenClassTable
+CgenClassTable	src/cgen.h	/^class CgenClassTable : public cool::SymbolTable<Symbol,CgenNode>$/;"	c
+CgenEnvironment	src/cgen.cc	/^CgenEnvironment::CgenEnvironment(std::ostream &o, CgenNode *c)$/;"	f	class:CgenEnvironment
+CgenEnvironment	src/cgen.h	/^class CgenEnvironment$/;"	c
+CgenNode	src/cgen.cc	/^CgenNode::CgenNode(Class_ nd, Basicness bstatus, CgenClassTable *ct)$/;"	f	class:CgenNode
+CgenNode	src/cgen.h	/^class CgenNode : public class__class$/;"	c
+Class_	cool-support/include/ast-parse.h	/^typedef class Class__class *Class_;$/;"	t	typeref:class:Class__class
+Class_	cool-support/include/cool-parse.h	/^typedef class Class__class *Class_;$/;"	t	typeref:class:Class__class
+Class_	cool-support/include/cool-tree.h	/^typedef class Class__class *Class_;$/;"	t	typeref:class:Class__class
+Class_	src/cool-tree.handcode.h	/^typedef Class__class *Class_;$/;"	t
+Class__EXTRAS	src/cool-tree.handcode.h	/^#define Class__EXTRAS /;"	d
+Class__class	cool-support/include/cool-tree.h	/^class Class__class : public tree_node {$/;"	c
+Classes	cool-support/include/ast-parse.h	/^typedef Classes_class *Classes;$/;"	t
+Classes	cool-support/include/cool-parse.h	/^typedef Classes_class *Classes;$/;"	t
+Classes	cool-support/include/cool-tree.h	/^typedef Classes_class *Classes;$/;"	t
+Classes	src/cool-tree.handcode.h	/^typedef Classes_class *Classes;$/;"	t
+Classes_class	cool-support/include/ast-parse.h	/^typedef list_node<Class_> Classes_class;$/;"	t
+Classes_class	cool-support/include/cool-parse.h	/^typedef list_node<Class_> Classes_class;$/;"	t
+Classes_class	cool-support/include/cool-tree.h	/^typedef list_node<Class_> Classes_class;$/;"	t
+Classes_class	src/cool-tree.handcode.h	/^typedef list_node<Class_> Classes_class;$/;"	t
+DARROW	cool-support/include/cool-parse.h	/^# define	DARROW	/;"	d
+DISPATCH	cool-support/include/ast-parse.h	/^# define	DISPATCH	/;"	d
+DISPATCH	cool-support/src/ast-parse.cc	/^# define	DISPATCH	/;"	d	file:
+DIVIDE	cool-support/include/ast-parse.h	/^# define	DIVIDE	/;"	d
+DIVIDE	cool-support/src/ast-parse.cc	/^# define	DIVIDE	/;"	d	file:
+ECHO	cool-support/src/ast-lex.cc	/^#define ECHO /;"	d	file:
+ELSE	cool-support/include/cool-parse.h	/^# define	ELSE	/;"	d
+EMPTY	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+EOB_ACT_CONTINUE_SCAN	cool-support/src/ast-lex.cc	/^#define EOB_ACT_CONTINUE_SCAN /;"	d	file:
+EOB_ACT_END_OF_FILE	cool-support/src/ast-lex.cc	/^#define EOB_ACT_END_OF_FILE /;"	d	file:
+EOB_ACT_LAST_MATCH	cool-support/src/ast-lex.cc	/^#define EOB_ACT_LAST_MATCH /;"	d	file:
+EQ	cool-support/include/ast-parse.h	/^# define	EQ	/;"	d
+EQ	cool-support/src/ast-parse.cc	/^# define	EQ	/;"	d	file:
+EQ	src/value_printer.h	/^typedef enum {EQ, NE, LT, LE, GT, GE} icmp_val;$/;"	e	enum:__anon5
+ERROR	cool-support/include/cool-parse.h	/^# define	ERROR	/;"	d
+ESAC	cool-support/include/cool-parse.h	/^# define	ESAC	/;"	d
+EXTERN	src/cgen.cc	/^#define EXTERN$/;"	d	file:
+Entry	cool-support/include/stringtab.h	/^class Entry {$/;"	c
+Entry	cool-support/src/stringtab.cc	/^Entry::Entry(char *s, int l, int i) : len(l), index(i) {$/;"	f	class:Entry
+Expression	cool-support/include/ast-parse.h	/^typedef class Expression_class *Expression;$/;"	t	typeref:class:Expression_class
+Expression	cool-support/include/cool-parse.h	/^typedef class Expression_class *Expression;$/;"	t	typeref:class:Expression_class
+Expression	cool-support/include/cool-tree.h	/^typedef class Expression_class *Expression;$/;"	t	typeref:class:Expression_class
+Expression	src/cool-tree.handcode.h	/^typedef Expression_class *Expression;$/;"	t
+Expression_EXTRAS	src/cool-tree.handcode.h	/^#define Expression_EXTRAS /;"	d
+Expression_SHARED_EXTRAS	src/cool-tree.handcode.h	/^#define Expression_SHARED_EXTRAS /;"	d
+Expression_class	cool-support/include/cool-tree.h	/^class Expression_class : public tree_node {$/;"	c
+Expressions	cool-support/include/ast-parse.h	/^typedef Expressions_class *Expressions;$/;"	t
+Expressions	cool-support/include/cool-parse.h	/^typedef Expressions_class *Expressions;$/;"	t
+Expressions	cool-support/include/cool-tree.h	/^typedef Expressions_class *Expressions;$/;"	t
+Expressions	src/cool-tree.handcode.h	/^typedef Expressions_class *Expressions;$/;"	t
+Expressions_class	cool-support/include/ast-parse.h	/^typedef list_node<Expression> Expressions_class;$/;"	t
+Expressions_class	cool-support/include/cool-parse.h	/^typedef list_node<Expression> Expressions_class;$/;"	t
+Expressions_class	cool-support/include/cool-tree.h	/^typedef list_node<Expression> Expressions_class;$/;"	t
+Expressions_class	src/cool-tree.handcode.h	/^typedef list_node<Expression> Expressions_class;$/;"	t
+FI	cool-support/include/cool-parse.h	/^# define	FI	/;"	d
+FLEX_DEBUG	cool-support/src/ast-lex.cc	/^#define FLEX_DEBUG$/;"	d	file:
+FLEX_SCANNER	cool-support/src/ast-lex.cc	/^#define FLEX_SCANNER$/;"	d	file:
+FORMAL	cool-support/include/ast-parse.h	/^# define	FORMAL	/;"	d
+FORMAL	cool-support/src/ast-parse.cc	/^# define	FORMAL	/;"	d	file:
+Feature	cool-support/include/ast-parse.h	/^typedef class Feature_class *Feature;$/;"	t	typeref:class:Feature_class
+Feature	cool-support/include/cool-parse.h	/^typedef class Feature_class *Feature;$/;"	t	typeref:class:Feature_class
+Feature	cool-support/include/cool-tree.h	/^typedef class Feature_class *Feature;$/;"	t	typeref:class:Feature_class
+Feature	src/cool-tree.handcode.h	/^typedef Feature_class *Feature;$/;"	t
+Feature_EXTRAS	src/cool-tree.handcode.h	/^#define Feature_EXTRAS /;"	d
+Feature_SHARED_EXTRAS	src/cool-tree.handcode.h	/^#define Feature_SHARED_EXTRAS /;"	d
+Feature_class	cool-support/include/cool-tree.h	/^class Feature_class : public tree_node {$/;"	c
+Features	cool-support/include/ast-parse.h	/^typedef Features_class *Features;$/;"	t
+Features	cool-support/include/cool-parse.h	/^typedef Features_class *Features;$/;"	t
+Features	cool-support/include/cool-tree.h	/^typedef Features_class *Features;$/;"	t
+Features	src/cool-tree.handcode.h	/^typedef Features_class *Features;$/;"	t
+Features_class	cool-support/include/ast-parse.h	/^typedef list_node<Feature> Features_class;$/;"	t
+Features_class	cool-support/include/cool-parse.h	/^typedef list_node<Feature> Features_class;$/;"	t
+Features_class	cool-support/include/cool-tree.h	/^typedef list_node<Feature> Features_class;$/;"	t
+Features_class	src/cool-tree.handcode.h	/^typedef list_node<Feature> Features_class;$/;"	t
+Formal	cool-support/include/ast-parse.h	/^typedef class Formal_class *Formal;$/;"	t	typeref:class:Formal_class
+Formal	cool-support/include/cool-parse.h	/^typedef class Formal_class *Formal;$/;"	t	typeref:class:Formal_class
+Formal	cool-support/include/cool-tree.h	/^typedef class Formal_class *Formal;$/;"	t	typeref:class:Formal_class
+Formal	src/cool-tree.handcode.h	/^typedef Formal_class *Formal;$/;"	t
+Formal_EXTRAS	src/cool-tree.handcode.h	/^#define Formal_EXTRAS /;"	d
+Formal_class	cool-support/include/cool-tree.h	/^class Formal_class : public tree_node {$/;"	c
+Formals	cool-support/include/ast-parse.h	/^typedef Formals_class *Formals;$/;"	t
+Formals	cool-support/include/cool-parse.h	/^typedef Formals_class *Formals;$/;"	t
+Formals	cool-support/include/cool-tree.h	/^typedef Formals_class *Formals;$/;"	t
+Formals	src/cool-tree.handcode.h	/^typedef Formals_class *Formals;$/;"	t
+Formals_class	cool-support/include/ast-parse.h	/^typedef list_node<Formal> Formals_class;$/;"	t
+Formals_class	cool-support/include/cool-parse.h	/^typedef list_node<Formal> Formals_class;$/;"	t
+Formals_class	cool-support/include/cool-tree.h	/^typedef list_node<Formal> Formals_class;$/;"	t
+Formals_class	src/cool-tree.handcode.h	/^typedef list_node<Formal> Formals_class;$/;"	t
+GC_DEBUG	cool-support/include/cgen_gc.h	/^extern enum Memmgr_Debug { GC_QUICK, GC_DEBUG } cgen_Memmgr_Debug;$/;"	e	enum:Memmgr_Debug
+GC_GENGC	cool-support/include/cgen_gc.h	/^extern enum Memmgr { GC_NOGC, GC_GENGC, GC_SNCGC } cgen_Memmgr;$/;"	e	enum:Memmgr
+GC_NOGC	cool-support/include/cgen_gc.h	/^extern enum Memmgr { GC_NOGC, GC_GENGC, GC_SNCGC } cgen_Memmgr;$/;"	e	enum:Memmgr
+GC_NORMAL	cool-support/include/cgen_gc.h	/^extern enum Memmgr_Test { GC_NORMAL, GC_TEST } cgen_Memmgr_Test;$/;"	e	enum:Memmgr_Test
+GC_QUICK	cool-support/include/cgen_gc.h	/^extern enum Memmgr_Debug { GC_QUICK, GC_DEBUG } cgen_Memmgr_Debug;$/;"	e	enum:Memmgr_Debug
+GC_SNCGC	cool-support/include/cgen_gc.h	/^extern enum Memmgr { GC_NOGC, GC_GENGC, GC_SNCGC } cgen_Memmgr;$/;"	e	enum:Memmgr
+GC_TEST	cool-support/include/cgen_gc.h	/^extern enum Memmgr_Test { GC_NORMAL, GC_TEST } cgen_Memmgr_Test;$/;"	e	enum:Memmgr_Test
+GE	src/value_printer.h	/^typedef enum {EQ, NE, LT, LE, GT, GE} icmp_val;$/;"	e	enum:__anon5
+GT	src/value_printer.h	/^typedef enum {EQ, NE, LT, LE, GT, GE} icmp_val;$/;"	e	enum:__anon5
+ID	cool-support/include/ast-parse.h	/^# define	ID	/;"	d
+ID	cool-support/src/ast-parse.cc	/^# define	ID	/;"	d	file:
+IF	cool-support/include/cool-parse.h	/^# define	IF	/;"	d
+IN	cool-support/include/cool-parse.h	/^# define	IN	/;"	d
+INHERITS	cool-support/include/cool-parse.h	/^# define	INHERITS	/;"	d
+INITIAL	cool-support/src/ast-lex.cc	/^#define INITIAL /;"	d	file:
+INT	cool-support/include/ast-parse.h	/^# define	INT	/;"	d
+INT	cool-support/src/ast-parse.cc	/^# define	INT	/;"	d	file:
+INT1	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+INT1_PPTR	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+INT1_PTR	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+INT32	src/operand.h	/^	      INT32, INT32_PTR, INT32_PPTR, VAR_ARG,$/;"	e	enum:__anon4
+INT32_PPTR	src/operand.h	/^	      INT32, INT32_PTR, INT32_PPTR, VAR_ARG,$/;"	e	enum:__anon4
+INT32_PTR	src/operand.h	/^	      INT32, INT32_PTR, INT32_PPTR, VAR_ARG,$/;"	e	enum:__anon4
+INT8	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+INT8_PPTR	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+INT8_PTR	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+INT_CONST	cool-support/include/ast-parse.h	/^# define	INT_CONST	/;"	d
+INT_CONST	cool-support/include/cool-parse.h	/^# define	INT_CONST	/;"	d
+INT_CONST	cool-support/src/ast-parse.cc	/^# define	INT_CONST	/;"	d	file:
+IO	src/cgen.cc	/^    IO,$/;"	v
+IO	src/coolrt.h	/^struct IO {$/;"	s
+IO	src/coolrt.h	/^typedef struct IO IO;$/;"	t	typeref:struct:IO
+IO_in_int	src/coolrt.c	/^Int* IO_in_int(IO *self)$/;"	f
+IO_in_string	src/coolrt.c	/^String* IO_in_string(IO *self)$/;"	f
+IO_out_int	src/coolrt.c	/^IO* IO_out_int(IO *self, Int* x)$/;"	f
+IO_out_string	src/coolrt.c	/^IO* IO_out_string(IO *self, String* x)$/;"	f
+IO_string	src/coolrt.c	/^const char IO_string[] 		= "IO";$/;"	v
+IO_vtable	src/coolrt.h	/^struct IO_vtable {$/;"	s
+IO_vtable	src/coolrt.h	/^typedef struct IO_vtable IO_vtable;$/;"	t	typeref:struct:IO_vtable
+ISVOID	cool-support/include/ast-parse.h	/^# define	ISVOID	/;"	d
+ISVOID	cool-support/include/cool-parse.h	/^# define	ISVOID	/;"	d
+ISVOID	cool-support/src/ast-parse.cc	/^# define	ISVOID	/;"	d	file:
+IdEntry	cool-support/include/stringtab.h	/^class IdEntry : public Entry {$/;"	c
+IdEntry	cool-support/src/stringtab.cc	/^IdEntry::IdEntry(char *s, int l, int i) : Entry(s,l,i) { }$/;"	f	class:IdEntry
+IdEntryP	cool-support/include/stringtab.h	/^typedef IdEntry *IdEntryP;$/;"	t
+IdTable	cool-support/include/stringtab.h	/^class IdTable : public StringTable<IdEntry> { };$/;"	c
+Int	src/cgen.cc	/^    Int,$/;"	v
+Int	src/coolrt.h	/^struct Int {$/;"	s
+Int	src/coolrt.h	/^typedef struct Int Int;$/;"	t	typeref:struct:Int
+IntEntry	cool-support/include/stringtab.h	/^class IntEntry: public Entry {$/;"	c
+IntEntry	cool-support/src/stringtab.cc	/^IntEntry::IntEntry(char *s, int l, int i) : Entry(s,l,i) { }$/;"	f	class:IntEntry
+IntEntryP	cool-support/include/stringtab.h	/^typedef IntEntry *IntEntryP;$/;"	t
+IntEntry_EXTRAS	src/stringtab.handcode.h	/^#define IntEntry_EXTRAS /;"	d
+IntTable	cool-support/include/stringtab.h	/^class IntTable : public StringTable<IntEntry>$/;"	c
+IntTable_EXTRAS	src/stringtab.handcode.h	/^#define IntTable_EXTRAS /;"	d
+Int_string	src/coolrt.c	/^const char Int_string[] 	= "Int";$/;"	v
+Int_vtable	src/coolrt.h	/^struct Int_vtable {$/;"	s
+Int_vtable	src/coolrt.h	/^typedef struct Int_vtable Int_vtable;$/;"	t	typeref:struct:Int_vtable
+LE	cool-support/include/cool-parse.h	/^# define	LE	/;"	d
+LE	src/value_printer.h	/^typedef enum {EQ, NE, LT, LE, GT, GE} icmp_val;$/;"	e	enum:__anon5
+LEQ	cool-support/include/ast-parse.h	/^# define	LEQ	/;"	d
+LEQ	cool-support/src/ast-parse.cc	/^# define	LEQ	/;"	d	file:
+LET	cool-support/include/ast-parse.h	/^# define	LET	/;"	d
+LET	cool-support/include/cool-parse.h	/^# define	LET	/;"	d
+LET	cool-support/src/ast-parse.cc	/^# define	LET	/;"	d	file:
+LET_STMT	cool-support/include/cool-parse.h	/^# define	LET_STMT	/;"	d
+LEVEL	src/Makefile	/^LEVEL = ..$/;"	m
+LEVEL	test-1/Makefile	/^LEVEL = ..$/;"	m
+LEVEL	test-2/Makefile	/^LEVEL = ..$/;"	m
+LINENO	cool-support/include/ast-parse.h	/^# define	LINENO	/;"	d
+LINENO	cool-support/src/ast-parse.cc	/^# define	LINENO	/;"	d	file:
+LOOP	cool-support/include/ast-parse.h	/^# define	LOOP	/;"	d
+LOOP	cool-support/include/cool-parse.h	/^# define	LOOP	/;"	d
+LOOP	cool-support/src/ast-parse.cc	/^# define	LOOP	/;"	d	file:
+LT	cool-support/include/ast-parse.h	/^# define	LT	/;"	d
+LT	cool-support/src/ast-parse.cc	/^# define	LT	/;"	d	file:
+LT	src/value_printer.h	/^typedef enum {EQ, NE, LT, LE, GT, GE} icmp_val;$/;"	e	enum:__anon5
+List	cool-support/include/list.h	/^  List(T *h,List<T>* t = NULL): head(h), tail(t) { }$/;"	f	class:List
+List	cool-support/include/list.h	/^class List {$/;"	c
+MAXSIZE	cool-support/include/stringtab_functions.h	/^#define MAXSIZE /;"	d
+MAX_STR_CONST	cool-support/src/ast-lex.cc	/^#define MAX_STR_CONST /;"	d	file:
+METHOD	cool-support/include/ast-parse.h	/^# define	METHOD	/;"	d
+METHOD	cool-support/src/ast-parse.cc	/^# define	METHOD	/;"	d	file:
+MP4	test-2/Makefile	/^MP4=1$/;"	m
+MPINCL	src/Makefile	/^MPINCL = $(wildcard *.h) $(wildcard $(MPDIR)\/include\/*.h)$/;"	m
+MPSRC	src/Makefile	/^MPSRC = stringtab.cc str_aux.cc operand.cc value_printer.cc handle_flags.cc \\$/;"	m
+MUL	cool-support/include/ast-parse.h	/^# define	MUL	/;"	d
+MUL	cool-support/src/ast-parse.cc	/^# define	MUL	/;"	d	file:
+Main	src/cgen.cc	/^    Main,$/;"	v
+Memmgr	cool-support/include/cgen_gc.h	/^extern enum Memmgr { GC_NOGC, GC_GENGC, GC_SNCGC } cgen_Memmgr;$/;"	g
+Memmgr_Debug	cool-support/include/cgen_gc.h	/^extern enum Memmgr_Debug { GC_QUICK, GC_DEBUG } cgen_Memmgr_Debug;$/;"	g
+Memmgr_Test	cool-support/include/cgen_gc.h	/^extern enum Memmgr_Test { GC_NORMAL, GC_TEST } cgen_Memmgr_Test;$/;"	g
+NE	src/value_printer.h	/^typedef enum {EQ, NE, LT, LE, GT, GE} icmp_val;$/;"	e	enum:__anon5
+NEG	cool-support/include/ast-parse.h	/^# define	NEG	/;"	d
+NEG	cool-support/src/ast-parse.cc	/^# define	NEG	/;"	d	file:
+NEW	cool-support/include/ast-parse.h	/^# define	NEW	/;"	d
+NEW	cool-support/include/cool-parse.h	/^# define	NEW	/;"	d
+NEW	cool-support/src/ast-parse.cc	/^# define	NEW	/;"	d	file:
+NOT	cool-support/include/cool-parse.h	/^# define	NOT	/;"	d
+NO_EXPR	cool-support/include/ast-parse.h	/^# define	NO_EXPR	/;"	d
+NO_EXPR	cool-support/src/ast-parse.cc	/^# define	NO_EXPR	/;"	d	file:
+NO_TYPE	cool-support/include/ast-parse.h	/^# define	NO_TYPE	/;"	d
+NO_TYPE	cool-support/src/ast-parse.cc	/^# define	NO_TYPE	/;"	d	file:
+No_class	src/cgen.cc	/^    No_class, 	\/\/ symbol that can't be the name of any user-defined class$/;"	v
+No_type	src/cgen.cc	/^    No_type, 	\/\/ If e : No_type, then no code is generated for e.$/;"	v
+NotBasic	src/cgen.h	/^	{ Basic, NotBasic };$/;"	e	enum:CgenNode::Basicness
+OBJ	src/operand.h	/^\/* Types needed for MP4 *\/ OBJ, OBJ_PTR, OBJ_PPTR} op_type_id;$/;"	e	enum:__anon4
+OBJECT	cool-support/include/ast-parse.h	/^# define	OBJECT	/;"	d
+OBJECT	cool-support/src/ast-parse.cc	/^# define	OBJECT	/;"	d	file:
+OBJECTID	cool-support/include/cool-parse.h	/^# define	OBJECTID	/;"	d
+OBJ_PPTR	src/operand.h	/^\/* Types needed for MP4 *\/ OBJ, OBJ_PTR, OBJ_PPTR} op_type_id;$/;"	e	enum:__anon4
+OBJ_PTR	src/operand.h	/^\/* Types needed for MP4 *\/ OBJ, OBJ_PTR, OBJ_PPTR} op_type_id;$/;"	e	enum:__anon4
+OF	cool-support/include/cool-parse.h	/^# define	OF	/;"	d
+Object	src/cgen.cc	/^    Object,$/;"	v
+Object	src/coolrt.h	/^struct Object {$/;"	s
+Object	src/coolrt.h	/^typedef struct Object Object;$/;"	t	typeref:struct:Object
+Object_abort	src/coolrt.c	/^Object* Object_abort(Object *self)$/;"	f
+Object_string	src/coolrt.c	/^const char Object_string[] 	= "Object";$/;"	v
+Object_type_name	src/coolrt.c	/^const String* Object_type_name(Object *self)$/;"	f
+Object_vtable	src/coolrt.h	/^struct Object_vtable {$/;"	s
+Object_vtable	src/coolrt.h	/^typedef struct Object_vtable Object_vtable;$/;"	t	typeref:struct:Object_vtable
+Object_vtable_prototype	src/coolrt.c	/^const Object_vtable Object_vtable_prototype = {$/;"	v
+PLUS	cool-support/include/ast-parse.h	/^# define	PLUS	/;"	d
+PLUS	cool-support/src/ast-parse.cc	/^# define	PLUS	/;"	d	file:
+POOL	cool-support/include/cool-parse.h	/^# define	POOL	/;"	d
+PROGRAM	cool-support/include/ast-parse.h	/^# define	PROGRAM	/;"	d
+PROGRAM	cool-support/src/ast-parse.cc	/^# define	PROGRAM	/;"	d	file:
+Program	cool-support/include/ast-parse.h	/^typedef class Program_class *Program;$/;"	t	typeref:class:Program_class
+Program	cool-support/include/cool-parse.h	/^typedef class Program_class *Program;$/;"	t	typeref:class:Program_class
+Program	cool-support/include/cool-tree.h	/^typedef class Program_class *Program;$/;"	t	typeref:class:Program_class
+Program	src/cool-tree.handcode.h	/^typedef Program_class *Program;$/;"	t
+Program_EXTRAS	src/cool-tree.handcode.h	/^#define Program_EXTRAS /;"	d
+Program_class	cool-support/include/cool-tree.h	/^class Program_class : public tree_node {$/;"	c
+REJECT	cool-support/src/ast-lex.cc	/^#define REJECT /;"	d	file:
+SELF_TYPE	src/cgen.cc	/^    SELF_TYPE, 	\/\/ Special code is generated for new SELF_TYPE.$/;"	v
+STATIC_DISPATCH	cool-support/include/ast-parse.h	/^# define	STATIC_DISPATCH	/;"	d
+STATIC_DISPATCH	cool-support/src/ast-parse.cc	/^# define	STATIC_DISPATCH	/;"	d	file:
+STR	cool-support/include/ast-parse.h	/^# define	STR	/;"	d
+STR	cool-support/src/ast-parse.cc	/^# define	STR	/;"	d	file:
+STRING	cool-support/src/ast-lex.cc	/^#define STRING /;"	d	file:
+STRINGTAB_HANDCODE_H	src/stringtab.handcode.h	/^#define STRINGTAB_HANDCODE_H$/;"	d
+STR_AUX_H	cool-support/include/str_aux.h	/^#define STR_AUX_H$/;"	d
+STR_CONST	cool-support/include/ast-parse.h	/^# define	STR_CONST	/;"	d
+STR_CONST	cool-support/include/cool-parse.h	/^# define	STR_CONST	/;"	d
+STR_CONST	cool-support/src/ast-parse.cc	/^# define	STR_CONST	/;"	d	file:
+SUB	cool-support/include/ast-parse.h	/^# define	SUB	/;"	d
+SUB	cool-support/src/ast-parse.cc	/^# define	SUB	/;"	d	file:
+SUPPORT_OBJS	src/Makefile	/^SUPPORT_OBJS = $(MPSRC:.cc=.o)$/;"	m
+Scope	cool-support/include/symtab.h	/^   typedef List<ScopeEntry> Scope;$/;"	t	class:cool::SymbolTable
+ScopeEntry	cool-support/include/symtab.h	/^   typedef SymtabEntry<SYM,DAT> ScopeEntry;$/;"	t	class:cool::SymbolTable
+ScopeList	cool-support/include/symtab.h	/^   typedef List<Scope> ScopeList;$/;"	t	class:cool::SymbolTable
+StrTable	cool-support/include/stringtab.h	/^class StrTable : public StringTable<StringEntry>$/;"	c
+StrTable_EXTRAS	src/stringtab.handcode.h	/^#define StrTable_EXTRAS /;"	d
+String	src/cgen.cc	/^    String,$/;"	v
+String	src/coolrt.h	/^struct String {$/;"	s
+String	src/coolrt.h	/^typedef struct String String;$/;"	t	typeref:struct:String
+StringEntry	cool-support/include/stringtab.h	/^class StringEntry : public Entry {$/;"	c
+StringEntry	cool-support/src/stringtab.cc	/^StringEntry::StringEntry(char *s, int l, int i) : Entry(s,l,i) { }$/;"	f	class:StringEntry
+StringEntryP	cool-support/include/stringtab.h	/^typedef StringEntry *StringEntryP;$/;"	t
+StringEntry_EXTRAS	src/stringtab.handcode.h	/^#define StringEntry_EXTRAS /;"	d
+StringTable	cool-support/include/stringtab.h	/^   StringTable(): tbl((List<Elem> *) NULL), index(0) { }   \/\/ an empty table$/;"	f	class:StringTable
+StringTable	cool-support/include/stringtab.h	/^class StringTable$/;"	c
+String_string	src/coolrt.c	/^const char String_string[] 	= "String";$/;"	v
+String_vtable	src/coolrt.h	/^struct String_vtable {$/;"	s
+String_vtable	src/coolrt.h	/^typedef struct String_vtable String_vtable;$/;"	t	typeref:struct:String_vtable
+Symbol	cool-support/include/ast-parse.h	/^typedef Entry *Symbol;$/;"	t
+Symbol	cool-support/include/cool-parse.h	/^typedef Entry *Symbol;$/;"	t
+Symbol	cool-support/include/cool.h	/^typedef Entry *Symbol;$/;"	t
+Symbol	cool-support/include/stringtab.h	/^typedef Entry* Symbol;$/;"	t
+SymbolTable	cool-support/include/symtab.h	/^   SymbolTable(): tbl(NULL) { }     \/\/ create a new symbol table$/;"	f	class:cool::SymbolTable
+SymbolTable	cool-support/include/symtab.h	/^class SymbolTable$/;"	c	namespace:cool
+SymtabEntry	cool-support/include/symtab.h	/^  SymtabEntry(SYM x, DAT *y) : id(x), info(y) { }$/;"	f	class:cool::SymtabEntry
+SymtabEntry	cool-support/include/symtab.h	/^class SymtabEntry {$/;"	c	namespace:cool
+TESTS	test-1/Makefile	/^TESTS	= $(wildcard *.cl)$/;"	m
+TESTS	test-2/Makefile	/^TESTS	= $(wildcard *.cl)$/;"	m
+THEN	cool-support/include/cool-parse.h	/^# define	THEN	/;"	d
+TREE_H	cool-support/include/tree.h	/^#define TREE_H$/;"	d
+TYPCASE	cool-support/include/ast-parse.h	/^# define	TYPCASE	/;"	d
+TYPCASE	cool-support/src/ast-parse.cc	/^# define	TYPCASE	/;"	d	file:
+TYPEID	cool-support/include/cool-parse.h	/^# define	TYPEID	/;"	d
+VAR_ARG	src/operand.h	/^	      INT32, INT32_PTR, INT32_PPTR, VAR_ARG,$/;"	e	enum:__anon4
+VERBOSE_ERRORS	cool-support/src/handle_flags.cc	/^       int VERBOSE_ERRORS;      \/\/ for the parser; prints verbose errors$/;"	v
+VOID	src/operand.h	/^typedef enum {EMPTY, VOID, INT1, INT1_PTR, INT1_PPTR, INT8, INT8_PTR, INT8_PPTR,$/;"	e	enum:__anon4
+VPATH	src/Makefile	/^VPATH = ..\/cool-support\/src$/;"	m
+ValuePrinter	src/value_printer.h	/^		ValuePrinter() : stream(NULL) {}$/;"	f	class:ValuePrinter
+ValuePrinter	src/value_printer.h	/^		ValuePrinter(ostream& o) : stream(&o) {}$/;"	f	class:ValuePrinter
+ValuePrinter	src/value_printer.h	/^class ValuePrinter {$/;"	c
+WHILE	cool-support/include/cool-parse.h	/^# define	WHILE	/;"	d
+YYABORT	cool-support/src/ast-parse.cc	/^#define YYABORT /;"	d	file:
+YYACCEPT	cool-support/src/ast-parse.cc	/^#define YYACCEPT	/;"	d	file:
+YYBACKUP	cool-support/src/ast-parse.cc	/^#define YYBACKUP(/;"	d	file:
+YYBISON	cool-support/src/ast-parse.cc	/^#define YYBISON /;"	d	file:
+YYCOPY	cool-support/src/ast-parse.cc	/^#   define YYCOPY(/;"	d	file:
+YYDEBUG	cool-support/src/ast-parse.cc	/^# define YYDEBUG /;"	d	file:
+YYDPRINTF	cool-support/src/ast-parse.cc	/^# define YYDPRINTF(/;"	d	file:
+YYEMPTY	cool-support/src/ast-parse.cc	/^#define YYEMPTY	/;"	d	file:
+YYEOF	cool-support/src/ast-parse.cc	/^#define YYEOF	/;"	d	file:
+YYERRCODE	cool-support/src/ast-parse.cc	/^#define YYERRCODE	/;"	d	file:
+YYERROR	cool-support/src/ast-parse.cc	/^#define YYERROR	/;"	d	file:
+YYFAIL	cool-support/src/ast-parse.cc	/^#define YYFAIL	/;"	d	file:
+YYFINAL	cool-support/src/ast-parse.cc	/^#define	YYFINAL	/;"	d	file:
+YYFLAG	cool-support/src/ast-parse.cc	/^#define	YYFLAG	/;"	d	file:
+YYFPRINTF	cool-support/src/ast-parse.cc	/^#  define YYFPRINTF /;"	d	file:
+YYINITDEPTH	cool-support/src/ast-parse.cc	/^# define YYINITDEPTH /;"	d	file:
+YYLAST	cool-support/src/ast-parse.cc	/^#define	YYLAST	/;"	d	file:
+YYLEX	cool-support/src/ast-parse.cc	/^#   define YYLEX	/;"	d	file:
+YYLEX	cool-support/src/ast-parse.cc	/^# define YYLEX	/;"	d	file:
+YYLLOC_DEFAULT	cool-support/src/ast-parse.cc	/^# define YYLLOC_DEFAULT(/;"	d	file:
+YYMAXDEPTH	cool-support/src/ast-parse.cc	/^# define YYMAXDEPTH /;"	d	file:
+YYMAXDEPTH	cool-support/src/ast-parse.cc	/^# undef YYMAXDEPTH$/;"	d	file:
+YYNTBASE	cool-support/src/ast-parse.cc	/^#define	YYNTBASE	/;"	d	file:
+YYPARSE_PARAM_ARG	cool-support/src/ast-parse.cc	/^#  define YYPARSE_PARAM_ARG /;"	d	file:
+YYPARSE_PARAM_ARG	cool-support/src/ast-parse.cc	/^# define YYPARSE_PARAM_ARG$/;"	d	file:
+YYPARSE_PARAM_DECL	cool-support/src/ast-parse.cc	/^#  define YYPARSE_PARAM_DECL /;"	d	file:
+YYPARSE_PARAM_DECL	cool-support/src/ast-parse.cc	/^#  define YYPARSE_PARAM_DECL$/;"	d	file:
+YYPARSE_PARAM_DECL	cool-support/src/ast-parse.cc	/^# define YYPARSE_PARAM_DECL$/;"	d	file:
+YYPOPSTACK	cool-support/src/ast-parse.cc	/^# define YYPOPSTACK /;"	d	file:
+YYRECOVERING	cool-support/src/ast-parse.cc	/^#define YYRECOVERING(/;"	d	file:
+YYSIZE_T	cool-support/src/ast-parse.cc	/^#   define YYSIZE_T /;"	d	file:
+YYSIZE_T	cool-support/src/ast-parse.cc	/^#  define YYSIZE_T /;"	d	file:
+YYSIZE_T	cool-support/src/ast-parse.cc	/^# define YYSIZE_T /;"	d	file:
+YYSTACK_ALLOC	cool-support/src/ast-parse.cc	/^#     define YYSTACK_ALLOC /;"	d	file:
+YYSTACK_ALLOC	cool-support/src/ast-parse.cc	/^#    define YYSTACK_ALLOC /;"	d	file:
+YYSTACK_ALLOC	cool-support/src/ast-parse.cc	/^#  define YYSTACK_ALLOC /;"	d	file:
+YYSTACK_BYTES	cool-support/src/ast-parse.cc	/^#  define YYSTACK_BYTES(/;"	d	file:
+YYSTACK_FREE	cool-support/src/ast-parse.cc	/^#  define YYSTACK_FREE /;"	d	file:
+YYSTACK_FREE	cool-support/src/ast-parse.cc	/^#  define YYSTACK_FREE(/;"	d	file:
+YYSTACK_GAP_MAX	cool-support/src/ast-parse.cc	/^# define YYSTACK_GAP_MAX /;"	d	file:
+YYSTACK_RELOCATE	cool-support/src/ast-parse.cc	/^# define YYSTACK_RELOCATE(/;"	d	file:
+YYSTATE	cool-support/src/ast-lex.cc	/^#define YYSTATE /;"	d	file:
+YYSTYPE	cool-support/include/ast-parse.h	/^# define YYSTYPE /;"	d
+YYSTYPE	cool-support/include/cool-parse.h	/^# define YYSTYPE /;"	d
+YYSTYPE	cool-support/src/ast-parse.cc	/^# define YYSTYPE /;"	d	file:
+YYSTYPE_IS_TRIVIAL	cool-support/include/ast-parse.h	/^# define YYSTYPE_IS_TRIVIAL /;"	d
+YYSTYPE_IS_TRIVIAL	cool-support/include/cool-parse.h	/^# define YYSTYPE_IS_TRIVIAL /;"	d
+YYSTYPE_IS_TRIVIAL	cool-support/src/ast-parse.cc	/^# define YYSTYPE_IS_TRIVIAL /;"	d	file:
+YYTERROR	cool-support/src/ast-parse.cc	/^#define YYTERROR	/;"	d	file:
+YYTRANSLATE	cool-support/src/ast-parse.cc	/^#define YYTRANSLATE(/;"	d	file:
+YY_AT_BOL	cool-support/src/ast-lex.cc	/^#define YY_AT_BOL(/;"	d	file:
+YY_BREAK	cool-support/src/ast-lex.cc	/^#define YY_BREAK /;"	d	file:
+YY_BUFFER_EOF_PENDING	cool-support/src/ast-lex.cc	/^#define YY_BUFFER_EOF_PENDING /;"	d	file:
+YY_BUFFER_NEW	cool-support/src/ast-lex.cc	/^#define YY_BUFFER_NEW /;"	d	file:
+YY_BUFFER_NORMAL	cool-support/src/ast-lex.cc	/^#define YY_BUFFER_NORMAL /;"	d	file:
+YY_BUFFER_STATE	cool-support/src/ast-lex.cc	/^typedef struct yy_buffer_state *YY_BUFFER_STATE;$/;"	t	typeref:struct:yy_buffer_state	file:
+YY_BUF_SIZE	cool-support/src/ast-lex.cc	/^#define YY_BUF_SIZE /;"	d	file:
+YY_CHAR	cool-support/src/ast-lex.cc	/^typedef unsigned char YY_CHAR;$/;"	t	file:
+YY_CURRENT_BUFFER	cool-support/src/ast-lex.cc	/^#define YY_CURRENT_BUFFER /;"	d	file:
+YY_DECL	cool-support/src/ast-lex.cc	/^#define YY_DECL /;"	d	file:
+YY_DECL_NON_LSP_VARIABLES	cool-support/src/ast-parse.cc	/^#define YY_DECL_NON_LSP_VARIABLES	/;"	d	file:
+YY_DECL_VARIABLES	cool-support/src/ast-parse.cc	/^# define YY_DECL_VARIABLES	/;"	d	file:
+YY_DO_BEFORE_ACTION	cool-support/src/ast-lex.cc	/^#define YY_DO_BEFORE_ACTION /;"	d	file:
+YY_END_OF_BUFFER	cool-support/src/ast-lex.cc	/^#define YY_END_OF_BUFFER /;"	d	file:
+YY_END_OF_BUFFER_CHAR	cool-support/src/ast-lex.cc	/^#define YY_END_OF_BUFFER_CHAR /;"	d	file:
+YY_EXIT_FAILURE	cool-support/src/ast-lex.cc	/^#define YY_EXIT_FAILURE /;"	d	file:
+YY_FATAL_ERROR	cool-support/src/ast-lex.cc	/^#define YY_FATAL_ERROR(/;"	d	file:
+YY_FLEX_MAJOR_VERSION	cool-support/src/ast-lex.cc	/^#define YY_FLEX_MAJOR_VERSION /;"	d	file:
+YY_FLEX_MINOR_VERSION	cool-support/src/ast-lex.cc	/^#define YY_FLEX_MINOR_VERSION /;"	d	file:
+YY_FLUSH_BUFFER	cool-support/src/ast-lex.cc	/^#define YY_FLUSH_BUFFER /;"	d	file:
+YY_INPUT	cool-support/src/ast-lex.cc	/^#define YY_INPUT(/;"	d	file:
+YY_INPUT	cool-support/src/ast-lex.cc	/^#undef YY_INPUT$/;"	d	file:
+YY_MORE_ADJ	cool-support/src/ast-lex.cc	/^#define YY_MORE_ADJ /;"	d	file:
+YY_NEW_FILE	cool-support/src/ast-lex.cc	/^#define YY_NEW_FILE /;"	d	file:
+YY_NO_POP_STATE	cool-support/src/ast-lex.cc	/^#define YY_NO_POP_STATE /;"	d	file:
+YY_NO_PUSH_STATE	cool-support/src/ast-lex.cc	/^#define YY_NO_PUSH_STATE /;"	d	file:
+YY_NO_TOP_STATE	cool-support/src/ast-lex.cc	/^#define YY_NO_TOP_STATE /;"	d	file:
+YY_NO_UNPUT	cool-support/src/ast-lex.cc	/^#define YY_NO_UNPUT /;"	d	file:
+YY_NULL	cool-support/src/ast-lex.cc	/^#define YY_NULL /;"	d	file:
+YY_NUM_RULES	cool-support/src/ast-lex.cc	/^#define YY_NUM_RULES /;"	d	file:
+YY_PROTO	cool-support/src/ast-lex.cc	/^#define YY_PROTO(/;"	d	file:
+YY_READ_BUF_SIZE	cool-support/src/ast-lex.cc	/^#define YY_READ_BUF_SIZE /;"	d	file:
+YY_RESTORE_YY_MORE_OFFSET	cool-support/src/ast-lex.cc	/^#define YY_RESTORE_YY_MORE_OFFSET$/;"	d	file:
+YY_RULE_SETUP	cool-support/src/ast-lex.cc	/^#define YY_RULE_SETUP /;"	d	file:
+YY_SC_TO_UI	cool-support/src/ast-lex.cc	/^#define YY_SC_TO_UI(/;"	d	file:
+YY_START	cool-support/src/ast-lex.cc	/^#define YY_START /;"	d	file:
+YY_START_STACK_INCR	cool-support/src/ast-lex.cc	/^#define YY_START_STACK_INCR /;"	d	file:
+YY_STATE_EOF	cool-support/src/ast-lex.cc	/^#define YY_STATE_EOF(/;"	d	file:
+YY_USER_ACTION	cool-support/src/ast-lex.cc	/^#define YY_USER_ACTION$/;"	d	file:
+YY_USE_CONST	cool-support/src/ast-lex.cc	/^#define YY_USE_CONST$/;"	d	file:
+YY_USE_PROTOS	cool-support/src/ast-lex.cc	/^#define YY_USE_PROTOS$/;"	d	file:
+_AST_PARSE_H	cool-support/include/ast-parse.h	/^#define _AST_PARSE_H$/;"	d
+_COOL_H_	cool-support/include/ast-parse.h	/^#define _COOL_H_$/;"	d
+_COOL_H_	cool-support/include/cool-parse.h	/^#define _COOL_H_$/;"	d
+_COOL_H_	cool-support/include/cool.h	/^#define _COOL_H_$/;"	d
+_COOL_PARSE_H	cool-support/include/cool-parse.h	/^#define _COOL_PARSE_H$/;"	d
+_LIST_H_	cool-support/include/list.h	/^#define _LIST_H_$/;"	d
+_STRINGTAB_H_	cool-support/include/stringtab.h	/^#define _STRINGTAB_H_$/;"	d
+_SYMTAB_H_	cool-support/include/symtab.h	/^#define _SYMTAB_H_$/;"	d
+_UTILITIES_H_	cool-support/include/utilities.h	/^#define _UTILITIES_H_$/;"	d
+__OPERAND_H	src/operand.h	/^#define __OPERAND_H$/;"	d
+__VALUE_PRINTER_H	src/value_printer.h	/^#define __VALUE_PRINTER_H$/;"	d
+__cplusplus	cool-support/src/ast-lex.cc	/^#define __cplusplus$/;"	d	file:
+actual	cool-support/include/cool-tree.h	/^   Expressions actual;$/;"	m	class:dispatch_class
+actual	cool-support/include/cool-tree.h	/^   Expressions actual;$/;"	m	class:static_dispatch_class
+add	src/value_printer.cc	/^operand ValuePrinter::add(operand op1, operand op2) {$/;"	f	class:ValuePrinter
+add	src/value_printer.cc	/^void ValuePrinter::add(ostream &o, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+add_child	src/cgen.cc	/^void CgenNode::add_child(CgenNode *n)$/;"	f	class:CgenNode
+add_int	cool-support/include/stringtab_functions.h	/^Elem *StringTable<Elem>::add_int(int i)$/;"	f	class:StringTable
+add_local	src/cgen.cc	/^void CgenEnvironment::add_local(Symbol name, operand &vb) {$/;"	f	class:CgenEnvironment
+add_string	cool-support/include/stringtab_functions.h	/^Elem *StringTable<Elem>::add_string(char *s)$/;"	f	class:StringTable
+add_string	cool-support/include/stringtab_functions.h	/^Elem *StringTable<Elem>::add_string(char *s, int maxchars)$/;"	f	class:StringTable
+addid	cool-support/include/symtab.h	/^   ScopeEntry *addid(SYM s, DAT *i)$/;"	f	class:cool::SymbolTable
+alloca_mem	src/value_printer.cc	/^operand ValuePrinter::alloca_mem(op_type type) {$/;"	f	class:ValuePrinter
+alloca_mem	src/value_printer.cc	/^void ValuePrinter::alloca_mem(ostream &o, op_type type, operand result) {$/;"	f	class:ValuePrinter
+append	cool-support/include/tree.h	/^template <class Elem> list_node<Elem> *list_node<Elem>::append(list_node<Elem> *l1,list_node<Elem> *l2) {$/;"	f	class:list_node
+append_Cases	cool-support/src/cool-tree.cc	/^Cases append_Cases(Cases p1, Cases p2)$/;"	f
+append_Classes	cool-support/src/cool-tree.cc	/^Classes append_Classes(Classes p1, Classes p2)$/;"	f
+append_Expressions	cool-support/src/cool-tree.cc	/^Expressions append_Expressions(Expressions p1, Expressions p2)$/;"	f
+append_Features	cool-support/src/cool-tree.cc	/^Features append_Features(Features p1, Features p2)$/;"	f
+append_Formals	cool-support/src/cool-tree.cc	/^Formals append_Formals(Formals p1, Formals p2)$/;"	f
+append_node	cool-support/include/tree.h	/^    append_node(list_node<Elem> *l1, list_node<Elem> *l2) {$/;"	f	class:append_node
+append_node	cool-support/include/tree.h	/^template <class Elem> class append_node : public list_node<Elem> {$/;"	c
+arg	src/cgen.cc	/^    arg,$/;"	v
+arg2	src/cgen.cc	/^    arg2,$/;"	v
+args	src/operand.h	/^		vector<op_type> args;$/;"	m	class:op_func_ptr_type
+args	src/operand.h	/^		vector<op_type> args;$/;"	m	class:op_func_type
+ascii	cool-support/src/cgen_supp.cc	/^static int ascii = 0;$/;"	v	file:
+ascii_mode	cool-support/src/cgen_supp.cc	/^void ascii_mode(ostream& str)$/;"	f
+assert_Boolean	src/cool-tree.handcode.h	/^inline void assert_Boolean(Boolean) {}$/;"	f
+assign	cool-support/src/cool-tree.cc	/^Expression assign(Symbol name, Expression expr)$/;"	f
+assign_class	cool-support/include/cool-tree.h	/^   assign_class(Symbol a1, Expression a2) {$/;"	f	class:assign_class
+assign_class	cool-support/include/cool-tree.h	/^class assign_class : public Expression_class {$/;"	c
+ast_file	cool-support/src/cgen-phase.cc	/^FILE *ast_file = stdin;       \/\/ we read the AST from standard input$/;"	v
+ast_root	cool-support/src/ast-parse.cc	/^Program ast_root;             \/* the result of the parse  *\/$/;"	v
+ast_yyerror	cool-support/src/ast-parse.cc	/^void ast_yyerror(char *)$/;"	f
+attr	cool-support/src/cool-tree.cc	/^Feature attr(Symbol name, Symbol type_decl, Expression init)$/;"	f
+attr_class	cool-support/include/cool-tree.h	/^   attr_class(Symbol a1, Symbol a2, Expression a3) {$/;"	f	class:attr_class
+attr_class	cool-support/include/cool-tree.h	/^class attr_class : public Feature_class {$/;"	c
+b_value	src/operand.h	/^		bool b_value;$/;"	m	class:bool_value
+basic	src/cgen.h	/^	int basic() { return (basic_status == Basic); }$/;"	f	class:CgenNode
+basic_status	src/cgen.h	/^	Basicness basic_status;                    \/\/ `Basic' or 'NotBasic'$/;"	m	class:CgenNode
+begin_block	src/value_printer.cc	/^void ValuePrinter::begin_block(string label)$/;"	f	class:ValuePrinter
+bin_inst	src/value_printer.cc	/^operand ValuePrinter::bin_inst(string inst_name, operand op1, operand op2) {$/;"	f	class:ValuePrinter
+bin_inst	src/value_printer.cc	/^void ValuePrinter::bin_inst(ostream &o, string inst_name, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+bitcast	src/value_printer.cc	/^operand ValuePrinter::bitcast(operand op, op_type new_type) {$/;"	f	class:ValuePrinter
+bitcast	src/value_printer.cc	/^void ValuePrinter::bitcast(ostream &o, operand op, op_type new_type, operand result) {$/;"	f	class:ValuePrinter
+block	cool-support/src/cool-tree.cc	/^Expression block(Expressions body)$/;"	f
+block_class	cool-support/include/cool-tree.h	/^   block_class(Expressions a1) {$/;"	f	class:block_class
+block_class	cool-support/include/cool-tree.h	/^class block_class : public Expression_class {$/;"	c
+block_count	src/cgen.h	/^	int block_count;$/;"	m	class:CgenEnvironment
+body	cool-support/include/cool-tree.h	/^   Expression body;$/;"	m	class:let_class
+body	cool-support/include/cool-tree.h	/^   Expression body;$/;"	m	class:loop_class
+body	cool-support/include/cool-tree.h	/^   Expressions body;$/;"	m	class:block_class
+bool_const	cool-support/src/cool-tree.cc	/^Expression bool_const(Boolean val)$/;"	f
+bool_const_class	cool-support/include/cool-tree.h	/^   bool_const_class(Boolean a1) {$/;"	f	class:bool_const_class
+bool_const_class	cool-support/include/cool-tree.h	/^class bool_const_class : public Expression_class {$/;"	c
+bool_value	src/operand.h	/^		bool_value(bool b, bool intr) : const_value(op_type(INT1), "", intr),$/;"	f	class:bool_value
+bool_value	src/operand.h	/^class bool_value : public const_value {$/;"	c
+boolean	cool-support/include/ast-parse.h	/^  Boolean boolean;$/;"	m	union:__anon1
+boolean	cool-support/include/cool-parse.h	/^  Boolean boolean;$/;"	m	union:__anon2
+boolean	cool-support/src/ast-parse.cc	/^  Boolean boolean;$/;"	m	union:__anon3	file:
+branch	cool-support/src/cool-tree.cc	/^Case branch(Symbol name, Symbol type_decl, Expression expr)$/;"	f
+branch_EXTRAS	src/cool-tree.handcode.h	/^#define branch_EXTRAS /;"	d
+branch_class	cool-support/include/cool-tree.h	/^   branch_class(Symbol a1, Symbol a2, Expression a3) {$/;"	f	class:branch_class
+branch_class	cool-support/include/cool-tree.h	/^class branch_class : public Case_class {$/;"	c
+branch_cond	src/value_printer.cc	/^void ValuePrinter::branch_cond(operand op, label label_true, label label_false) {$/;"	f	class:ValuePrinter
+branch_cond	src/value_printer.cc	/^void ValuePrinter::branch_cond(ostream &o, operand op, label label_true, label label_false) {$/;"	f	class:ValuePrinter
+branch_operand	src/cgen.h	/^	operand branch_operand;$/;"	m	class:CgenEnvironment
+branch_uncond	src/value_printer.cc	/^void ValuePrinter::branch_uncond(label l) {$/;"	f	class:ValuePrinter
+branch_uncond	src/value_printer.cc	/^void ValuePrinter::branch_uncond(ostream &o, label l) {$/;"	f	class:ValuePrinter
+build_inheritance_tree	src/cgen.cc	/^void CgenClassTable::build_inheritance_tree()$/;"	f	class:CgenClassTable
+byte_mode	cool-support/src/cgen_supp.cc	/^void byte_mode(ostream& str)$/;"	f
+call	src/value_printer.cc	/^operand ValuePrinter::call(vector<op_type> arg_types, op_type result_type,$/;"	f	class:ValuePrinter
+call	src/value_printer.cc	/^void ValuePrinter::call(ostream &o, vector<op_type> arg_types, string fn_name, $/;"	f	class:ValuePrinter
+case_	cool-support/include/ast-parse.h	/^  Case case_;$/;"	m	union:__anon1
+case_	cool-support/include/cool-parse.h	/^  Case case_;$/;"	m	union:__anon2
+case_	cool-support/src/ast-parse.cc	/^  Case case_;$/;"	m	union:__anon3	file:
+cases	cool-support/include/ast-parse.h	/^  Cases cases;$/;"	m	union:__anon1
+cases	cool-support/include/cool-parse.h	/^  Cases cases;$/;"	m	union:__anon2
+cases	cool-support/include/cool-tree.h	/^   Cases cases;$/;"	m	class:typcase_class
+cases	cool-support/src/ast-parse.cc	/^  Cases cases;$/;"	m	union:__anon3	file:
+casted_value	src/operand.h	/^    casted_value(op_type t, string val, op_type precast_t) :$/;"	f	class:casted_value
+casted_value	src/operand.h	/^class casted_value : public const_value {$/;"	c
+cc_add_symbol	src/cgen.cc	/^void CgenEnvironment::cc_add_symbol(Symbol name, operand &vb) {$/;"	f	class:CgenEnvironment
+cgen	src/cgen.cc	/^void program_class::cgen(ostream &os)$/;"	f	class:program_class
+cgen_Memmgr	cool-support/src/handle_flags.cc	/^       Memmgr cgen_Memmgr = GC_NOGC;      \/\/ enable\/disable garbage collection$/;"	v
+cgen_Memmgr_Debug	cool-support/src/handle_flags.cc	/^       Memmgr_Debug cgen_Memmgr_Debug = GC_QUICK; \/\/ check heap frequently$/;"	v
+cgen_Memmgr_Test	cool-support/src/handle_flags.cc	/^       Memmgr_Test cgen_Memmgr_Test = GC_NORMAL;  \/\/ normal\/test GC$/;"	v
+cgen_debug	cool-support/src/handle_flags.cc	/^       int cgen_debug;          \/\/ for code gen$/;"	v
+cgen_optimize	cool-support/src/handle_flags.cc	/^       int cgen_optimize;       \/\/ optimize switch for code generator $/;"	v
+check_ostream	src/value_printer.h	/^		void check_ostream(ostream& supplied) { assert (!stream || (stream == &supplied)); }$/;"	f	class:ValuePrinter
+check_ostream	src/value_printer.h	/^        void check_ostream() { assert(stream); }$/;"	f	class:ValuePrinter
+children	src/cgen.h	/^	List<CgenNode> *children;                  \/\/ Children of class$/;"	m	class:CgenNode
+class_	cool-support/include/ast-parse.h	/^  Class_ class_;$/;"	m	union:__anon1
+class_	cool-support/include/cool-parse.h	/^  Class_ class_;$/;"	m	union:__anon2
+class_	cool-support/src/ast-parse.cc	/^  Class_ class_;$/;"	m	union:__anon3	file:
+class_	cool-support/src/cool-tree.cc	/^Class_ class_(Symbol name, Symbol parent, Features features, Symbol filename)$/;"	f
+class__EXTRAS	src/cool-tree.handcode.h	/^#define class__EXTRAS /;"	d
+class__class	cool-support/include/cool-tree.h	/^   class__class(Symbol a1, Symbol a2, Features a3, Symbol a4) {$/;"	f	class:class__class
+class__class	cool-support/include/cool-tree.h	/^class class__class : public Class__class {$/;"	c
+class_table	cool-support/include/cool-tree.h	/^   CgenClassTable *class_table;$/;"	m	class:Program_class
+class_table	src/cgen.h	/^	CgenClassTable *class_table;$/;"	m	class:CgenNode
+classes	cool-support/include/ast-parse.h	/^  Classes classes;$/;"	m	union:__anon1
+classes	cool-support/include/cool-parse.h	/^  Classes classes;$/;"	m	union:__anon2
+classes	cool-support/include/cool-tree.h	/^   Classes classes;$/;"	m	class:program_class
+classes	cool-support/src/ast-parse.cc	/^  Classes classes;$/;"	m	union:__anon3	file:
+code	src/cgen.cc	/^operand assign_class::code(CgenEnvironment *env)$/;"	f	class:assign_class
+code	src/cgen.cc	/^operand block_class::code(CgenEnvironment *env)$/;"	f	class:block_class
+code	src/cgen.cc	/^operand bool_const_class::code(CgenEnvironment *env)$/;"	f	class:bool_const_class
+code	src/cgen.cc	/^operand comp_class::code(CgenEnvironment *env)$/;"	f	class:comp_class
+code	src/cgen.cc	/^operand cond_class::code(CgenEnvironment *env)$/;"	f	class:cond_class
+code	src/cgen.cc	/^operand dispatch_class::code(CgenEnvironment *env)$/;"	f	class:dispatch_class
+code	src/cgen.cc	/^operand divide_class::code(CgenEnvironment *env)$/;"	f	class:divide_class
+code	src/cgen.cc	/^operand eq_class::code(CgenEnvironment *env)$/;"	f	class:eq_class
+code	src/cgen.cc	/^operand int_const_class::code(CgenEnvironment *env)$/;"	f	class:int_const_class
+code	src/cgen.cc	/^operand isvoid_class::code(CgenEnvironment *env)$/;"	f	class:isvoid_class
+code	src/cgen.cc	/^operand leq_class::code(CgenEnvironment *env)$/;"	f	class:leq_class
+code	src/cgen.cc	/^operand let_class::code(CgenEnvironment *env)$/;"	f	class:let_class
+code	src/cgen.cc	/^operand loop_class::code(CgenEnvironment *env)$/;"	f	class:loop_class
+code	src/cgen.cc	/^operand lt_class::code(CgenEnvironment *env)$/;"	f	class:lt_class
+code	src/cgen.cc	/^operand mul_class::code(CgenEnvironment *env)$/;"	f	class:mul_class
+code	src/cgen.cc	/^operand neg_class::code(CgenEnvironment *env)$/;"	f	class:neg_class
+code	src/cgen.cc	/^operand new__class::code(CgenEnvironment *env)$/;"	f	class:new__class
+code	src/cgen.cc	/^operand no_expr_class::code(CgenEnvironment *env)$/;"	f	class:no_expr_class
+code	src/cgen.cc	/^operand object_class::code(CgenEnvironment *env)$/;"	f	class:object_class
+code	src/cgen.cc	/^operand plus_class::code(CgenEnvironment *env)$/;"	f	class:plus_class
+code	src/cgen.cc	/^operand static_dispatch_class::code(CgenEnvironment *env)$/;"	f	class:static_dispatch_class
+code	src/cgen.cc	/^operand string_const_class::code(CgenEnvironment *env)$/;"	f	class:string_const_class
+code	src/cgen.cc	/^operand sub_class::code(CgenEnvironment *env)$/;"	f	class:sub_class
+code	src/cgen.cc	/^operand typcase_class::code(CgenEnvironment *env) {$/;"	f	class:typcase_class
+code	src/cgen.cc	/^void method_class::code(CgenEnvironment *env)$/;"	f	class:method_class
+codeGenMainmain	src/cgen.cc	/^void CgenNode::codeGenMainmain(std::ostream &o)$/;"	f	class:CgenNode
+code_class	src/cgen.cc	/^void CgenNode::code_class()$/;"	f	class:CgenNode
+code_classes	src/cgen.cc	/^void CgenClassTable::code_classes(CgenNode *c)$/;"	f	class:CgenClassTable
+code_constants	src/cgen.cc	/^void CgenClassTable::code_constants()$/;"	f	class:CgenClassTable
+code_def	src/cgen.cc	/^void IntEntry::code_def(ostream& s, CgenClassTable* ct)$/;"	f	class:IntEntry
+code_def	src/cgen.cc	/^void StringEntry::code_def(ostream& s, CgenClassTable* ct)$/;"	f	class:StringEntry
+code_main	src/cgen.cc	/^void CgenClassTable::code_main()$/;"	f	class:CgenClassTable
+code_module	src/cgen.cc	/^void CgenClassTable::code_module()$/;"	f	class:CgenClassTable
+code_string_table	src/cgen.cc	/^void IntTable::code_string_table(ostream& s, CgenClassTable* ct)$/;"	f	class:IntTable
+code_string_table	src/cgen.cc	/^void StrTable::code_string_table(ostream& s, CgenClassTable* ct)$/;"	f	class:StrTable
+comp	cool-support/src/cool-tree.cc	/^Expression comp(Expression e1)$/;"	f
+comp_class	cool-support/include/cool-tree.h	/^   comp_class(Expression a1) {$/;"	f	class:comp_class
+comp_class	cool-support/include/cool-tree.h	/^class comp_class : public Expression_class {$/;"	c
+concat	src/cgen.cc	/^    concat,$/;"	v
+cond	cool-support/src/cool-tree.cc	/^Expression cond(Expression pred, Expression then_exp, Expression else_exp)$/;"	f
+cond_class	cool-support/include/cool-tree.h	/^   cond_class(Expression a1, Expression a2, Expression a3) {$/;"	f	class:cond_class
+cond_class	cool-support/include/cool-tree.h	/^class cond_class : public Expression_class {$/;"	c
+conform	src/cgen.cc	/^operand conform(operand src, op_type type, CgenEnvironment *env) {$/;"	f
+cons	cool-support/include/tree.h	/^template <class Elem> append_node<Elem> *cons(Elem x, list_node<Elem> *l)$/;"	f
+const_value	src/operand.h	/^		const_value(op_type t, string val, bool intr)$/;"	f	class:const_value
+const_value	src/operand.h	/^class const_value : public operand {$/;"	c
+cool	cool-support/include/symtab.h	/^namespace cool$/;"	n
+cool_abort	src/cgen.cc	/^    cool_abort,$/;"	v
+cool_copy	src/cgen.cc	/^    cool_copy,$/;"	v
+cool_token_to_string	cool-support/src/utilities.cc	/^char *cool_token_to_string(int tok)$/;"	f
+cool_yydebug	cool-support/src/cgen-phase.cc	/^int cool_yydebug;     \/\/ not used, but needed to link with handle_flags$/;"	v
+cool_yylval	cool-support/src/ast-lex.cc	/^YYSTYPE cool_yylval;  \/* needed to link ast code with utilities.cc *\/$/;"	v
+copy	cool-support/include/cool-tree.h	/^   tree_node *copy()		 { return copy_Case(); }$/;"	f	class:Case_class
+copy	cool-support/include/cool-tree.h	/^   tree_node *copy()		 { return copy_Class_(); }$/;"	f	class:Class__class
+copy	cool-support/include/cool-tree.h	/^   tree_node *copy()		 { return copy_Expression(); }$/;"	f	class:Expression_class
+copy	cool-support/include/cool-tree.h	/^   tree_node *copy()		 { return copy_Feature(); }$/;"	f	class:Feature_class
+copy	cool-support/include/cool-tree.h	/^   tree_node *copy()		 { return copy_Formal(); }$/;"	f	class:Formal_class
+copy	cool-support/include/cool-tree.h	/^   tree_node *copy()		 { return copy_Program(); }$/;"	f	class:Program_class
+copy	cool-support/include/tree.h	/^    tree_node *copy()            { return copy_list(); }$/;"	f	class:list_node
+copy_Boolean	src/cool-tree.handcode.h	/^inline Boolean copy_Boolean(Boolean b) {return b; }$/;"	f
+copy_Case	cool-support/src/cool-tree.cc	/^Case branch_class::copy_Case()$/;"	f	class:branch_class
+copy_Class_	cool-support/src/cool-tree.cc	/^Class_ class__class::copy_Class_()$/;"	f	class:class__class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression assign_class::copy_Expression()$/;"	f	class:assign_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression block_class::copy_Expression()$/;"	f	class:block_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression bool_const_class::copy_Expression()$/;"	f	class:bool_const_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression comp_class::copy_Expression()$/;"	f	class:comp_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression cond_class::copy_Expression()$/;"	f	class:cond_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression dispatch_class::copy_Expression()$/;"	f	class:dispatch_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression divide_class::copy_Expression()$/;"	f	class:divide_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression eq_class::copy_Expression()$/;"	f	class:eq_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression int_const_class::copy_Expression()$/;"	f	class:int_const_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression isvoid_class::copy_Expression()$/;"	f	class:isvoid_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression leq_class::copy_Expression()$/;"	f	class:leq_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression let_class::copy_Expression()$/;"	f	class:let_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression loop_class::copy_Expression()$/;"	f	class:loop_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression lt_class::copy_Expression()$/;"	f	class:lt_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression mul_class::copy_Expression()$/;"	f	class:mul_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression neg_class::copy_Expression()$/;"	f	class:neg_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression new__class::copy_Expression()$/;"	f	class:new__class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression no_expr_class::copy_Expression()$/;"	f	class:no_expr_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression object_class::copy_Expression()$/;"	f	class:object_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression plus_class::copy_Expression()$/;"	f	class:plus_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression static_dispatch_class::copy_Expression()$/;"	f	class:static_dispatch_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression string_const_class::copy_Expression()$/;"	f	class:string_const_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression sub_class::copy_Expression()$/;"	f	class:sub_class
+copy_Expression	cool-support/src/cool-tree.cc	/^Expression typcase_class::copy_Expression()$/;"	f	class:typcase_class
+copy_Feature	cool-support/src/cool-tree.cc	/^Feature attr_class::copy_Feature()$/;"	f	class:attr_class
+copy_Feature	cool-support/src/cool-tree.cc	/^Feature method_class::copy_Feature()$/;"	f	class:method_class
+copy_Formal	cool-support/src/cool-tree.cc	/^Formal formal_class::copy_Formal()$/;"	f	class:formal_class
+copy_Program	cool-support/src/cool-tree.cc	/^Program program_class::copy_Program()$/;"	f	class:program_class
+copy_Symbol	cool-support/src/stringtab.cc	/^Symbol copy_Symbol(const Symbol s)$/;"	f
+copy_list	cool-support/include/tree.h	/^template <class Elem> list_node<Elem> *append_node<Elem>::copy_list()$/;"	f	class:append_node
+copy_list	cool-support/include/tree.h	/^template <class Elem> list_node<Elem> *nil_node<Elem>::copy_list()$/;"	f	class:nil_node
+copy_list	cool-support/include/tree.h	/^template <class Elem> list_node<Elem> *single_list_node<Elem>::copy_list()$/;"	f	class:single_list_node
+ct_stream	src/cgen.h	/^	ostream *ct_stream;$/;"	m	class:CgenClassTable
+cur_class	src/cgen.h	/^    CgenNode *cur_class;$/;"	m	class:CgenEnvironment
+cur_stream	src/cgen.h	/^	  std::ostream *cur_stream;$/;"	m	class:CgenEnvironment
+curr_filename	cool-support/src/cgen-phase.cc	/^char *curr_filename;$/;"	v
+curr_lineno	cool-support/src/cgen-phase.cc	/^int curr_lineno;$/;"	v
+current_tag	src/cgen.h	/^    int current_tag;$/;"	m	class:CgenClassTable
+declare	src/value_printer.cc	/^void ValuePrinter::declare(op_type ret_type, string name, vector<op_type> args) {$/;"	f	class:ValuePrinter
+declare	src/value_printer.cc	/^void ValuePrinter::declare(ostream &o, op_type ret_type, string name, vector<op_type> args) {$/;"	f	class:ValuePrinter
+default_string	src/coolrt.c	/^const char default_string[]	= "";$/;"	v
+define	src/value_printer.cc	/^void ValuePrinter::define(op_type ret_type, string name, vector<operand> args) {$/;"	f	class:ValuePrinter
+define	src/value_printer.cc	/^void ValuePrinter::define(ostream &o, op_type ret_type, string name, vector<operand> args) {$/;"	f	class:ValuePrinter
+disable_reg_alloc	cool-support/src/handle_flags.cc	/^       bool disable_reg_alloc;  \/\/ Don't do register allocation$/;"	v
+dispatch	cool-support/src/cool-tree.cc	/^Expression dispatch(Expression expr, Symbol name, Expressions actual)$/;"	f
+dispatch_class	cool-support/include/cool-tree.h	/^   dispatch_class(Expression a1, Symbol a2, Expressions a3) {$/;"	f	class:dispatch_class
+dispatch_class	cool-support/include/cool-tree.h	/^class dispatch_class : public Expression_class {$/;"	c
+div	src/value_printer.cc	/^operand ValuePrinter::div(operand op1, operand op2) {$/;"	f	class:ValuePrinter
+div	src/value_printer.cc	/^void ValuePrinter::div(ostream &o, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+divide	cool-support/src/cool-tree.cc	/^Expression divide(Expression e1, Expression e2)$/;"	f
+divide_class	cool-support/include/cool-tree.h	/^   divide_class(Expression a1, Expression a2) {$/;"	f	class:divide_class
+divide_class	cool-support/include/cool-tree.h	/^class divide_class : public Expression_class {$/;"	c
+dump	cool-support/include/symtab.h	/^   void dump()$/;"	f	class:cool::SymbolTable
+dump	cool-support/include/tree.h	/^template <class Elem> void append_node<Elem>::dump(ostream& stream, int n)$/;"	f	class:append_node
+dump	cool-support/include/tree.h	/^template <class Elem> void nil_node<Elem>::dump(ostream& stream, int n)$/;"	f	class:nil_node
+dump	cool-support/include/tree.h	/^template <class Elem> void single_list_node<Elem>::dump(ostream& stream, int n)$/;"	f	class:single_list_node
+dump	cool-support/src/cool-tree.cc	/^void assign_class::dump(ostream& stream, int n)$/;"	f	class:assign_class
+dump	cool-support/src/cool-tree.cc	/^void attr_class::dump(ostream& stream, int n)$/;"	f	class:attr_class
+dump	cool-support/src/cool-tree.cc	/^void block_class::dump(ostream& stream, int n)$/;"	f	class:block_class
+dump	cool-support/src/cool-tree.cc	/^void bool_const_class::dump(ostream& stream, int n)$/;"	f	class:bool_const_class
+dump	cool-support/src/cool-tree.cc	/^void branch_class::dump(ostream& stream, int n)$/;"	f	class:branch_class
+dump	cool-support/src/cool-tree.cc	/^void class__class::dump(ostream& stream, int n)$/;"	f	class:class__class
+dump	cool-support/src/cool-tree.cc	/^void comp_class::dump(ostream& stream, int n)$/;"	f	class:comp_class
+dump	cool-support/src/cool-tree.cc	/^void cond_class::dump(ostream& stream, int n)$/;"	f	class:cond_class
+dump	cool-support/src/cool-tree.cc	/^void dispatch_class::dump(ostream& stream, int n)$/;"	f	class:dispatch_class
+dump	cool-support/src/cool-tree.cc	/^void divide_class::dump(ostream& stream, int n)$/;"	f	class:divide_class
+dump	cool-support/src/cool-tree.cc	/^void eq_class::dump(ostream& stream, int n)$/;"	f	class:eq_class
+dump	cool-support/src/cool-tree.cc	/^void formal_class::dump(ostream& stream, int n)$/;"	f	class:formal_class
+dump	cool-support/src/cool-tree.cc	/^void int_const_class::dump(ostream& stream, int n)$/;"	f	class:int_const_class
+dump	cool-support/src/cool-tree.cc	/^void isvoid_class::dump(ostream& stream, int n)$/;"	f	class:isvoid_class
+dump	cool-support/src/cool-tree.cc	/^void leq_class::dump(ostream& stream, int n)$/;"	f	class:leq_class
+dump	cool-support/src/cool-tree.cc	/^void let_class::dump(ostream& stream, int n)$/;"	f	class:let_class
+dump	cool-support/src/cool-tree.cc	/^void loop_class::dump(ostream& stream, int n)$/;"	f	class:loop_class
+dump	cool-support/src/cool-tree.cc	/^void lt_class::dump(ostream& stream, int n)$/;"	f	class:lt_class
+dump	cool-support/src/cool-tree.cc	/^void method_class::dump(ostream& stream, int n)$/;"	f	class:method_class
+dump	cool-support/src/cool-tree.cc	/^void mul_class::dump(ostream& stream, int n)$/;"	f	class:mul_class
+dump	cool-support/src/cool-tree.cc	/^void neg_class::dump(ostream& stream, int n)$/;"	f	class:neg_class
+dump	cool-support/src/cool-tree.cc	/^void new__class::dump(ostream& stream, int n)$/;"	f	class:new__class
+dump	cool-support/src/cool-tree.cc	/^void no_expr_class::dump(ostream& stream, int n)$/;"	f	class:no_expr_class
+dump	cool-support/src/cool-tree.cc	/^void object_class::dump(ostream& stream, int n)$/;"	f	class:object_class
+dump	cool-support/src/cool-tree.cc	/^void plus_class::dump(ostream& stream, int n)$/;"	f	class:plus_class
+dump	cool-support/src/cool-tree.cc	/^void program_class::dump(ostream& stream, int n)$/;"	f	class:program_class
+dump	cool-support/src/cool-tree.cc	/^void static_dispatch_class::dump(ostream& stream, int n)$/;"	f	class:static_dispatch_class
+dump	cool-support/src/cool-tree.cc	/^void string_const_class::dump(ostream& stream, int n)$/;"	f	class:string_const_class
+dump	cool-support/src/cool-tree.cc	/^void sub_class::dump(ostream& stream, int n)$/;"	f	class:sub_class
+dump	cool-support/src/cool-tree.cc	/^void typcase_class::dump(ostream& stream, int n)$/;"	f	class:typcase_class
+dump_Boolean	src/cool-tree.handcode.h	/^inline void dump_Boolean(ostream& stream, int padding, Boolean b)$/;"	f
+dump_Symbol	cool-support/src/stringtab.cc	/^void dump_Symbol(ostream& s, int n, Symbol sym)$/;"	f
+dump_cool_token	cool-support/src/utilities.cc	/^void dump_cool_token(ostream& out, int lineno, int token, YYSTYPE yylval) {$/;"	f
+dump_line	cool-support/src/dumptype.cc	/^void dump_line(ostream& stream, int n, tree_node *t)$/;"	f
+dump_type	cool-support/src/dumptype.cc	/^void Expression_class::dump_type(ostream& stream, int n)$/;"	f	class:Expression_class
+dump_with_types	cool-support/src/dumptype.cc	/^void assign_class::dump_with_types(ostream& stream, int n)$/;"	f	class:assign_class
+dump_with_types	cool-support/src/dumptype.cc	/^void attr_class::dump_with_types(ostream& stream, int n)$/;"	f	class:attr_class
+dump_with_types	cool-support/src/dumptype.cc	/^void block_class::dump_with_types(ostream& stream, int n)$/;"	f	class:block_class
+dump_with_types	cool-support/src/dumptype.cc	/^void bool_const_class::dump_with_types(ostream& stream, int n)$/;"	f	class:bool_const_class
+dump_with_types	cool-support/src/dumptype.cc	/^void branch_class::dump_with_types(ostream& stream, int n)$/;"	f	class:branch_class
+dump_with_types	cool-support/src/dumptype.cc	/^void class__class::dump_with_types(ostream& stream, int n)$/;"	f	class:class__class
+dump_with_types	cool-support/src/dumptype.cc	/^void comp_class::dump_with_types(ostream& stream, int n)$/;"	f	class:comp_class
+dump_with_types	cool-support/src/dumptype.cc	/^void cond_class::dump_with_types(ostream& stream, int n)$/;"	f	class:cond_class
+dump_with_types	cool-support/src/dumptype.cc	/^void dispatch_class::dump_with_types(ostream& stream, int n)$/;"	f	class:dispatch_class
+dump_with_types	cool-support/src/dumptype.cc	/^void divide_class::dump_with_types(ostream& stream, int n)$/;"	f	class:divide_class
+dump_with_types	cool-support/src/dumptype.cc	/^void eq_class::dump_with_types(ostream& stream, int n)$/;"	f	class:eq_class
+dump_with_types	cool-support/src/dumptype.cc	/^void formal_class::dump_with_types(ostream& stream, int n)$/;"	f	class:formal_class
+dump_with_types	cool-support/src/dumptype.cc	/^void int_const_class::dump_with_types(ostream& stream, int n)$/;"	f	class:int_const_class
+dump_with_types	cool-support/src/dumptype.cc	/^void isvoid_class::dump_with_types(ostream& stream, int n)$/;"	f	class:isvoid_class
+dump_with_types	cool-support/src/dumptype.cc	/^void leq_class::dump_with_types(ostream& stream, int n)$/;"	f	class:leq_class
+dump_with_types	cool-support/src/dumptype.cc	/^void let_class::dump_with_types(ostream& stream, int n)$/;"	f	class:let_class
+dump_with_types	cool-support/src/dumptype.cc	/^void loop_class::dump_with_types(ostream& stream, int n)$/;"	f	class:loop_class
+dump_with_types	cool-support/src/dumptype.cc	/^void lt_class::dump_with_types(ostream& stream, int n)$/;"	f	class:lt_class
+dump_with_types	cool-support/src/dumptype.cc	/^void method_class::dump_with_types(ostream& stream, int n)$/;"	f	class:method_class
+dump_with_types	cool-support/src/dumptype.cc	/^void mul_class::dump_with_types(ostream& stream, int n)$/;"	f	class:mul_class
+dump_with_types	cool-support/src/dumptype.cc	/^void neg_class::dump_with_types(ostream& stream, int n)$/;"	f	class:neg_class
+dump_with_types	cool-support/src/dumptype.cc	/^void new__class::dump_with_types(ostream& stream, int n)$/;"	f	class:new__class
+dump_with_types	cool-support/src/dumptype.cc	/^void no_expr_class::dump_with_types(ostream& stream, int n)$/;"	f	class:no_expr_class
+dump_with_types	cool-support/src/dumptype.cc	/^void object_class::dump_with_types(ostream& stream, int n)$/;"	f	class:object_class
+dump_with_types	cool-support/src/dumptype.cc	/^void plus_class::dump_with_types(ostream& stream, int n)$/;"	f	class:plus_class
+dump_with_types	cool-support/src/dumptype.cc	/^void program_class::dump_with_types(ostream& stream, int n)$/;"	f	class:program_class
+dump_with_types	cool-support/src/dumptype.cc	/^void static_dispatch_class::dump_with_types(ostream& stream, int n)$/;"	f	class:static_dispatch_class
+dump_with_types	cool-support/src/dumptype.cc	/^void string_const_class::dump_with_types(ostream& stream, int n)$/;"	f	class:string_const_class
+dump_with_types	cool-support/src/dumptype.cc	/^void sub_class::dump_with_types(ostream& stream, int n)$/;"	f	class:sub_class
+dump_with_types	cool-support/src/dumptype.cc	/^void typcase_class::dump_with_types(ostream& stream, int n)$/;"	f	class:typcase_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:comp_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:divide_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:eq_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:isvoid_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:leq_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:lt_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:mul_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:neg_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:plus_class
+e1	cool-support/include/cool-tree.h	/^   Expression e1;$/;"	m	class:sub_class
+e2	cool-support/include/cool-tree.h	/^   Expression e2;$/;"	m	class:divide_class
+e2	cool-support/include/cool-tree.h	/^   Expression e2;$/;"	m	class:eq_class
+e2	cool-support/include/cool-tree.h	/^   Expression e2;$/;"	m	class:leq_class
+e2	cool-support/include/cool-tree.h	/^   Expression e2;$/;"	m	class:lt_class
+e2	cool-support/include/cool-tree.h	/^   Expression e2;$/;"	m	class:mul_class
+e2	cool-support/include/cool-tree.h	/^   Expression e2;$/;"	m	class:plus_class
+e2	cool-support/include/cool-tree.h	/^   Expression e2;$/;"	m	class:sub_class
+elem	cool-support/include/tree.h	/^    Elem elem;$/;"	m	class:single_list_node
+else_exp	cool-support/include/cool-tree.h	/^   Expression else_exp;$/;"	m	class:cond_class
+embed_getelementptr	src/value_printer.cc	/^static void embed_getelementptr (ostream &o, operand op1, operand op2, operand op3) {$/;"	f	file:
+emit_string_constant	cool-support/src/cgen_supp.cc	/^void emit_string_constant(ostream& str, char* s)$/;"	f
+end_define	src/value_printer.h	/^		void end_define() { *stream << "}\\n\\n"; }$/;"	f	class:ValuePrinter
+end_define	src/value_printer.h	/^		void end_define(ostream &o) { check_ostream(o); o << "}\\n\\n"; }$/;"	f	class:ValuePrinter
+enterscope	cool-support/include/symtab.h	/^   void enterscope()$/;"	f	class:cool::SymbolTable
+eq	cool-support/src/cool-tree.cc	/^Expression eq(Expression e1, Expression e2)$/;"	f
+eq_class	cool-support/include/cool-tree.h	/^   eq_class(Expression a1, Expression a2) {$/;"	f	class:eq_class
+eq_class	cool-support/include/cool-tree.h	/^class eq_class : public Expression_class {$/;"	c
+equal_index	cool-support/include/stringtab.h	/^  bool equal_index(int ind) const           { return ind == index; }$/;"	f	class:Entry
+equal_string	cool-support/src/stringtab.cc	/^int Entry::equal_string(char *string, int length) const$/;"	f	class:Entry
+error_msg	cool-support/include/cool-parse.h	/^  char *error_msg;$/;"	m	union:__anon2
+exitscope	cool-support/include/symtab.h	/^   void exitscope()$/;"	f	class:cool::SymbolTable
+expr	cool-support/include/cool-tree.h	/^   Expression expr;$/;"	m	class:assign_class
+expr	cool-support/include/cool-tree.h	/^   Expression expr;$/;"	m	class:branch_class
+expr	cool-support/include/cool-tree.h	/^   Expression expr;$/;"	m	class:dispatch_class
+expr	cool-support/include/cool-tree.h	/^   Expression expr;$/;"	m	class:method_class
+expr	cool-support/include/cool-tree.h	/^   Expression expr;$/;"	m	class:static_dispatch_class
+expr	cool-support/include/cool-tree.h	/^   Expression expr;$/;"	m	class:typcase_class
+expression	cool-support/include/ast-parse.h	/^  Expression expression;$/;"	m	union:__anon1
+expression	cool-support/include/cool-parse.h	/^  Expression expression;$/;"	m	union:__anon2
+expression	cool-support/src/ast-parse.cc	/^  Expression expression;$/;"	m	union:__anon3	file:
+expressions	cool-support/include/ast-parse.h	/^  Expressions expressions;$/;"	m	union:__anon1
+expressions	cool-support/include/cool-parse.h	/^  Expressions expressions;$/;"	m	union:__anon2
+expressions	cool-support/src/ast-parse.cc	/^  Expressions expressions;$/;"	m	union:__anon3	file:
+fatal_error	cool-support/include/symtab.h	/^   void fatal_error(char * msg)$/;"	f	class:cool::SymbolTable
+fatal_error	cool-support/src/utilities.cc	/^void fatal_error(char *msg)$/;"	f
+feature	cool-support/include/ast-parse.h	/^  Feature feature;$/;"	m	union:__anon1
+feature	cool-support/include/cool-parse.h	/^  Feature feature;$/;"	m	union:__anon2
+feature	cool-support/src/ast-parse.cc	/^  Feature feature;$/;"	m	union:__anon3	file:
+features	cool-support/include/ast-parse.h	/^  Features features;$/;"	m	union:__anon1
+features	cool-support/include/cool-parse.h	/^  Features features;$/;"	m	union:__anon2
+features	cool-support/include/cool-tree.h	/^   Features features;$/;"	m	class:class__class
+features	cool-support/src/ast-parse.cc	/^  Features features;$/;"	m	union:__anon3	file:
+filename	cool-support/include/cool-tree.h	/^   Symbol filename;$/;"	m	class:class__class
+first	cool-support/include/stringtab_functions.h	/^int StringTable<Elem>::first()$/;"	f	class:StringTable
+first	cool-support/include/tree.h	/^    int first()      { return 0; }$/;"	f	class:list_node
+formal	cool-support/include/ast-parse.h	/^  Formal formal;$/;"	m	union:__anon1
+formal	cool-support/include/cool-parse.h	/^  Formal formal;$/;"	m	union:__anon2
+formal	cool-support/src/ast-parse.cc	/^  Formal formal;$/;"	m	union:__anon3	file:
+formal	cool-support/src/cool-tree.cc	/^Formal formal(Symbol name, Symbol type_decl)$/;"	f
+formal_EXTRAS	src/cool-tree.handcode.h	/^#define formal_EXTRAS /;"	d
+formal_class	cool-support/include/cool-tree.h	/^   formal_class(Symbol a1, Symbol a2) {$/;"	f	class:formal_class
+formal_class	cool-support/include/cool-tree.h	/^class formal_class : public Formal_class {$/;"	c
+formals	cool-support/include/ast-parse.h	/^  Formals formals;$/;"	m	union:__anon1
+formals	cool-support/include/cool-parse.h	/^  Formals formals;$/;"	m	union:__anon2
+formals	cool-support/include/cool-tree.h	/^   Formals formals;$/;"	m	class:method_class
+formals	cool-support/src/ast-parse.cc	/^  Formals formals;$/;"	m	union:__anon3	file:
+getMainmain	src/cgen.cc	/^CgenNode* CgenClassTable::getMainmain(CgenNode* c)$/;"	f	class:CgenClassTable
+get_boolvalue	src/operand.h	/^		int get_boolvalue() { return b_value; }$/;"	f	class:bool_value
+get_children	src/cgen.h	/^	List<CgenNode> *get_children() { return children; }$/;"	f	class:CgenNode
+get_class	src/cgen.h	/^	CgenNode *get_class() { return cur_class; }$/;"	f	class:CgenEnvironment
+get_class_tag	src/cgen.cc	/^operand get_class_tag(operand src, CgenNode *src_cls, CgenEnvironment *env) {$/;"	f
+get_classtable	src/cgen.h	/^	CgenClassTable *get_classtable() { return class_table; }$/;"	f	class:CgenNode
+get_deref_type	src/operand.cc	/^op_type op_func_ptr_type::get_deref_type() { return op_func_type(res, args); }$/;"	f	class:op_func_ptr_type
+get_deref_type	src/operand.cc	/^op_type op_func_type::get_deref_type() {$/;"	f	class:op_func_type
+get_deref_type	src/operand.cc	/^op_type op_type::get_deref_type() {$/;"	f	class:op_type
+get_id	cool-support/include/symtab.h	/^  SYM get_id() const    { return id; }$/;"	f	class:cool::SymtabEntry
+get_id	src/operand.h	/^		op_type_id get_id() { return id; }$/;"	f	class:op_arr_type
+get_id	src/operand.h	/^		op_type_id get_id() { return id; }$/;"	f	class:op_type
+get_info	cool-support/include/symtab.h	/^  DAT *get_info() const { return info; }$/;"	f	class:cool::SymtabEntry
+get_intvalue	src/operand.h	/^		int get_intvalue() { return i_value; }$/;"	f	class:int_value
+get_len	cool-support/src/stringtab.cc	/^int Entry::get_len() const$/;"	f	class:Entry
+get_line_number	cool-support/src/tree.cc	/^int tree_node::get_line_number()$/;"	f	class:tree_node
+get_max_child	src/cgen.h	/^	int get_max_child() const 	{ return max_child; }$/;"	f	class:CgenNode
+get_name	src/operand.h	/^		string get_name () { return name; }$/;"	f	class:operand
+get_name	src/operand.h	/^		string get_name() { return name; }$/;"	f	class:op_type
+get_num_classes	src/cgen.h	/^	int get_num_classes() const		{ return current_tag; }$/;"	f	class:CgenClassTable
+get_one_line	src/coolrt.c	/^static int get_one_line(char** in_string_p, FILE* stream)$/;"	f	file:
+get_parentnd	src/cgen.h	/^ 	CgenNode *get_parentnd() { return parentnd; }$/;"	f	class:CgenNode
+get_precast_type	src/operand.h	/^		op_type get_precast_type() { return precast_type; }$/;"	f	class:casted_value
+get_precasttypename	src/operand.h	/^    string get_precasttypename() { return precast_type.get_name(); }$/;"	f	class:casted_value
+get_ptr_type	src/operand.cc	/^op_type op_func_ptr_type::get_ptr_type() {$/;"	f	class:op_func_ptr_type
+get_ptr_type	src/operand.cc	/^op_type op_func_type::get_ptr_type() { return op_func_ptr_type(res, args); }$/;"	f	class:op_func_type
+get_ptr_type	src/operand.cc	/^op_type op_type::get_ptr_type() {$/;"	f	class:op_type
+get_size	src/operand.h	/^		int get_size() { return size; }$/;"	f	class:op_arr_type
+get_string	cool-support/src/stringtab.cc	/^char *Entry::get_string() const$/;"	f	class:Entry
+get_tag	src/cgen.h	/^	int get_tag() const 	{ return tag; }$/;"	f	class:CgenNode
+get_type	src/operand.h	/^		op_type get_type() { return type; }$/;"	f	class:operand
+get_type_name	src/cgen.h	/^	string get_type_name() { return string(name->get_string()); }$/;"	f	class:CgenNode
+get_typename	src/operand.h	/^		string get_typename() { return type.get_name(); }$/;"	f	class:operand
+get_value	src/operand.h	/^		operand get_value() { return value; }$/;"	f	class:global_value
+get_value	src/operand.h	/^		string get_value() { return value; }$/;"	f	class:const_value
+getelementptr	src/value_printer.cc	/^operand ValuePrinter::getelementptr(operand op1, operand op2, op_type result_type) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^operand ValuePrinter::getelementptr(operand op1, operand op2, operand op3, op_type result_type) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^operand ValuePrinter::getelementptr(operand op1, operand op2, operand op3, operand op4, op_type result_type) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^operand ValuePrinter::getelementptr(operand op1, operand op2, operand op3, operand op4, operand op5, op_type result_type) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^operand ValuePrinter::getelementptr(vector<operand> op, op_type result_type) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^void ValuePrinter::getelementptr(ostream &o, operand op1, operand op2, operand op3, operand op4, operand op5, operand result) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^void ValuePrinter::getelementptr(ostream &o, operand op1, operand op2, operand op3, operand op4, operand result) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^void ValuePrinter::getelementptr(ostream &o, operand op1, operand op2, operand op3, operand result) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^void ValuePrinter::getelementptr(ostream &o, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+getelementptr	src/value_printer.cc	/^void ValuePrinter::getelementptr(ostream &o, vector<operand> op, operand result) {$/;"	f	class:ValuePrinter
+global_value	src/operand.h	/^		global_value(op_type t, string n) { type = t; name = "@" + n;}$/;"	f	class:global_value
+global_value	src/operand.h	/^		global_value(op_type t, string n, operand v) { type = t; name = "@" + n; value = v;}$/;"	f	class:global_value
+global_value	src/operand.h	/^class global_value : public operand {$/;"	c
+handle_flags	cool-support/src/handle_flags.cc	/^void handle_flags(int argc, char *argv[]) {$/;"	f
+hd	cool-support/include/list.h	/^  T *hd() const       { return head; }  $/;"	f	class:List
+head	cool-support/include/list.h	/^  T *head;$/;"	m	class:List
+i_value	src/operand.h	/^		int i_value;$/;"	m	class:int_value
+icmp	src/value_printer.cc	/^operand ValuePrinter::icmp(icmp_val v, operand op1, operand op2) {$/;"	f	class:ValuePrinter
+icmp	src/value_printer.cc	/^void ValuePrinter::icmp(ostream &o, icmp_val v, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+icmp_val	src/value_printer.h	/^typedef enum {EQ, NE, LT, LE, GT, GE} icmp_val;$/;"	t	typeref:enum:__anon5
+id	cool-support/include/symtab.h	/^  SYM id;        \/\/ the key field$/;"	m	class:cool::SymtabEntry
+id	src/operand.h	/^		op_type_id id;$/;"	m	class:op_type
+identifier	cool-support/include/cool-tree.h	/^   Symbol identifier;$/;"	m	class:let_class
+idtable	cool-support/src/stringtab.cc	/^IdTable idtable;$/;"	v
+in_int	src/cgen.cc	/^    in_int,$/;"	v
+in_string	src/cgen.cc	/^    in_string,$/;"	v
+index	cool-support/include/stringtab.h	/^   int index;         \/\/ the current index$/;"	m	class:StringTable
+index	cool-support/include/stringtab.h	/^  int index;     \/\/ a unique index for each string$/;"	m	class:Entry
+info	cool-support/include/symtab.h	/^  DAT *info;     \/\/ associated information for the symbol$/;"	m	class:cool::SymtabEntry
+init	cool-support/include/cool-tree.h	/^   Expression init;$/;"	m	class:attr_class
+init	cool-support/include/cool-tree.h	/^   Expression init;$/;"	m	class:let_class
+init_constant	src/value_printer.cc	/^void ValuePrinter::init_constant(ostream &o, string name, const_value op) {$/;"	f	class:ValuePrinter
+init_constant	src/value_printer.cc	/^void ValuePrinter::init_constant(string name, const_value op) {$/;"	f	class:ValuePrinter
+init_ext_constant	src/value_printer.cc	/^void ValuePrinter::init_ext_constant(ostream &o, string name, op_type type) {$/;"	f	class:ValuePrinter
+init_ext_constant	src/value_printer.cc	/^void ValuePrinter::init_ext_constant(string name, op_type type) {$/;"	f	class:ValuePrinter
+init_struct_constant	src/value_printer.cc	/^void ValuePrinter::init_struct_constant(operand constant,$/;"	f	class:ValuePrinter
+init_struct_constant	src/value_printer.cc	/^void ValuePrinter::init_struct_constant(ostream &o, operand constant,$/;"	f	class:ValuePrinter
+initialize_constants	src/cgen.cc	/^static void initialize_constants(void)$/;"	f	file:
+install_basic_classes	src/cgen.cc	/^void CgenClassTable::install_basic_classes()$/;"	f	class:CgenClassTable
+install_class	src/cgen.cc	/^void CgenClassTable::install_class(CgenNode *nd)$/;"	f	class:CgenClassTable
+install_classes	src/cgen.cc	/^void CgenClassTable::install_classes(Classes cs)$/;"	f	class:CgenClassTable
+install_special_class	src/cgen.cc	/^void CgenClassTable::install_special_class(CgenNode *nd)$/;"	f	class:CgenClassTable
+int_const	cool-support/src/cool-tree.cc	/^Expression int_const(Symbol token)$/;"	f
+int_const_class	cool-support/include/cool-tree.h	/^   int_const_class(Symbol a1) {$/;"	f	class:int_const_class
+int_const_class	cool-support/include/cool-tree.h	/^class int_const_class : public Expression_class {$/;"	c
+int_value	src/operand.h	/^		int_value(int i) : const_value(op_type(INT32), itos(i), true), i_value(i) {}$/;"	f	class:int_value
+int_value	src/operand.h	/^		int_value(int i, bool intr) : const_value(op_type(INT32), itos(i), intr), i_value(i) {}$/;"	f	class:int_value
+int_value	src/operand.h	/^class int_value : public const_value {$/;"	c
+internal	src/operand.h	/^		bool internal;$/;"	m	class:const_value
+inttable	cool-support/src/stringtab.cc	/^IntTable inttable;$/;"	v
+is_bool_object	src/operand.h	/^    bool is_bool_object() { return id == OBJ_PTR && name.compare("%Bool*")==0; }$/;"	f	class:op_type
+is_empty	src/operand.h	/^		bool is_empty() { return type.get_id() == EMPTY; }$/;"	f	class:operand
+is_int_object	src/operand.h	/^    bool is_int_object() { return id == OBJ_PTR && name.compare("%Int*")==0; }$/;"	f	class:op_type
+is_internal	src/operand.h	/^		bool is_internal() { return internal; }$/;"	f	class:const_value
+is_pptr	src/operand.h	/^		bool is_pptr() { return (id == INT1_PPTR || id == INT8_PPTR || id == INT32_PPTR || id == OBJ_PPTR); }$/;"	f	class:op_type
+is_pptr	src/operand.h	/^		bool is_pptr() { return false; }$/;"	f	class:op_func_ptr_type
+is_pptr	src/operand.h	/^		bool is_pptr() { return false; }$/;"	f	class:op_func_type
+is_ptr	src/operand.h	/^		bool is_ptr() { return (id == INT1_PTR || id == INT8_PTR || id == INT32_PTR || id == OBJ_PTR); }$/;"	f	class:op_type
+is_ptr	src/operand.h	/^		bool is_ptr() { return false; }$/;"	f	class:op_func_type
+is_ptr	src/operand.h	/^		bool is_ptr() { return true; }$/;"	f	class:op_func_ptr_type
+is_same_with	src/operand.h	/^    bool is_same_with(op_type t) { return name.compare(t.get_name())==0; }$/;"	f	class:op_type
+is_self_type	src/operand.h	/^    bool is_self_type() { return id == OBJ && name.compare("%SELF_TYPE")==0; }$/;"	f	class:op_type
+is_string_object	src/operand.h	/^    bool is_string_object()$/;"	f	class:op_type
+isvoid	cool-support/src/cool-tree.cc	/^Expression isvoid(Expression e1)$/;"	f
+isvoid_class	cool-support/include/cool-tree.h	/^   isvoid_class(Expression a1) {$/;"	f	class:isvoid_class
+isvoid_class	cool-support/include/cool-tree.h	/^class isvoid_class : public Expression_class {$/;"	c
+itoa	cool-support/src/str_aux.cc	/^string itoa(int n, string s) {$/;"	f
+itos	cool-support/src/str_aux.cc	/^string itos(int n) {$/;"	f
+kill_local	src/cgen.cc	/^void CgenEnvironment::kill_local() {$/;"	f	class:CgenEnvironment
+label	src/value_printer.h	/^typedef string label;$/;"	t
+layout_features	src/cgen.cc	/^void CgenNode::layout_features()$/;"	f	class:CgenNode
+len	cool-support/include/stringtab.h	/^  int  len;      \/\/ the length of the string (without trailing \\0)$/;"	m	class:Entry
+len	cool-support/include/tree.h	/^template <class Elem> int append_node<Elem>::len()$/;"	f	class:append_node
+len	cool-support/include/tree.h	/^template <class Elem> int nil_node<Elem>::len()$/;"	f	class:nil_node
+len	cool-support/include/tree.h	/^template <class Elem> int single_list_node<Elem>::len()$/;"	f	class:single_list_node
+length	src/cgen.cc	/^    length,$/;"	v
+leq	cool-support/src/cool-tree.cc	/^Expression leq(Expression e1, Expression e2)$/;"	f
+leq_class	cool-support/include/cool-tree.h	/^   leq_class(Expression a1, Expression a2) {$/;"	f	class:leq_class
+leq_class	cool-support/include/cool-tree.h	/^class leq_class : public Expression_class {$/;"	c
+let	cool-support/src/cool-tree.cc	/^Expression let(Symbol identifier, Symbol type_decl, Expression init, Expression body)$/;"	f
+let_class	cool-support/include/cool-tree.h	/^   let_class(Symbol a1, Symbol a2, Expression a3, Expression a4) {$/;"	f	class:let_class
+let_class	cool-support/include/cool-tree.h	/^class let_class : public Expression_class {$/;"	c
+line_number	cool-support/include/tree.h	/^    int line_number;            \/\/ stash the line number when node is made$/;"	m	class:tree_node
+lineno	cool-support/include/ast-parse.h	/^  int lineno;$/;"	m	union:__anon1
+lineno	cool-support/src/ast-parse.cc	/^  int lineno;$/;"	m	union:__anon3	file:
+list	cool-support/include/tree.h	/^template <class Elem> single_list_node<Elem> *list(Elem x)$/;"	f
+list_length	cool-support/include/list.h	/^int list_length(List<T> *l)$/;"	f
+list_map	cool-support/include/list.h	/^void list_map(void f(T*), List<T> *l)$/;"	f
+list_node	cool-support/include/tree.h	/^template <class Elem> class list_node : public tree_node {$/;"	c
+list_print	cool-support/include/list.h	/^void list_print(S &str, List<T> *l)$/;"	f
+load	src/value_printer.cc	/^operand ValuePrinter::load(operand op) {$/;"	f	class:ValuePrinter
+load	src/value_printer.cc	/^void ValuePrinter::load(ostream &o, operand op, operand result) {$/;"	f	class:ValuePrinter
+lookup	cool-support/include/stringtab_functions.h	/^Elem *StringTable<Elem>::lookup(int ind)$/;"	f	class:StringTable
+lookup	cool-support/include/symtab.h	/^   DAT * lookup(SYM s)$/;"	f	class:cool::SymbolTable
+lookup	src/cgen.h	/^	operand *lookup(Symbol name)		{ return var_table.lookup(name); }$/;"	f	class:CgenEnvironment
+lookup_string	cool-support/include/stringtab_functions.h	/^Elem *StringTable<Elem>::lookup_string(char *s)$/;"	f	class:StringTable
+loop	cool-support/src/cool-tree.cc	/^Expression loop(Expression pred, Expression body)$/;"	f
+loop_class	cool-support/include/cool-tree.h	/^   loop_class(Expression a1, Expression a2) {$/;"	f	class:loop_class
+loop_class	cool-support/include/cool-tree.h	/^class loop_class : public Expression_class {$/;"	c
+lt	cool-support/src/cool-tree.cc	/^Expression lt(Expression e1, Expression e2)$/;"	f
+lt_class	cool-support/include/cool-tree.h	/^   lt_class(Expression a1, Expression a2) {$/;"	f	class:lt_class
+lt_class	cool-support/include/cool-tree.h	/^class lt_class : public Expression_class {$/;"	c
+main	cool-support/src/ast-lex.cc	/^int main()$/;"	f
+main	cool-support/src/cgen-phase.cc	/^int main(int argc, char *argv[]) {$/;"	f
+main	cool-support/src/symtab_example.cc	/^int main(int argc, char *argv[]) {$/;"	f
+make_fresh_operand	src/value_printer.cc	/^operand make_fresh_operand(op_type type) {$/;"	f
+malloc_mem	src/value_printer.cc	/^operand ValuePrinter::malloc_mem(int size)$/;"	f	class:ValuePrinter
+malloc_mem	src/value_printer.cc	/^operand ValuePrinter::malloc_mem(operand size)$/;"	f	class:ValuePrinter
+malloc_mem	src/value_printer.cc	/^void ValuePrinter::malloc_mem(ostream &o, int size, operand result) {$/;"	f	class:ValuePrinter
+malloc_mem	src/value_printer.cc	/^void ValuePrinter::malloc_mem(ostream &o, operand size, operand result)$/;"	f	class:ValuePrinter
+max_child	src/cgen.h	/^    int max_child;$/;"	m	class:CgenNode
+method	cool-support/src/cool-tree.cc	/^Feature method(Symbol name, Formals formals, Symbol return_type, Expression expr)$/;"	f
+method_EXTRAS	src/cool-tree.handcode.h	/^#define method_EXTRAS	/;"	d
+method_class	cool-support/include/cool-tree.h	/^   method_class(Symbol a1, Formals a2, Symbol a3, Expression a4) {$/;"	f	class:method_class
+method_class	cool-support/include/cool-tree.h	/^class method_class : public Feature_class {$/;"	c
+min	cool-support/include/stringtab_functions.h	/^#define min(/;"	d
+more	cool-support/include/stringtab_functions.h	/^int StringTable<Elem>::more(int i)$/;"	f	class:StringTable
+more	cool-support/include/tree.h	/^    int more(int n)  { return (n < len()); }$/;"	f	class:list_node
+mul	cool-support/src/cool-tree.cc	/^Expression mul(Expression e1, Expression e2)$/;"	f
+mul	src/value_printer.cc	/^operand ValuePrinter::mul(operand op1, operand op2) {$/;"	f	class:ValuePrinter
+mul	src/value_printer.cc	/^void ValuePrinter::mul(ostream &o, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+mul_class	cool-support/include/cool-tree.h	/^   mul_class(Expression a1, Expression a2) {$/;"	f	class:mul_class
+mul_class	cool-support/include/cool-tree.h	/^class mul_class : public Expression_class {$/;"	c
+my_print_escaped_string	src/value_printer.cc	/^void my_print_escaped_string(ostream& str, const char *s)$/;"	f
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:assign_class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:attr_class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:branch_class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:class__class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:dispatch_class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:formal_class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:method_class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:object_class
+name	cool-support/include/cool-tree.h	/^   Symbol name;$/;"	m	class:static_dispatch_class
+name	src/operand.h	/^		string name;$/;"	m	class:op_type
+name	src/operand.h	/^		string name;$/;"	m	class:operand
+nds	src/cgen.h	/^	List<CgenNode> *nds;$/;"	m	class:CgenClassTable
+neg	cool-support/src/cool-tree.cc	/^Expression neg(Expression e1)$/;"	f
+neg_class	cool-support/include/cool-tree.h	/^   neg_class(Expression a1) {$/;"	f	class:neg_class
+neg_class	cool-support/include/cool-tree.h	/^class neg_class : public Expression_class {$/;"	c
+new_	cool-support/src/cool-tree.cc	/^Expression new_(Symbol type_name)$/;"	f
+new__class	cool-support/include/cool-tree.h	/^   new__class(Symbol a1) {$/;"	f	class:new__class
+new__class	cool-support/include/cool-tree.h	/^class new__class : public Expression_class {$/;"	c
+new_label	src/cgen.cc	/^const std::string CgenEnvironment::new_label(const std::string& prefix,$/;"	f	class:CgenEnvironment
+new_name	src/cgen.cc	/^std::string CgenEnvironment::new_name() {$/;"	f	class:CgenEnvironment
+new_ok_label	src/cgen.cc	/^std::string CgenEnvironment::new_ok_label() {$/;"	f	class:CgenEnvironment
+next	cool-support/include/stringtab_functions.h	/^int StringTable<Elem>::next(int i)$/;"	f	class:StringTable
+next	cool-support/include/tree.h	/^    int next(int n)  { return n + 1; }$/;"	f	class:list_node
+next_label	src/cgen.h	/^	string next_label;$/;"	m	class:CgenEnvironment
+nil	cool-support/include/tree.h	/^template <class Elem> list_node<Elem> *list_node<Elem>::nil() { return new nil_node<Elem>(); }$/;"	f	class:list_node
+nil_Cases	cool-support/src/cool-tree.cc	/^Cases nil_Cases()$/;"	f
+nil_Classes	cool-support/src/cool-tree.cc	/^Classes nil_Classes()$/;"	f
+nil_Expressions	cool-support/src/cool-tree.cc	/^Expressions nil_Expressions()$/;"	f
+nil_Features	cool-support/src/cool-tree.cc	/^Features nil_Features()$/;"	f
+nil_Formals	cool-support/src/cool-tree.cc	/^Formals nil_Formals()$/;"	f
+nil_node	cool-support/include/tree.h	/^template <class Elem> class nil_node : public list_node<Elem> {$/;"	c
+no_expr	cool-support/src/cool-tree.cc	/^Expression no_expr()$/;"	f
+no_expr_EXTRAS	src/cool-tree.handcode.h	/^#define no_expr_EXTRAS /;"	d
+no_expr_class	cool-support/include/cool-tree.h	/^   no_expr_class() {$/;"	f	class:no_expr_class
+no_expr_class	cool-support/include/cool-tree.h	/^class no_expr_class : public Expression_class {$/;"	c
+nth	cool-support/include/tree.h	/^template <class Elem> Elem list_node<Elem>::nth(int n)$/;"	f	class:list_node
+nth_length	cool-support/include/tree.h	/^template <class Elem> Elem append_node<Elem>::nth_length(int n, int &len)$/;"	f	class:append_node
+nth_length	cool-support/include/tree.h	/^template <class Elem> Elem nil_node<Elem>::nth_length(int, int &len)$/;"	f	class:nil_node
+nth_length	cool-support/include/tree.h	/^template <class Elem> Elem single_list_node<Elem>::nth_length(int n, int &len)$/;"	f	class:single_list_node
+null_value	src/operand.h	/^		null_value(op_type t) : const_value(t, "null", true) {}$/;"	f	class:null_value
+null_value	src/operand.h	/^class null_value : public const_value {$/;"	c
+object	cool-support/src/cool-tree.cc	/^Expression object(Symbol name)$/;"	f
+object_class	cool-support/include/cool-tree.h	/^   object_class(Symbol a1) {$/;"	f	class:object_class
+object_class	cool-support/include/cool-tree.h	/^class object_class : public Expression_class {$/;"	c
+ok_count	src/cgen.h	/^	int ok_count;$/;"	m	class:CgenEnvironment
+omerrs	cool-support/src/ast-parse.cc	/^int omerrs = 0;               \/* number of errors in lexing and parsing *\/$/;"	v
+op_arr_type	src/operand.cc	/^op_arr_type::op_arr_type(op_type_id i, int s) : op_type(i){$/;"	f	class:op_arr_type
+op_arr_type	src/operand.h	/^class op_arr_type : public op_type {$/;"	c
+op_func_ptr_type	src/operand.cc	/^op_func_ptr_type::op_func_ptr_type(op_type res_type, vector<op_type> arg_types)$/;"	f	class:op_func_ptr_type
+op_func_ptr_type	src/operand.h	/^class op_func_ptr_type : public op_type {$/;"	c
+op_func_type	src/operand.cc	/^op_func_type::op_func_type(op_type res_type, vector<op_type> arg_types)$/;"	f	class:op_func_type
+op_func_type	src/operand.h	/^class op_func_type : public op_type {$/;"	c
+op_type	src/operand.cc	/^op_type::op_type(op_type_id i) : id(i){$/;"	f	class:op_type
+op_type	src/operand.cc	/^op_type::op_type(string n, int ptr_level) {$/;"	f	class:op_type
+op_type	src/operand.h	/^		op_type() : id(EMPTY), name(""){}$/;"	f	class:op_type
+op_type	src/operand.h	/^		op_type(string n) : id(OBJ), name("%" + n) {}$/;"	f	class:op_type
+op_type	src/operand.h	/^class op_type {$/;"	c
+op_type_id	src/operand.h	/^\/* Types needed for MP4 *\/ OBJ, OBJ_PTR, OBJ_PPTR} op_type_id;$/;"	t	typeref:enum:__anon4
+operand	src/operand.h	/^		operand() : type(EMPTY), name("") { }$/;"	f	class:operand
+operand	src/operand.h	/^		operand(const operand& other) : type(other.type), name(other.name) {}$/;"	f	class:operand
+operand	src/operand.h	/^		operand(op_type t, string n) : type(t), name("%" + n) {}$/;"	f	class:operand
+operand	src/operand.h	/^class operand {$/;"	c
+operator <<	cool-support/src/stringtab.cc	/^ostream& operator<<(ostream& s, Symbol sym)$/;"	f
+operator <<	cool-support/src/stringtab.cc	/^ostream& operator<<(ostream& s, const Entry& sym) $/;"	f
+out_filename	cool-support/src/handle_flags.cc	/^       char *out_filename;      \/\/ file name for generated code$/;"	v
+out_int	src/cgen.cc	/^    out_int,$/;"	v
+out_string	src/cgen.cc	/^    out_string,$/;"	v
+pad	cool-support/src/utilities.cc	/^char *pad(int n) {$/;"	f
+padding	cool-support/src/utilities.cc	/^static char *padding = (char *)"                                                                                ";      \/\/ 80 spaces for padding$/;"	v	file:
+parent	cool-support/include/cool-tree.h	/^   Symbol parent;$/;"	m	class:class__class
+parentnd	src/cgen.h	/^	CgenNode *parentnd;                        \/\/ Parent of class$/;"	m	class:CgenNode
+parse_results	cool-support/src/ast-parse.cc	/^Classes parse_results;        \/* for use in parsing multiple files *\/$/;"	v
+plus	cool-support/src/cool-tree.cc	/^Expression plus(Expression e1, Expression e2)$/;"	f
+plus_class	cool-support/include/cool-tree.h	/^   plus_class(Expression a1, Expression a2) {$/;"	f	class:plus_class
+plus_class	cool-support/include/cool-tree.h	/^class plus_class : public Expression_class {$/;"	c
+precast_type	src/operand.h	/^		op_type precast_type;$/;"	m	class:casted_value
+pred	cool-support/include/cool-tree.h	/^   Expression pred;$/;"	m	class:cond_class
+pred	cool-support/include/cool-tree.h	/^   Expression pred;$/;"	m	class:loop_class
+prim_bool	src/cgen.cc	/^    prim_bool;$/;"	v
+prim_int	src/cgen.cc	/^    prim_int,$/;"	v
+prim_string	src/cgen.cc	/^    prim_string,$/;"	v
+print	cool-support/include/stringtab_functions.h	/^void StringTable<Elem>::print()$/;"	f	class:StringTable
+print	cool-support/src/stringtab.cc	/^ostream& Entry::print(ostream& s) const$/;"	f	class:Entry
+print_cool_token	cool-support/src/utilities.cc	/^void print_cool_token(int tok)$/;"	f
+print_escaped_string	cool-support/src/utilities.cc	/^void print_escaped_string(ostream& str, const char *s)$/;"	f
+probe	cool-support/include/symtab.h	/^   DAT *probe(SYM s)$/;"	f	class:cool::SymbolTable
+program	cool-support/include/ast-parse.h	/^  Program program;$/;"	m	union:__anon1
+program	cool-support/include/cool-parse.h	/^  Program program;$/;"	m	union:__anon2
+program	cool-support/src/ast-parse.cc	/^  Program program;$/;"	m	union:__anon3	file:
+program	cool-support/src/cool-tree.cc	/^Program program(Classes classes)$/;"	f
+program_EXTRAS	src/cool-tree.handcode.h	/^#define program_EXTRAS /;"	d
+program_class	cool-support/include/cool-tree.h	/^   program_class(Classes a1) {$/;"	f	class:program_class
+program_class	cool-support/include/cool-tree.h	/^class program_class : public Program_class {$/;"	c
+ptrtoint	src/value_printer.cc	/^operand ValuePrinter::ptrtoint(operand op, op_type new_type) {$/;"	f	class:ValuePrinter
+ptrtoint	src/value_printer.cc	/^void ValuePrinter::ptrtoint(ostream &o, operand op, op_type new_type, operand result) {$/;"	f	class:ValuePrinter
+recent_type	src/cgen.h	/^	op_type recent_type;$/;"	m	class:CgenEnvironment
+res	src/operand.h	/^    op_type res;$/;"	m	class:op_func_ptr_type
+res	src/operand.h	/^    op_type res;$/;"	m	class:op_func_type
+rest	cool-support/include/tree.h	/^    list_node<Elem> *some, *rest;$/;"	m	class:append_node
+ret	src/value_printer.cc	/^void ValuePrinter::ret(operand op) {$/;"	f	class:ValuePrinter
+ret	src/value_printer.cc	/^void ValuePrinter::ret(ostream &o, operand op) {$/;"	f	class:ValuePrinter
+return_type	cool-support/include/cool-tree.h	/^   Symbol return_type;$/;"	m	class:method_class
+reverse	cool-support/src/str_aux.cc	/^string reverse(string s) {$/;"	f
+root	src/cgen.cc	/^CgenNode *CgenClassTable::root()$/;"	f	class:CgenClassTable
+select	src/value_printer.cc	/^operand ValuePrinter::select(operand op1, operand op2, operand op3) {$/;"	f	class:ValuePrinter
+select	src/value_printer.cc	/^void ValuePrinter::select(ostream &o, operand op1, operand op2, operand op3, operand result) {$/;"	f	class:ValuePrinter
+self	src/cgen.cc	/^    self, 	\/\/ self generates code differently than other references$/;"	v
+semant_debug	cool-support/src/handle_flags.cc	/^       int semant_debug;        \/\/ for semantic analysis$/;"	v
+set	cool-support/src/tree.cc	/^tree_node *tree_node::set(tree_node *t) {$/;"	f	class:tree_node
+set_class	src/cgen.h	/^	void set_class(CgenNode *c) { cur_class = c; }$/;"	f	class:CgenEnvironment
+set_id	src/operand.h	/^		void set_id(op_type_id i) { id = i; }$/;"	f	class:op_type
+set_max_child	src/cgen.h	/^	void set_max_child(int mc) 	{ max_child = mc; }$/;"	f	class:CgenNode
+set_parentnd	src/cgen.cc	/^void CgenNode::set_parentnd(CgenNode *p)$/;"	f	class:CgenNode
+set_relations	src/cgen.cc	/^void CgenClassTable::set_relations(CgenNode *nd)$/;"	f	class:CgenClassTable
+set_type	src/operand.h	/^		void set_type(op_type t) { id = t.get_id(); name = t.get_name(); }$/;"	f	class:op_type
+set_type	src/operand.h	/^		void set_type(op_type t) { type = t; }$/;"	f	class:operand
+setup	src/cgen.cc	/^void CgenClassTable::setup()$/;"	f	class:CgenClassTable
+setup	src/cgen.cc	/^void CgenNode::setup(int tag, int depth)$/;"	f	class:CgenNode
+setup_classes	src/cgen.cc	/^void CgenClassTable::setup_classes(CgenNode *c, int depth)$/;"	f	class:CgenClassTable
+setup_external_functions	src/cgen.cc	/^void CgenClassTable::setup_external_functions()$/;"	f	class:CgenClassTable
+single	cool-support/include/tree.h	/^template <class Elem> list_node<Elem> *list_node<Elem>::single(Elem e) { return new single_list_node<Elem>(e); }$/;"	f	class:list_node
+single_Cases	cool-support/src/cool-tree.cc	/^Cases single_Cases(Case e)$/;"	f
+single_Classes	cool-support/src/cool-tree.cc	/^Classes single_Classes(Class_ e)$/;"	f
+single_Expressions	cool-support/src/cool-tree.cc	/^Expressions single_Expressions(Expression e)$/;"	f
+single_Features	cool-support/src/cool-tree.cc	/^Features single_Features(Feature e)$/;"	f
+single_Formals	cool-support/src/cool-tree.cc	/^Formals single_Formals(Formal e)$/;"	f
+single_list_node	cool-support/include/tree.h	/^    single_list_node(Elem t) {$/;"	f	class:single_list_node
+single_list_node	cool-support/include/tree.h	/^template <class Elem> class single_list_node : public list_node<Elem> {$/;"	c
+size	src/operand.h	/^		int size;$/;"	m	class:op_arr_type
+some	cool-support/include/tree.h	/^    list_node<Elem> *some, *rest;$/;"	m	class:append_node
+special_nds	src/cgen.h	/^	List<CgenNode> *special_nds;$/;"	m	class:CgenClassTable
+static_dispatch	cool-support/src/cool-tree.cc	/^Expression static_dispatch(Expression expr, Symbol type_name, Symbol name, Expressions actual)$/;"	f
+static_dispatch_class	cool-support/include/cool-tree.h	/^   static_dispatch_class(Expression a1, Symbol a2, Symbol a3, Expressions a4) {$/;"	f	class:static_dispatch_class
+static_dispatch_class	cool-support/include/cool-tree.h	/^class static_dispatch_class : public Expression_class {$/;"	c
+store	src/value_printer.cc	/^void ValuePrinter::store(operand op, operand result) {$/;"	f	class:ValuePrinter
+store	src/value_printer.cc	/^void ValuePrinter::store(ostream &o, operand op, operand result) {$/;"	f	class:ValuePrinter
+str	cool-support/include/stringtab.h	/^  char *str;     \/\/ the string$/;"	m	class:Entry
+stream	src/value_printer.h	/^        ostream* stream;$/;"	m	class:ValuePrinter
+string_buf	cool-support/src/ast-lex.cc	/^char string_buf[MAX_STR_CONST]; \/* to assemble string constants *\/$/;"	v
+string_buf_ptr	cool-support/src/ast-lex.cc	/^char *string_buf_ptr;$/;"	v
+string_const	cool-support/src/cool-tree.cc	/^Expression string_const(Symbol token)$/;"	f
+string_const_class	cool-support/include/cool-tree.h	/^   string_const_class(Symbol a1) {$/;"	f	class:string_const_class
+string_const_class	cool-support/include/cool-tree.h	/^class string_const_class : public Expression_class {$/;"	c
+stringtable	cool-support/src/stringtab.cc	/^StrTable stringtable;$/;"	v
+sub	cool-support/src/cool-tree.cc	/^Expression sub(Expression e1, Expression e2)$/;"	f
+sub	src/value_printer.cc	/^operand ValuePrinter::sub(operand op1, operand op2) {$/;"	f	class:ValuePrinter
+sub	src/value_printer.cc	/^void ValuePrinter::sub(ostream &o, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+sub_class	cool-support/include/cool-tree.h	/^   sub_class(Expression a1, Expression a2) {$/;"	f	class:sub_class
+sub_class	cool-support/include/cool-tree.h	/^class sub_class : public Expression_class {$/;"	c
+substr	src/cgen.cc	/^    substr,$/;"	v
+symbol	cool-support/include/ast-parse.h	/^  Symbol symbol;$/;"	m	union:__anon1
+symbol	cool-support/include/cool-parse.h	/^  Symbol symbol;$/;"	m	union:__anon2
+symbol	cool-support/src/ast-parse.cc	/^  Symbol symbol;$/;"	m	union:__anon3	file:
+tag	src/cgen.h	/^	int tag;$/;"	m	class:CgenNode
+tail	cool-support/include/list.h	/^  List<T>* tail;$/;"	m	class:List
+tbl	cool-support/include/stringtab.h	/^   List<Elem> *tbl;   \/\/ a string table is a list$/;"	m	class:StringTable
+tbl	cool-support/include/symtab.h	/^   ScopeList  *tbl;$/;"	m	class:cool::SymbolTable
+then_exp	cool-support/include/cool-tree.h	/^   Expression then_exp;$/;"	m	class:cond_class
+tl	cool-support/include/list.h	/^  List<T>* tl() const { return tail; }$/;"	f	class:List
+tmp_count	src/cgen.h	/^	int tmp_count;$/;"	m	class:CgenEnvironment
+token	cool-support/include/cool-tree.h	/^   Symbol token;$/;"	m	class:int_const_class
+token	cool-support/include/cool-tree.h	/^   Symbol token;$/;"	m	class:string_const_class
+tree_node	cool-support/include/tree.h	/^class tree_node {$/;"	c
+tree_node	cool-support/src/tree.cc	/^tree_node::tree_node()$/;"	f	class:tree_node
+typcase	cool-support/src/cool-tree.cc	/^Expression typcase(Expression expr, Cases cases)$/;"	f
+typcase_class	cool-support/include/cool-tree.h	/^   typcase_class(Expression a1, Cases a2) {$/;"	f	class:typcase_class
+typcase_class	cool-support/include/cool-tree.h	/^class typcase_class : public Expression_class {$/;"	c
+type	src/operand.h	/^		op_type type;$/;"	m	class:operand
+type_alias_define	src/value_printer.cc	/^void ValuePrinter::type_alias_define(ostream &o, string alias_name, op_type type){$/;"	f	class:ValuePrinter
+type_alias_define	src/value_printer.cc	/^void ValuePrinter::type_alias_define(string alias_name, op_type type) {$/;"	f	class:ValuePrinter
+type_decl	cool-support/include/cool-tree.h	/^   Symbol type_decl;$/;"	m	class:attr_class
+type_decl	cool-support/include/cool-tree.h	/^   Symbol type_decl;$/;"	m	class:branch_class
+type_decl	cool-support/include/cool-tree.h	/^   Symbol type_decl;$/;"	m	class:formal_class
+type_decl	cool-support/include/cool-tree.h	/^   Symbol type_decl;$/;"	m	class:let_class
+type_define	src/value_printer.cc	/^void ValuePrinter::type_define(ostream &o, string class_name, vector<op_type> attributes) {$/;"	f	class:ValuePrinter
+type_define	src/value_printer.cc	/^void ValuePrinter::type_define(string class_name, vector<op_type> attributes) {$/;"	f	class:ValuePrinter
+type_name	cool-support/include/cool-tree.h	/^   Symbol type_name;$/;"	m	class:new__class
+type_name	cool-support/include/cool-tree.h	/^   Symbol type_name;$/;"	m	class:static_dispatch_class
+type_name	src/cgen.cc	/^    type_name,$/;"	v
+type_to_class	src/cgen.cc	/^CgenNode *CgenEnvironment::type_to_class(Symbol t) {$/;"	f	class:CgenEnvironment
+unput	cool-support/src/ast-lex.cc	/^#define unput(/;"	d	file:
+unreachable	src/value_printer.h	/^		void unreachable() { unreachable(*stream); }$/;"	f	class:ValuePrinter
+unreachable	src/value_printer.h	/^		void unreachable(ostream &o) { check_ostream(o); o << "\\tunreachable\\n"; }$/;"	f	class:ValuePrinter
+val	cool-support/include/cool-tree.h	/^   Boolean val;$/;"	m	class:bool_const_class
+val	src/cgen.cc	/^    val,$/;"	v
+value	src/operand.h	/^		operand value;$/;"	m	class:global_value
+value	src/operand.h	/^		string value;$/;"	m	class:const_value
+value_printer_counter	src/value_printer.cc	/^static int value_printer_counter = 0;$/;"	v	file:
+var_table	src/cgen.h	/^	cool::SymbolTable<Symbol,operand> var_table;$/;"	m	class:CgenEnvironment
+xcons	cool-support/include/tree.h	/^template <class Elem> append_node<Elem> *xcons(list_node<Elem> *l, Elem x)$/;"	f
+xor_in	src/value_printer.cc	/^operand ValuePrinter::xor_in(operand op1, operand op2) {$/;"	f	class:ValuePrinter
+xor_in	src/value_printer.cc	/^void ValuePrinter::xor_in(ostream &o, operand op1, operand op2, operand result) {$/;"	f	class:ValuePrinter
+yy_accept	cool-support/src/ast-lex.cc	/^static yyconst short int yy_accept[163] =$/;"	v	file:
+yy_at_bol	cool-support/src/ast-lex.cc	/^	int yy_at_bol;$/;"	m	struct:yy_buffer_state	file:
+yy_base	cool-support/src/ast-lex.cc	/^static yyconst short int yy_base[166] =$/;"	v	file:
+yy_buf_pos	cool-support/src/ast-lex.cc	/^	char *yy_buf_pos;		\/* current position in input buffer *\/$/;"	m	struct:yy_buffer_state	file:
+yy_buf_size	cool-support/src/ast-lex.cc	/^	yy_size_t yy_buf_size;$/;"	m	struct:yy_buffer_state	file:
+yy_buffer_state	cool-support/src/ast-lex.cc	/^struct yy_buffer_state$/;"	s	file:
+yy_buffer_status	cool-support/src/ast-lex.cc	/^	int yy_buffer_status;$/;"	m	struct:yy_buffer_state	file:
+yy_c_buf_p	cool-support/src/ast-lex.cc	/^static char *yy_c_buf_p = (char *) 0;$/;"	v	file:
+yy_ch_buf	cool-support/src/ast-lex.cc	/^	char *yy_ch_buf;		\/* input buffer *\/$/;"	m	struct:yy_buffer_state	file:
+yy_chk	cool-support/src/ast-lex.cc	/^static yyconst short int yy_chk[217] =$/;"	v	file:
+yy_create_buffer	cool-support/src/ast-lex.cc	/^YY_BUFFER_STATE yy_create_buffer( FILE *file, int size )$/;"	f
+yy_current_buffer	cool-support/src/ast-lex.cc	/^static YY_BUFFER_STATE yy_current_buffer = 0;$/;"	v	file:
+yy_def	cool-support/src/ast-lex.cc	/^static yyconst short int yy_def[166] =$/;"	v	file:
+yy_delete_buffer	cool-support/src/ast-lex.cc	/^void yy_delete_buffer( YY_BUFFER_STATE b )$/;"	f
+yy_did_buffer_switch_on_eof	cool-support/src/ast-lex.cc	/^static int yy_did_buffer_switch_on_eof;$/;"	v	file:
+yy_ec	cool-support/src/ast-lex.cc	/^static yyconst int yy_ec[256] =$/;"	v	file:
+yy_fatal_error	cool-support/src/ast-lex.cc	/^static void yy_fatal_error( yyconst char msg[] )$/;"	f	file:
+yy_fill_buffer	cool-support/src/ast-lex.cc	/^	int yy_fill_buffer;$/;"	m	struct:yy_buffer_state	file:
+yy_flex_alloc	cool-support/src/ast-lex.cc	/^static void *yy_flex_alloc( yy_size_t size )$/;"	f	file:
+yy_flex_debug	cool-support/src/ast-lex.cc	/^int yy_flex_debug = 1;$/;"	v
+yy_flex_free	cool-support/src/ast-lex.cc	/^static void yy_flex_free( void *ptr )$/;"	f	file:
+yy_flex_realloc	cool-support/src/ast-lex.cc	/^static void *yy_flex_realloc( void *ptr, yy_size_t size )$/;"	f	file:
+yy_flex_strlen	cool-support/src/ast-lex.cc	/^static int yy_flex_strlen( yyconst char *s )$/;"	f	file:
+yy_flex_strncpy	cool-support/src/ast-lex.cc	/^static void yy_flex_strncpy( char *s1, yyconst char *s2, int n )$/;"	f	file:
+yy_flush_buffer	cool-support/src/ast-lex.cc	/^void yy_flush_buffer( YY_BUFFER_STATE b )$/;"	f
+yy_get_next_buffer	cool-support/src/ast-lex.cc	/^static int yy_get_next_buffer()$/;"	f	file:
+yy_get_previous_state	cool-support/src/ast-lex.cc	/^static yy_state_type yy_get_previous_state()$/;"	f	file:
+yy_hold_char	cool-support/src/ast-lex.cc	/^static char yy_hold_char;$/;"	v	file:
+yy_init	cool-support/src/ast-lex.cc	/^static int yy_init = 1;		\/* whether we need to initialize *\/$/;"	v	file:
+yy_init_buffer	cool-support/src/ast-lex.cc	/^void yy_init_buffer( YY_BUFFER_STATE b, FILE *file )$/;"	f
+yy_input_file	cool-support/src/ast-lex.cc	/^	FILE *yy_input_file;$/;"	m	struct:yy_buffer_state	file:
+yy_is_interactive	cool-support/src/ast-lex.cc	/^	int yy_is_interactive;$/;"	m	struct:yy_buffer_state	file:
+yy_is_our_buffer	cool-support/src/ast-lex.cc	/^	int yy_is_our_buffer;$/;"	m	struct:yy_buffer_state	file:
+yy_last_accepting_cpos	cool-support/src/ast-lex.cc	/^static char *yy_last_accepting_cpos;$/;"	v	file:
+yy_last_accepting_state	cool-support/src/ast-lex.cc	/^static yy_state_type yy_last_accepting_state;$/;"	v	file:
+yy_load_buffer_state	cool-support/src/ast-lex.cc	/^void yy_load_buffer_state( void )$/;"	f
+yy_meta	cool-support/src/ast-lex.cc	/^static yyconst int yy_meta[36] =$/;"	v	file:
+yy_n_chars	cool-support/src/ast-lex.cc	/^	int yy_n_chars;$/;"	m	struct:yy_buffer_state	file:
+yy_n_chars	cool-support/src/ast-lex.cc	/^static int yy_n_chars;		\/* number of characters read into yy_ch_buf *\/$/;"	v	file:
+yy_new_buffer	cool-support/src/ast-lex.cc	/^#define yy_new_buffer /;"	d	file:
+yy_nxt	cool-support/src/ast-lex.cc	/^static yyconst short int yy_nxt[217] =$/;"	v	file:
+yy_pop_state	cool-support/src/ast-lex.cc	/^static void yy_pop_state()$/;"	f	file:
+yy_push_state	cool-support/src/ast-lex.cc	/^static void yy_push_state( int new_state )$/;"	f	file:
+yy_rule_linenum	cool-support/src/ast-lex.cc	/^static yyconst short int yy_rule_linenum[47] =$/;"	v	file:
+yy_scan_buffer	cool-support/src/ast-lex.cc	/^YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )$/;"	f
+yy_scan_bytes	cool-support/src/ast-lex.cc	/^YY_BUFFER_STATE yy_scan_bytes( yyconst char *bytes, int len )$/;"	f
+yy_scan_string	cool-support/src/ast-lex.cc	/^YY_BUFFER_STATE yy_scan_string( yyconst char *yy_str )$/;"	f
+yy_set_bol	cool-support/src/ast-lex.cc	/^#define yy_set_bol(/;"	d	file:
+yy_set_interactive	cool-support/src/ast-lex.cc	/^#define yy_set_interactive(/;"	d	file:
+yy_size_t	cool-support/src/ast-lex.cc	/^typedef unsigned int yy_size_t;$/;"	t	file:
+yy_start	cool-support/src/ast-lex.cc	/^static int yy_start = 0;	\/* start state number *\/$/;"	v	file:
+yy_start_stack	cool-support/src/ast-lex.cc	/^static int *yy_start_stack = 0;$/;"	v	file:
+yy_start_stack_depth	cool-support/src/ast-lex.cc	/^static int yy_start_stack_depth = 0;$/;"	v	file:
+yy_start_stack_ptr	cool-support/src/ast-lex.cc	/^static int yy_start_stack_ptr = 0;$/;"	v	file:
+yy_state_type	cool-support/src/ast-lex.cc	/^typedef int yy_state_type;$/;"	t	file:
+yy_switch_to_buffer	cool-support/src/ast-lex.cc	/^void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )$/;"	f
+yy_top_state	cool-support/src/ast-lex.cc	/^static int yy_top_state()$/;"	f	file:
+yy_try_NUL_trans	cool-support/src/ast-lex.cc	/^static yy_state_type yy_try_NUL_trans( yy_state_type yy_current_state )$/;"	f	file:
+yyalloc	cool-support/src/ast-parse.cc	/^union yyalloc$/;"	u	file:
+yychar	cool-support/src/ast-parse.cc	/^#define yychar /;"	d	file:
+yycheck	cool-support/src/ast-parse.cc	/^static const short yycheck[] =$/;"	v	file:
+yyclearin	cool-support/src/ast-parse.cc	/^#define yyclearin	/;"	d	file:
+yyconst	cool-support/src/ast-lex.cc	/^#define yyconst /;"	d	file:
+yyconst	cool-support/src/ast-lex.cc	/^#define yyconst$/;"	d	file:
+yydebug	cool-support/src/ast-parse.cc	/^#define yydebug /;"	d	file:
+yydebug	cool-support/src/ast-parse.cc	/^int yydebug;$/;"	v
+yydefact	cool-support/src/ast-parse.cc	/^static const short yydefact[] =$/;"	v	file:
+yydefgoto	cool-support/src/ast-parse.cc	/^static const short yydefgoto[] =$/;"	v	file:
+yyerrok	cool-support/src/ast-parse.cc	/^#define yyerrok	/;"	d	file:
+yyerror	cool-support/src/ast-parse.cc	/^#define yyerror /;"	d	file:
+yyin	cool-support/src/ast-lex.cc	/^FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;$/;"	v
+yyinput	cool-support/src/ast-lex.cc	/^static int yyinput()$/;"	f	file:
+yyleng	cool-support/src/ast-lex.cc	/^int yyleng;$/;"	v
+yyless	cool-support/src/ast-lex.cc	/^#define yyless(/;"	d	file:
+yyless	cool-support/src/ast-lex.cc	/^#undef yyless$/;"	d	file:
+yylex	cool-support/src/ast-lex.cc	/^#define yylex /;"	d	file:
+yylex	cool-support/src/ast-parse.cc	/^#define yylex /;"	d	file:
+yylineno	cool-support/src/tree.cc	/^#define yylineno /;"	d	file:
+yylineno	src/cool-tree.handcode.h	/^#define yylineno /;"	d
+yyls	cool-support/src/ast-parse.cc	/^  YYLTYPE yyls;$/;"	m	union:yyalloc	file:
+yylval	cool-support/src/ast-lex.cc	/^#define yylval /;"	d	file:
+yylval	cool-support/src/ast-parse.cc	/^#define yylval /;"	d	file:
+yymore	cool-support/src/ast-lex.cc	/^#define yymore(/;"	d	file:
+yynerrs	cool-support/src/ast-parse.cc	/^#define yynerrs /;"	d	file:
+yyout	cool-support/src/ast-lex.cc	/^FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;$/;"	v
+yypact	cool-support/src/ast-parse.cc	/^static const short yypact[] =$/;"	v	file:
+yyparse	cool-support/src/ast-parse.cc	/^#define yyparse /;"	d	file:
+yypgoto	cool-support/src/ast-parse.cc	/^static const short yypgoto[] =$/;"	v	file:
+yyprhs	cool-support/src/ast-parse.cc	/^static const short yyprhs[] =$/;"	v	file:
+yyr1	cool-support/src/ast-parse.cc	/^static const short yyr1[] =$/;"	v	file:
+yyr2	cool-support/src/ast-parse.cc	/^static const short yyr2[] =$/;"	v	file:
+yyrestart	cool-support/src/ast-lex.cc	/^void yyrestart( FILE *input_file )$/;"	f
+yyrhs	cool-support/src/ast-parse.cc	/^static const short yyrhs[] =$/;"	v	file:
+yyrline	cool-support/src/ast-parse.cc	/^static const short yyrline[] =$/;"	v	file:
+yyss	cool-support/src/ast-parse.cc	/^  short yyss;$/;"	m	union:yyalloc	file:
+yystpcpy	cool-support/src/ast-parse.cc	/^#   define yystpcpy /;"	d	file:
+yystpcpy	cool-support/src/ast-parse.cc	/^yystpcpy (char *yydest, const char *yysrc)$/;"	f	file:
+yystrlen	cool-support/src/ast-parse.cc	/^#   define yystrlen /;"	d	file:
+yystrlen	cool-support/src/ast-parse.cc	/^yystrlen (const char *yystr)$/;"	f	file:
+yystype	cool-support/include/ast-parse.h	/^} yystype;$/;"	t	typeref:union:__anon1
+yystype	cool-support/include/cool-parse.h	/^} yystype;$/;"	t	typeref:union:__anon2
+yystype	cool-support/src/ast-parse.cc	/^} yystype;$/;"	t	typeref:union:__anon3	file:
+yytable	cool-support/src/ast-parse.cc	/^static const short yytable[] =$/;"	v	file:
+yyterminate	cool-support/src/ast-lex.cc	/^#define yyterminate(/;"	d	file:
+yytext	cool-support/src/ast-lex.cc	/^char *yytext;$/;"	v
+yytext_ptr	cool-support/src/ast-lex.cc	/^#define yytext_ptr /;"	d	file:
+yytname	cool-support/src/ast-parse.cc	/^static const char *const yytname[] =$/;"	v	file:
+yytranslate	cool-support/src/ast-parse.cc	/^static const char yytranslate[] =$/;"	v	file:
+yyunput	cool-support/src/ast-lex.cc	/^static void yyunput( int c, register char *yy_bp )$/;"	f	file:
+yyvs	cool-support/src/ast-parse.cc	/^  YYSTYPE yyvs;$/;"	m	union:yyalloc	file:
+yywrap	cool-support/src/ast-lex.cc	/^#define yywrap(/;"	d	file:
+~CgenClassTable	src/cgen.cc	/^CgenClassTable::~CgenClassTable()$/;"	f	class:CgenClassTable
+~CgenNode	src/cgen.h	/^	virtual ~CgenNode() { }$/;"	f	class:CgenNode
+~tree_node	cool-support/include/tree.h	/^    virtual ~tree_node() {}$/;"	f	class:tree_node
