@@ -516,12 +516,6 @@ void CgenClassTable::setup_classes(CgenNode *c, int depth)
 
 	c->set_max_child(current_tag-1);
 
-	/*
-	if (cgen_debug)
-		std::cerr << "Class " << c->get_name() << " assigned tag "
-			<< c->get_tag() << ", max child " << c->get_max_child()
-			<< ", depth " << c->get_depth() << endl;
-	*/
 }
 
 
