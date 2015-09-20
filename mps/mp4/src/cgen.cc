@@ -192,8 +192,6 @@ void CgenEnvironment::remove_space(string& str)
 }
 
 vector<op_type> CgenEnvironment::parse_args(string x){
-//	%Main*(%Main*, i32 ) *
-//	%Main*, i32
 	vector<op_type> ret_vec;
 
 	if(x.find('(', 0) == std::string::npos){
@@ -207,8 +205,6 @@ vector<op_type> CgenEnvironment::parse_args(string x){
 	std::string segment2;
 	std::getline(test, segment2, ')');
 	string params = x.substr(segment.length()+1, x.length() - 1 - (segment2.length() + 1));
-//	std::cerr << "x " <<  x << endl;
-//	std::cerr << "params " <<  params << endl;
 	this->remove_space(params);
 	int pos = 0;
 
@@ -223,18 +219,6 @@ vector<op_type> CgenEnvironment::parse_args(string x){
 		ret_vec.push_back(temp_type);
 		pch = strtok(NULL, ",");
 	}
-//	while(params.find(',', pos) != std::string::npos){
-//		string param_string = params.substr(pos, params.find(',', pos));
-//		op_type temp_type = get_op_type(param_string);
-//		pos = params.find(',', pos);
-//		ret_vec.push_back(temp_type);
-//	}
-//	string param_string = params.substr(pos,params.find(')'));
-//	op_type temp_type = get_op_type(param_string);
-//	std::cerr << "params " <<  params << endl;
-//	std::cerr << "pos: " <<  pos << endl;
-//	std::cerr << "temp_type2: " <<  temp_type.get_name() << endl;
-//	ret_vec.push_back(temp_type);
 	return ret_vec;
 }
 
@@ -395,16 +379,6 @@ void CgenNode::handle_vtable_defaults(){
 	this->vtable_types.push_back(i8_ptr_type);
 	this->vtable_types.push_back(cool_type);
 
-	//Handle the vtable_prototype
-	//i32 #,
-//	string type_name = name->get_string();
-//	int count = (type_name == "Object") ? 0
-//			: (type_name == "Int") ? 1
-//			: (type_name == "Bool")? 2
-//			: (type_name == "String") ? 3
-//			: (type_name == "IO") ? 4
-//			: (type_name == "Main") ? 5 : -1;
-
 	const_value id_const(i32_type, SSTR(count++), false);
 	this->vtable_values.push_back(id_const);
 	this->function_names.push_back("counter");
@@ -510,19 +484,6 @@ void CgenNode::handle_vtable_defaults(){
 
 		//VALUES
 		//bitcast (%Object* (%Object*) * @Object_abort to %Object* (%SELF_TYPE*) *)
-		//NOTE: I know this method uses provided functionality of casted value,
-		//however it doesnt actually do anything useful!
-//		op_type res_type("Object*");
-//		vector<op_type> arg_types;
-//		arg_types.push_back(no_self_type + "*");
-//		op_func_ptr_type cast_to(res_type, arg_types);
-//		op_type pre_res_type("Object*");
-//		op_type pre_arg_type(no_self_type + "*");
-//		op_func_ptr_type pre_cast_to(res_type, pre_arg_type);
-//
-//		global_value abort_global(res_type, "Object_abort");
-//		casted_value abort_casted(cast_to, abort_global.get_name(), pre_arg_type);
-//		const_value abort_const(cool_type, abort_casted.get_name(), false);
 		string abort_string = "bitcast (%Object* (%Object*) * @Object_abort to %Object* (%";
 		abort_string = abort_string + no_self_type;
 		abort_string = abort_string + "*) *)";
@@ -1188,14 +1149,6 @@ void CgenClassTable::code_constants()
 		const_value str_getelement_ptr_const(op_type_array, get_element_ptr_string, false);
 		str_const_values.push_back(str_getelement_ptr_const);
 
-
-		//i8* getelementptr ([14 x i8]* @str.1, i32 0, i32 0)
-//		embed_getelementptr(
-//			*(env->cur_stream),
-//			operand(op_type(op_type_array.get_name() + "*") , "@" + first_string),
-//			int_value(0),
-//			int_value(0));
-
 		std::string second_string = "String.";
 		second_string = second_string + SSTR(x);
 		global_value string_global(op_type("String"), second_string);
@@ -1267,20 +1220,12 @@ void CgenClassTable::setup()
 
 void CgenClassTable::setup_classes(CgenNode *c, int depth)
 {
-	// MAY ADD CODE HERE
-	// if you want to give classes more setup information
-
 	c->setup(current_tag++, depth);
 	List<CgenNode> *children = c->get_children();
 	for (List<CgenNode> *child = children; child; child = child->tl())
 		setup_classes(child->hd(), depth + 1);
 
 	c->set_max_child(current_tag-1);
-
-//	std::cerr << "Class " << c->get_name() << " assigned tag "
-//		<< c->get_tag() << ", max child " << c->get_max_child()
-//		<< "\n";
-
 }
 
 // The code generation second pass. Add code here to traverse the tree and
@@ -1357,25 +1302,6 @@ void CgenClassTable::code_main()
 	//%main.retval = call RETURN_TYPE(%Main*)* @Main_main( %Main* %main.obj )
 	op_type main_ret_type("Object*");
 	List<CgenNode> *children = root()->get_children();
-//	for (List<CgenNode> *child = children; child; child = child->tl()){
-//		std::cerr << "CGENNODE NAME: " << child->hd()->get_type_name() << "\n";
-//		if(child->hd()->get_type_name() == "Main"){
-//			for(size_t i = 0; i < child->hd()->vtable_values.size(); i++){
-//				std::cerr << "CGENNODE: " << child->hd()->get_type_name() << " vtable_values " << child->hd()->vtable_values.at(i).get_value()<<  "\n";
-//				if(child->hd()->vtable_values.at(i).get_value() == "@Main_main"){
-//					op_type main_main_ret_type = child->hd()->vtable_types.at(i);
-//					std::cerr << "MAIN MAIN RET TYPE: " << main_main_ret_type.get_name() << "\n";
-//					string original = main_main_ret_type.get_name();
-//					string ret_type_only;
-//					stringstream ssNew(original);
-//					ssNew >> ret_type_only;
-//					//std::cerr << "NEW RET TYPE: " << ret_type_only << "\n";
-//					op_type ret_temp_type = get_main_main_ret_type(ret_type_only);
-//					main_ret_type = ret_temp_type;
-//				}
-//			}
-//		}
-//	}
 	operand main_retval_operand(main_ret_type,"main.retval");
 	vector<operand> main_retval_args;
 	main_retval_args.push_back(main_obj_operand);
@@ -1429,7 +1355,6 @@ CgenNode::CgenNode(Class_ nd, Basicness bstatus, CgenClassTable *ct)
 : class__class((const class__class &) *nd),
   parentnd(0), children(0), basic_status(bstatus), class_table(ct), tag(-1)
 {
-	// ADD CODE HERE
 }
 
 void CgenNode::add_child(CgenNode *n)
@@ -1519,8 +1444,6 @@ void CgenNode::code_class()
 	if (basic())
 		return;
 
-	//std::cerr << "SETTING UP CODE FOR: " << this->get_type_name() << "\n";
-	//define %RETURN_TYPE* @CLASS_FUNCTION(SELF_PARAM, OTHERPARAMS) {
 	//%return_type*
 	CgenEnvironment *env = new CgenEnvironment(*(this->get_classtable()->ct_stream), this);
 	ValuePrinter vp(*(env->cur_stream));
@@ -1609,7 +1532,6 @@ void CgenNode::code_class()
 
 	//store %Main* %tmp.11, %Main** %tmp.13
 	vp.store(bitcast_result, *alloca_result);
-	//TODO:figure out what to store here
 	env->add_local(self, alloca_result);
 
 	//Code attr only!
@@ -2204,16 +2126,6 @@ operand dispatch_class::code(CgenEnvironment *env)
 	assert(0 && "Unsupported case for phase 1");
 #else
 
-//	method
-//	block
-//	assign
-//	Integer Constant
-//	Object
-//	dispatch
-//	Object
-//	attribute!
-//	Integer Constant
-//
 //	%tmp.0 = alloca %Main*
 //	store %Main* %self, %Main** %tmp.0
 	//assign + int const
@@ -2256,8 +2168,6 @@ operand dispatch_class::code(CgenEnvironment *env)
 //	};
 
 	ValuePrinter vp(*(env->cur_stream));
-//	std::cerr << "DISPATCH NAME: " <<  name->get_string() << endl;
-//	std::cerr << "DISPATCH expr: " <<  expr->get_type()->get_string() << endl;
 
 	//if(std::string(expr->get_type()->get_string()) != std::string("SELF_TYPE")){
 	op_type param_op_type;
@@ -2352,8 +2262,6 @@ operand dispatch_class::code(CgenEnvironment *env)
 
 	//	%tmp.15 = call %Main*(%Main*, i32 )* %tmp.14( %Main* %tmp.9, i32 %tmp.8 )
 	vector<op_type> arg_types = env->parse_args(func_type->get_name());
-//	for(int i = 0; i < param_op_vec.size(); i++)
-//		arg_types.push_back(param_op_vec.at(i).get_type());
 	op_type class_type(env->get_class()->get_type_name() + "*");
 	operand call_result = vp.call(
 								arg_types,
