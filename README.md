@@ -35,15 +35,15 @@ class Main inherits IO {
 
 ```
 
-###The Machine Problems:
-MP1: This mp implements the lexical analyzer from scratch without flex.
+### The Assignments:
+1: This assignment implements the lexical analyzer from scratch without flex.
 
-MP2: This mp implements the recursive descent parser without the use of bison.
+2: This assignment implements the recursive descent parser without the use of bison.
 
-MP3: This mp implements the conversion of our Abstract Syntax Tree, to
+3: This assignment implements the conversion of our Abstract Syntax Tree, to
       LLVM intermediate representation. (without objects)
 
-MP4: This mp finishes the LLVM code generation supporting basic classes and new objects.
+4: This assignment finishes the LLVM code generation supporting basic classes and new objects.
 
-MP5: This mp implements two optimizations to the LLVM Compiler. The LICM and ADCE 
+5: This assignment implements two optimizations to the LLVM Compiler. The LICM and ADCE 
 optimizations.
